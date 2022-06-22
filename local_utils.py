@@ -1,4 +1,5 @@
 # packages
+import math
 import numpy as np
 import sys
 import time
@@ -225,6 +226,55 @@ class CustomDataset(Dataset):
             plt.show()
 
             return None
+
+
+""" Model """
+class BasicStamp(nn.Module):
+
+    def __init__(
+        self,
+        n_malicious,
+        size_x, size_y,
+        gap_x, gap_y,
+        shift_x, shift_y
+        ):
+
+        super(BasicStamp, self).__init__()
+
+        # setup
+        root = math.isqrt(n_malicious)
+        assert n_malicious == root ** 2
+
+        self.n_malicious = n_malicious
+        self.size_x, self.size_y = size_x, size_y
+
+        move_x, move_y = size_x + gap_x, size_y + gap_y
+        self.x_start, self.y_start = move_x * np.arange(root) + shift_x, move_y * np.arange(root) + shift_y
+
+
+    def _forward_helper(self, x, user_index):
+
+        # setup
+        row, col = i // root, i % root
+        x_start, y_start = self.x_start[row], self.y_start[col]
+        x_end, y_end = x_start + self.size_x, y_start + self.size_y
+
+        assert (x_end <= x.size(-2) and y_end <= x.size(-1))
+        x[..., row:(row + self.size_x), col:(col + self.size_y)] = 1
+
+        return x
+
+
+    def forward(self, x, user_index=-1):
+
+        if user_index == -1:
+            for i in range(args.n_malicious):
+                x = self._forward_helper(x, i)
+
+        else:
+            x = self._forward_helper(x, user_index)
+
+        return x
 
 
 """ Training """
