@@ -14,9 +14,9 @@ from sklearn.model_selection import train_test_split
 
 # visual
 import matplotlib
-#matplotlib.use('agg')
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
-#matplotlib.pyplot.switch_backend('agg')
+matplotlib.pyplot.switch_backend('agg')
 import seaborn as sns
 
 # torch
@@ -98,7 +98,7 @@ def main():
     args.out_path = (
         ('distributed' if args.dba else 'centralized')
         + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/d_start' + str(args.d_start) + '--m_start' + str(args.m_start)
+        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -255,7 +255,7 @@ def main():
     (user_train_loss, user_train_acc) = gu.training(
         user_loader, user_model, cost, user_opt,
         args.n_epochs, args.gpu_start + 1,
-        logger=None, print_all=args.print_all
+        logger=(logger if args.print_all else None), print_all=args.print_all
     )
 
     # validation
@@ -265,18 +265,22 @@ def main():
         output=1
     )
 
-    val_ks_max = max([
+    val_ks = [
         round(
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
-    ])
+    ]
+    val_ks_max = max(val_ks)
 
     # calculate outlier rule - correct for unbalenced data and current round
     output_val_ks_all.append(val_ks_max)
-    output_val_ks_q3.append(np.percentile(output_val_ks_all, 0.75))
-    output_val_ks_q1.append(np.percentile(output_val_ks_all, 0.25))
+    output_val_ks_q3.append(np.quantile(output_val_ks_all, 0.75))
+    output_val_ks_q1.append(np.quantile(output_val_ks_all, 0.25))
 
     ks_max_cutoff = 2 * output_val_ks_all[-1]
+
+    if args.print_all:
+        logger.info([ks_max_cutoff] + val_ks)
 
     # testing
     (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
@@ -413,12 +417,12 @@ def main():
 
         """ Global model training """
         # save output
-        output_benign_ks_q3.append(np.percentile(output_benign_ks_all, 0.75))
-        output_benign_ks_q1.append(np.percentile(output_benign_ks_all, 0.25))
+        output_benign_ks_q3.append(np.quantile(output_benign_ks_all, 0.75))
+        output_benign_ks_q1.append(np.quantile(output_benign_ks_all, 0.25))
 
         try:
-            output_malicious_ks_q3.append(np.percentile(output_malicious_ks_all, 0.75))
-            output_malicious_ks_q1.append(np.percentile(output_malicious_ks_all, 0.25))
+            output_malicious_ks_q3.append(np.quantile(output_malicious_ks_all, 0.75))
+            output_malicious_ks_q1.append(np.quantile(output_malicious_ks_all, 0.25))
             output_malicious_ks_min.append(min(output_malicious_ks_all))
         except:
             pass
@@ -443,6 +447,14 @@ def main():
             r, args.n_rounds, round_end - round_start
         )
 
+        # validation
+        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
+            clean_val_loader, global_model, cost, args.gpu_start,
+            logger=None, title='validation clean',
+            output=1
+        )
+
+        """ Validation User """
         # copy global model and subset to user local data
         user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
         user_data = train_data.get_user_data(
@@ -466,7 +478,7 @@ def main():
         (user_train_loss, user_train_acc) = gu.training(
             user_loader, user_model, cost, user_opt,
             args.n_epochs, args.gpu_start + 1,
-            logger=None, print_all=args.print_all
+            logger=(logger if args.print_all else None), print_all=args.print_all
         )
 
         # validation
@@ -476,18 +488,22 @@ def main():
             output=1
         )
 
-        val_ks_max = max([
+        val_ks = [
             round(
                 lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
-        ])
+        ]
+        val_ks_max = max(val_ks)
 
         # calculate outlier rule - correct for unbalenced data and current round
         output_val_ks_all.append(val_ks_max)
-        output_val_ks_q3.append(np.percentile(output_val_ks_all, 0.75))
-        output_val_ks_q1.append(np.percentile(output_val_ks_all, 0.25))
+        output_val_ks_q3.append(np.quantile(output_val_ks_all, 0.75))
+        output_val_ks_q1.append(np.quantile(output_val_ks_all, 0.25))
 
         ks_max_cutoff = 2 * output_val_ks_all[-1]
+
+        if args.print_all:
+            logger.info([ks_max_cutoff] + val_ks)
 
         # testing
         (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
@@ -507,41 +523,40 @@ def main():
 
     """ Visualizations """
     logging.disable()
-    print(output_val_ks_all)
 
     # defense
     plt.figure()
-    plt.plot(range(args.n_rounds + 1), [max((2*x, 1)) for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [max((2*x*val_data_entropy, 1)) for x in output_val_ks_all])
-    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [min((2*x*val_data_entropy, 1)) for x in output_val_ks_all])
+    plt.plot(range(1, args.n_rounds + 1), [max(x - 1.5 * (y - x), 0) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
     if args.m_start < args.n_rounds:
-        plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-        plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
-    plt.text(args.d_start, 1, 'd-start')
-    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
-    plt.text(args.m_start, 1, 'a-start')
+        plt.plot(range(args.m_start, args.n_rounds + 1), [max(x - 1.5 * (y - x), 0) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+        plt.plot(range(args.m_start, args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+    plt.text(args.m_start, 1.0333, 'a-start')
     plt.xlabel('Round')
-    plt.ylim(-.05, 1.05)
+    plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
     plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
     plt.savefig(os.path.join(args.out_path, 'defense_eval_old.png'))
 
     plt.figure()
-    plt.plot(range(args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
-    plt.plot(range(args.n_rounds + 1), [(y + 1.5 * (y - x)) * val_data_entropy for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
+    plt.plot(range(args.n_rounds + 1), [min((y + 1.5 * (y - x)) * val_data_entropy, 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [max(x - 1.5 * (y - x), 0) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
     if args.m_start < args.n_rounds:
-        plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-        plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
-    plt.text(args.d_start, 1, 'd-start')
-    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
-    plt.text(args.m_start, 1, 'a-start')
+        plt.plot(range(args.m_start, args.n_rounds + 1), [max(x - 1.5 * (y - x), 0) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+        plt.plot(range(args.m_start, args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+    plt.text(args.m_start, 1.0333, 'a-start')
     plt.xlabel('Round')
-    plt.ylim(-.05, 1.05)
+    plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
     plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
     plt.savefig(os.path.join(args.out_path, 'defense_eval_new.png'))
@@ -551,13 +566,13 @@ def main():
     ax2 = ax1.twinx()
     ax1.plot(range(args.n_rounds + 1), output_global_acc_clean, 'g-')
     ax2.plot(range(args.n_rounds + 1), output_global_acc_pois, 'r-')
-    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
-    plt.text(args.d_start, 1, 'd-start')
-    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
-    plt.text(args.m_start, 1, 'a-start')
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+    plt.text(args.m_start, 1.0333, 'a-start')
     ax1.set_xlabel('Round')
     ax1.set_ylabel('Correct Classification Rate', c='g')
-    ax1.set_ylim(-.05, 1.05)
+    ax1.set_ylim(-.05, 1.1)
     ax2.set_ylabel('Attack Success Rate', c='r')
     ax2.set_ylim(ax1.get_ylim())
     plt.title('Testing Sets Evaluated Over Communication Rounds')

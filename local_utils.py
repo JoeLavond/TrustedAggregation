@@ -188,7 +188,7 @@ class CustomDataset(Dataset):
                 model, target, n_batch, gpu_start,
                 user_id=user_id
             )
-            to_pois.view_imgs()
+            #to_pois.view_imgs()
 
             user_images[:n_pois] = to_pois.images
             user_labels[:n_pois] = to_pois.labels
