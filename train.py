@@ -34,9 +34,6 @@ import local_utils as lu
 sys.path.insert(2, '/home/joe/models/')
 import resnet
 
-sys.path.insert(3, '/home/joe/02_backdoor/00_stamp/models/')
-import stamp as stamp_pkg
-
 
 """ Setup """
 # file control
@@ -47,7 +44,7 @@ def get_args():
     # control
     parser.add_argument('--seed', default=0, type=int)
     parser.add_argument('--n_classes', default=10, type=int)
-    parser.add_argument('--gpuser_start', default=0, type=int)
+    parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
 
@@ -68,7 +65,8 @@ def get_args():
     # malicious users
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--m_scale', default=1, type=int)
-    parser.add_argument('--n_malicious', default=1, type=int)
+    parser.add_argument('--p_malicious', default=None, type=float)
+    parser.add_argument('--n_malicious', default=1, type=float)
     parser.add_argument('--n_epochs_pois', default=15, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
@@ -77,7 +75,12 @@ def get_args():
 
     """ Data poisoning """
     # attack
+    parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
+    parser.add_argument('--target', default=0, type=int)
+    parser.add_argument('--size_x', default=4, type=int)
+    parser.add_argument('--size_y', default=1, type=int)
+    parser.add_argument('--gap', default=1, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -92,12 +95,12 @@ def main():
     args = get_args()
 
     # output
-    args.out_path = 'output/runs/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val) +
-        '/d_start' + str(args.m_start) + '--m_start' + str(args.d_start)
+    args.out_path = (
+        'output/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
+        + '/d_start' + str(args.m_start) + '--m_start' + str(args.d_start)
+    )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
-    if not os.path.exists(os.path.join(args.out_path, 'visuals')):
-        os.makedirs(os.path.join(args.out_path, 'visuals'))
 
     gu.set_seeds(args.seed)
     logger = gu.get_log(args.out_path)
@@ -125,12 +128,9 @@ def main():
     [val_data_indices] = train_data.sample(1, args.n_local_data, args.alpha_val, args.n_classes)
     users_data_indices.append(val_data_indices)
 
-    torch.save(
-        users_data_indices,
-        os.path.join(args.out_path, 'data_users_indices.pt')
+    val_data = train_data.get_user_data(
+        val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
-
-    val_data = train_data.get_user_data(val_data_indices, m_user=0, model=None, **vars(args))
     val_data_entropy = val_data.shannon_entropy()
 
     val_data.transformations = None
@@ -144,12 +144,21 @@ def main():
 
 
     """ Data poisoning """
-    stamp_model = stamp_pkg.BasicStamp(args.n_malicious).cuda(args.gpuser_start)  # working
-    stamp_model = stamp_model.eval()
 
     # establish malicious users
+    if args.p_malicious:
+        args.n_malicious = int(args.n_users * args.p_malicious)
+
     m_users = torch.zeros(args.n_users)
-    m_users[0] = 1
+    m_users[0:args.n_malicious] = 1
+
+    # define trigger model
+    stamp_model = lu.BasicStamp(
+        args.n_malicious, args.dba,
+        args.size_x, args.size_y,
+        args.gap, args.gap
+    ).cuda(args.gpu_start)
+    stamp_model = stamp_model.eval()
 
     """ Federated learning setup """
     # initialize global model
@@ -157,7 +166,7 @@ def main():
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
         resnet.resnet18(pretrained=False)
-    ).cuda(args.gpuser_start)
+    ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
     # global
@@ -167,7 +176,8 @@ def main():
     # defense
     output_val_ks_all, output_val_ks_q1, output_val_ks_q3 = [], [], []
     output_benign_ks_all, output_benign_ks_q1, output_benign_ks_q3 = [], [], []
-    output_malicious_ks_all, output_malicious_ks_q1, output_malicious_ks_q3 = [], [], []
+    output_malicious_ks_all, output_malicious_ks_min = [], []
+    output_malicious_ks_q1, output_malicious_ks_q3 = [], []
 
     """ Import testing data """
     # testing data
@@ -196,7 +206,7 @@ def main():
 
     # poison subset of test data
     pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
-    pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpuser_start, test=1)
+    pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
                 pois_test_data,
@@ -210,20 +220,22 @@ def main():
     """ Initial validation """
     logger.info(
         '\n\n--- GLOBAL VALIDATION - Round: %d of %d ---',
-        args.c_start, args.c_start + args.n_rounds
+        0, args.n_rounds
     )
 
     # validation
     (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
-        clean_val_loader, global_model, cost, args.gpuser_start,
+        clean_val_loader, global_model, cost, args.gpu_start,
         logger=None, title='validation clean',
         output=1
     )
 
     """ Validation User """
     # copy global model and subset to user local data
-    user_model = copy.deepcopy(global_model).cuda(args.gpuser_start + 1)
-    user_data = train_data.get_user_data(users_data_indices[-1], m_users[-1], stamp_model, **vars(args))
+    user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+    user_data = train_data.get_user_data(
+        users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
+    )
 
     user_loader = DataLoader(
         user_data,
@@ -241,13 +253,13 @@ def main():
     # train local model
     (user_train_loss, user_train_acc) = gu.training(
         user_loader, user_model, cost, user_opt,
-        args.n_epochs, args.gpuser_start + 1,
+        args.n_epochs, args.gpu_start + 1,
         logger=None, print_all=args.print_all
     )
 
     # validation
     (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-        clean_val_loader, user_model, cost, args.gpuser_start + 1,
+        clean_val_loader, user_model, cost, args.gpu_start + 1,
         logger=None, title='validation clean',
         output=1
     )
@@ -267,14 +279,14 @@ def main():
 
     # testing
     (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
-        clean_test_loader, global_model, cost, args.gpuser_start,
+        clean_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing clean'
     )
     output_global_loss_clean.append(global_clean_test_loss)
     output_global_acc_clean.append(global_clean_test_acc)
 
     (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
-        pois_test_loader, global_model, cost, args.gpuser_start,
+        pois_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing pois'
     )
     output_global_loss_pois.append(global_pois_test_loss)
@@ -297,15 +309,14 @@ def main():
 
         if (r < args.m_start):
 
-            user_subset_index = torch.randperm(args.n_users - 1)[:int(args.n_users * args.p_report)]
-            user_subset_index += 1  # no malicious users
+            user_subset_index = torch.randperm(args.n_users - args.n_malicious)[:int(args.n_users * args.p_report)]
+            user_subset_index += args.n_malicious  # no malicious users
 
         else:
 
             # force malicious users in subset if past round start
-            user_subset_index = torch.randperm(args.n_users)[:int(args.n_users * args.p_report)]
-            if sum([m_users[i] for i in user_subset_index]) == 0:
-                user_subset_index[0] = 0
+            user_subset_index = torch.randperm(args.n_users - args.n_malicious)[:int(args.n_users * args.p_report)]
+            user_subset_index = [i if i < args.n_malicious else user_subset_index[i] for i in range(len(user_subset_index))]
 
 
         """ Local model training """
@@ -322,8 +333,10 @@ def main():
                 )
 
             # copy global model and subset to user local data
-            user_model = copy.deepcopy(global_model).cuda(args.gpuser_start + 1)
-            user_data = train_data.get_user_data(user_indices, m_user, stamp_model, **vars(args))
+            user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+            user_data = train_data.get_user_data(
+                user_indices, m_user, user_id, stamp_model, **vars(args)
+            )
 
             user_loader = DataLoader(
                 user_data,
@@ -342,7 +355,7 @@ def main():
             # train local model
             (user_train_loss, user_train_acc) = gu.training(
                 user_loader, user_model, cost, user_opt,
-                args.n_epochs_pois if m_user else args.n_epochs, args.gpuser_start + 1,
+                args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
                 logger=(logger if m_user else None), print_all=args.print_all
             )
 
@@ -353,7 +366,7 @@ def main():
                         global_model.state_dict().items(),
                         user_model.state_dict().items()
                     ):
-                        global_weights = global_weights.cuda(args.gpuser_start + 1)
+                        global_weights = global_weights.cuda(args.gpu_start + 1)
                         user_weights.copy_(
                             args.m_scale * (user_weights - global_weights) + global_weights
                         )
@@ -362,25 +375,28 @@ def main():
             """ External validation """
             # validation
             (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-                clean_val_loader, user_model, cost, args.gpuser_start + 1,
+                clean_val_loader, user_model, cost, args.gpu_start + 1,
                 logger=None, title='validation clean',
                 output=(r >= args.d_start)
             )
 
-            if (r >= args.d_start):
+            # execute ks cutoff if defending
+            user_ks = [
+                round(
+                    lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+                ) for c in range(global_output_layer.shape[-1])
+            ]
 
-                user_ks = [
-                    round(
-                        lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
-                    ) for c in range(global_output_layer.shape[-1])
-                ]
+            user_update = (max(user_ks) < ks_max_cutoff)
 
-                user_update = (max(d_stat) < ks_max_cutoff)
+            # store output
+            if (m_user or args.print_all):
+                logger.info([user_update] + user_ks)
 
-                if (m_user or args.print_all):
-                    logger.info([user_update] + user_ks)
-
-                """ WORKING: NEED TO SAVE MAX KS TO BENIGN/MALICIOUS OUTPUT """
+            if m_user:
+                output_malicious_ks_all.append(max(user_ks))
+            else:
+                output_benign_ks_all.append(max(user_ks))
 
             # send updates to global
             if ((r < args.d_start) or user_update):
@@ -393,81 +409,44 @@ def main():
                     ):
                         update_weights += (user_weights.cpu() - global_weights.cpu())
 
-            # summary
-            if m_user:
-
-                temp_malicious_loss_train.append(user_train_loss)
-                temp_malicious_acc_train.append(user_train_acc)
-                temp_malicious_loss_val.append(user_clean_val_loss)
-                temp_malicious_acc_val.append(user_clean_val_acc)
-
-            else:
-
-                temp_benign_loss_train.append(user_train_loss)
-                temp_benign_acc_train.append(user_train_acc)
-                temp_benign_loss_val.append(user_clean_val_loss)
-                temp_benign_acc_val.append(user_clean_val_acc)
-
-
-        # user summary
-        if temp_benign_loss_train:
-
-            output_benign_rounds.append(r + 1)
-            output_benign_loss_train.append(np.mean(temp_benign_loss_train))
-            output_benign_loss_val.append(np.mean(temp_benign_loss_val))
-            output_benign_acc_train.append(np.mean(temp_benign_acc_train))
-            output_benign_acc_val.append(np.mean(temp_benign_acc_val))
-
-        if temp_malicious_loss_train:
-
-            output_malicious_rounds.append(r + 1)
-            output_malicious_loss_train.append(np.mean(temp_malicious_loss_train))
-            output_malicious_loss_val.append(np.mean(temp_malicious_loss_val))
-            output_malicious_acc_train.append(np.mean(temp_malicious_acc_train))
-            output_malicious_acc_val.append(np.mean(temp_malicious_acc_val))
-
-        if (r + 1) >= args.d_start:
-            output_d_benign.append(
-                (sum(benign_d_rule) / len(benign_d_rule)) if benign_d_rule else 0
-            )
-            output_d_malicious.append(
-                (sum(malicious_d_rule) / len(malicious_d_rule)) if malicious_d_rule else 1
-            )
 
         """ Global model training """
-        # update global weights
-        with torch.no_grad():
-            for (_, global_weights), (_, update_weights) in zip(
-                global_model.state_dict().items(),
-                global_update.state_dict().items()
-            ):
-                try:
-                    update_weights /= user_update_count
-                except:
-                    update_weights.copy_((update_weights / user_update_count).long())
+        # save output
+        output_benign_ks_q3.append(np.percentile(output_benign_ks_all, 0.75))
+        output_benign_ks_q1.append(np.percentile(output_benign_ks_all, 0.25))
 
-                global_weights += update_weights.cuda(args.gpuser_start)
+        try:
+            output_malicious_ks_q3.append(np.percentile(output_malicious_ks_all, 0.75))
+            output_malicious_ks_q1.append(np.percentile(output_malicious_ks_all, 0.25))
+            output_malicious_ks_min.append(min(output_malicious_ks_all))
+        except:
+            pass
+
+        # update global weights
+        if (user_update_count > 0):
+            with torch.no_grad():
+                for (_, global_weights), (_, update_weights) in zip(
+                    global_model.state_dict().items(),
+                    global_update.state_dict().items()
+                ):
+                    try:
+                        update_weights /= user_update_count
+                    except:
+                        update_weights.copy_((update_weights / user_update_count).long())
+
+                    global_weights += update_weights.cuda(args.gpu_start)
 
         round_end = time.time()
         logger.info(
             '\n\n--- GLOBAL EVALUATIONS - Round: %d of %d, Time: %.1f ---',
-            r + 1, args.c_start + args.n_rounds, round_end - round_start
+            r, args.n_rounds, round_end - round_start
         )
-
-        # validation
-        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
-            clean_val_loader, global_model, cost, args.gpuser_start,
-            logger=None, title='validation clean',
-            output=1
-        )
-        output_global_loss_val.append(global_clean_val_loss)
-        output_global_acc_val.append(global_clean_val_acc)
-
-    if ((r + 2) >= args.d_start):
 
         # copy global model and subset to user local data
-        user_model = copy.deepcopy(global_model).cuda(args.gpuser_start + 1)
-        user_data = train_data.get_user_data(users_data_indices[-1], m_users[-1], stamp_model, **vars(args))
+        user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+        user_data = train_data.get_user_data(
+            users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
+        )
 
         user_loader = DataLoader(
             user_data,
@@ -485,160 +464,104 @@ def main():
         # train local model
         (user_train_loss, user_train_acc) = gu.training(
             user_loader, user_model, cost, user_opt,
-            args.n_epochs, args.gpuser_start + 1,
+            args.n_epochs, args.gpu_start + 1,
             logger=None, print_all=args.print_all
         )
 
         # validation
         (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-            clean_val_loader, user_model, cost, args.gpuser_start + 1,
+            clean_val_loader, user_model, cost, args.gpu_start + 1,
             logger=None, title='validation clean',
             output=1
         )
 
-        val_d_stat = max([
+        val_ks_max = max([
             round(
                 lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
         ])
 
         # calculate outlier rule - correct for unbalenced data and current round
-        val_d_stat *= val_data_entropy
-        val_d_stats_all.append(val_d_stat)
+        output_val_ks_all.append(val_ks_max)
+        output_val_ks_q3.append(np.percentile(output_val_ks_all, 0.75))
+        output_val_ks_q1.append(np.percentile(output_val_ks_all, 0.25))
 
-        val_d_stats_q3.append(np.percentile(val_d_stats_all, 0.75))
-        val_d_stats_iqr.append(stats.iqr(val_d_stats_all))
-        cutoff = val_d_stats_q3[-1] + 1.5 * val_d_stats_iqr[-1]
-        cutoff *= ((r + 2) / (r + 1))
-        val_d_stats_cut.append(cutoff)
+        ks_max_cutoff = 2 * output_val_ks_all[-1]
 
         # testing
         (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
-            clean_test_loader, global_model, cost, args.gpuser_start,
+            clean_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing clean'
         )
-        output_global_loss_test_clean.append(global_clean_test_loss)
-        output_global_acc_test_clean.append(global_clean_test_acc)
+        output_global_loss_clean.append(global_clean_test_loss)
+        output_global_acc_clean.append(global_clean_test_acc)
 
         (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
-            pois_test_loader, global_model, cost, args.gpuser_start,
+            pois_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing pois'
         )
-        output_global_loss_test_pois.append(global_pois_test_loss)
-        output_global_acc_test_pois.append(global_pois_test_acc)
+        output_global_loss_pois.append(global_pois_test_loss)
+        output_global_acc_pois.append(global_pois_test_acc)
 
-    # save model results
-    if args.output_save:
-        torch.save(
-            global_model.state_dict(),
-            os.path.join(args.out_path, 'params_global_model.pt')
-        )
 
     """ Visualizations """
     logging.disable()
 
-    # user
-    if output_malicious_rounds:
-
-        # training
-        c_labels = [] + (
-            ['benign-train', 'benign-val'] if output_benign_rounds else []
-        ) + (
-            ['malicious-train', 'malicious-val'] if output_malicious_rounds else []
-        )
-
-        c_labels_short = [] + (
-            ['benign'] if output_benign_rounds else []
-        ) + (
-            ['malicious'] if output_malicious_rounds else []
-        )
-
-        plt.figure()
-        plt.title('Average Training Loss Over Communication Rounds')
-        if output_benign_rounds:
-            plt.plot(output_benign_rounds, output_benign_loss_train)
-            plt.plot(output_benign_rounds, output_benign_loss_val)
-        if output_malicious_rounds:
-            plt.plot(output_malicious_rounds, output_malicious_loss_train)
-            plt.plot(output_malicious_rounds, output_malicious_loss_val)
-        plt.legend(labels=c_labels)
-        plt.ylabel('Cross Entropy Loss')
-        plt.yscale('log')
-        plt.xlabel('Round')
-        plt.xlim(args.c_start + 1, args.c_start + args.n_rounds)
-        plt.savefig(os.path.join(args.out_path, 'visuals', 'user_loss_eval.png'))
-
-        plt.figure()
-        plt.title('Average Training Acc Over Communication Rounds')
-        if output_benign_rounds:
-            plt.plot(output_benign_rounds, output_benign_acc_train)
-            plt.plot(output_benign_rounds, output_benign_acc_val)
-        if output_malicious_rounds:
-            plt.plot(output_malicious_rounds, output_malicious_acc_train)
-            plt.plot(output_malicious_rounds, output_malicious_acc_val)
-        plt.legend(labels=c_labels)
-        plt.ylabel('Accuracy')
-        plt.ylim(-.05, 1.05)
-        plt.xlabel('Round')
-        plt.xlim(args.c_start + 1, args.c_start + args.n_rounds)
-        plt.savefig(os.path.join(args.out_path, 'visuals', 'user_acc_eval.png'))
-
-        # decision plot
-        plt.figure()
-        plt.title('Defense Running Correct Decision Rate Over Communication Rounds')
-        if output_benign_rounds:
-            plt.plot(range(args.d_start, args.c_start + args.n_rounds + 1), output_d_benign)
-        if output_malicious_rounds:
-            plt.plot(range(args.d_start, args.c_start + args.n_rounds + 1), output_d_malicious)
-        plt.legend(labels=c_labels_short)
-        plt.ylabel('Running Accuracy')
-        plt.ylim(-.05, 1.05)
-        plt.xlabel('Round')
-        plt.savefig(os.path.join(args.out_path, 'visuals', 'user_def_eval.png'))
-
-        # understanding benign and malicious users
-        plt.figure()
-        plt.title('Distribution of max(d_stat) for Benign and Malicious Users')
-        if output_benign_rounds:
-            sns.kdeplot(benign_d_all)
-        if output_malicious_rounds:
-            sns.kdeplot(malicious_d_all)
-        plt.legend(labels=['benign', 'malicious'])
-        plt.savefig(os.path.join(args.out_path, 'visuals', 'user_def_hist.png'))
-
-    # understanding val_d_stat
+    # defense
     plt.figure()
-    plt.title('Defense Cutoff Over Communication Rounds')
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 2), val_d_stats_all)
-    plt.plot(range(args.d_start, args.c_start + args.n_rounds + 2), val_d_stats_cutoff)
-    plt.legend(labels=['round-max', 'running-outlier-cutoff'])
-    plt.ylabel('Value')
-    plt.ylim(-.05, 1.05)
+    plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [2*x*val_data_entropy for x in output_val_ks_all])
+    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
     plt.xlabel('Round')
-    plt.savefig(os.path.join(args.out_path, 'visuals', 'user_def_stats.png'))
+    plt.ylim(-.05, 1.05)
+    plt.title('KS Cutoff Over Communication Rounds')
+    plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
+    plt.savefig(os.path.join(args.out_path, 'defense_eval_old.png'))
+
+    plt.figure()
+    plt.plot(range(args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
+    plt.plot(range(args.n_rounds + 1), [(y + 1.5 * (y - x)) * val_data_entropy for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.xlabel('Round')
+    plt.ylim(-.05, 1.05)
+    plt.title('KS Cutoff Over Communication Rounds')
+    plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
+    plt.savefig(os.path.join(args.out_path, 'defense_eval_new.png'))
 
     # global
-    plt.figure()
-    plt.title('Evaluation Losses Over Communication Rounds')
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_loss_val)
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_loss_test_clean)
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_loss_test_pois)
-    plt.legend(labels=['val', 'test-clean', 'test-poisoned'])
-    plt.ylabel('Cross Entropy Loss')
-    plt.yscale('log')
-    plt.xlabel('Round')
-    plt.savefig(os.path.join(args.out_path, 'visuals', 'global_loss_eval.png'))
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    ax1.plot(range(args.n_rounds + 1), output_global_acc_clean, 'g-')
+    ax2.plot(range(args.n_rounds + 1), output_global_acc_pois, 'r-')
+    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    ax1.set_xlabel('Round')
+    plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
+    ax1.set_ylabel('Correct Classification Rate', c='g')
+    ax1.set_ylim(-.05, 1.05)
+    ax2.set_ylabel('Attack Success Rate', c='r')
+    ax1.set_ylim(ax1.get_ylim())
+    plt.title('Testing Sets Evaluated Over Communication Rounds')
+    plt.legend(labels=['test-clean', 'test-poisoned'])
+    plt.savefig(os.path.join(args.out_path, 'global_acc_eval.png'))
 
     plt.figure()
-    plt.title('Evaluation Accuracy Over Communication Rounds')
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_acc_val)
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_acc_test_clean)
-    plt.plot(range(args.c_start, args.c_start + args.n_rounds + 1), output_global_acc_test_pois)
-    plt.legend(labels=['val', 'test-clean', 'test-poisoned'])
-    plt.ylabel('Accuracy')
-    plt.ylim(-.05, 1.05)
+    plt.plot(range(args.n_rounds + 1), output_global_acc_clean)
+    plt.plot(range(args.n_rounds + 1), output_global_acc_pois)
     plt.xlabel('Round')
-    plt.savefig(os.path.join(args.out_path, 'visuals', 'global_acc_eval.png'))
+    plt.ylabel('Cross Entropy Loss')
+    plt.yscale('log')
+    plt.title('Testing Sets Evaluated Over Communication Rounds')
+    plt.legend(labels=['test-clean', 'test-poisoned'])
+    plt.savefig(os.path.join(args.out_path, 'global_acc_eval.png'))
 
 
 if __name__ == "__main__":

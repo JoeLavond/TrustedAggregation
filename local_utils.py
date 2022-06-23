@@ -128,7 +128,12 @@ class CustomDataset(Dataset):
         return [self._sample_helper(n_local_data, alpha, n_classes) for i in range(n_users)]
 
 
-    def poison_(self, model, target, n_batch, gpu_start, test=0, **kwargs):
+    def poison_(
+        self,
+        model, target, n_batch,
+        gpu_start, test=0, user_id=-1,
+        **kwargs
+        ):
 
         # remove target class if evaluation data
         if test:
@@ -155,8 +160,7 @@ class CustomDataset(Dataset):
             end = min(start + n_batch, len(self.images))
 
             with torch.no_grad():
-                stamped_images, _ = model(images)
-                self.images[start:end] = stamped_images
+                self.images[start:end] = model(images, user_id)
 
         self.target = target
         return None
@@ -164,7 +168,7 @@ class CustomDataset(Dataset):
 
     def get_user_data(
         self,
-        user_indices, m_user, model,
+        user_indices, m_user, user_id, model,
         p_pois, target, n_batch, gpu_start,
         **kwargs
         ):
@@ -180,8 +184,11 @@ class CustomDataset(Dataset):
             user_images, user_labels = user_images[shuffle], user_labels[shuffle]
 
             to_pois = CustomDataset(user_images[:n_pois], user_labels[:n_pois], transformations=None)
-            to_pois.poison_(model, target, n_batch, gpu_start)
-            #to_pois.view()
+            to_pois.poison_(
+                model, target, n_batch, gpu_start,
+                user_id=user_id
+            )
+            to_pois.view_imgs()
 
             user_images[:n_pois] = to_pois.images
             user_labels[:n_pois] = to_pois.labels
@@ -233,29 +240,34 @@ class BasicStamp(nn.Module):
 
     def __init__(
         self,
-        n_malicious,
+        n_malicious, dba,
         size_x, size_y,
         gap_x, gap_y,
-        shift_x, shift_y
+        shift_x=0, shift_y=0
         ):
 
         super(BasicStamp, self).__init__()
 
         # setup
-        root = math.isqrt(n_malicious)
-        assert n_malicious == root ** 2
+        if dba:
+            root = math.isqrt(n_malicious)
+            assert n_malicious == root ** 2
+        else:
+            root, n_malicious = 2, 4
 
-        self.n_malicious = n_malicious
+        # save stamp params
+        self.dba = dba
+        self.n_malicious, self.root = n_malicious, root
         self.size_x, self.size_y = size_x, size_y
 
         move_x, move_y = size_x + gap_x, size_y + gap_y
         self.x_start, self.y_start = move_x * np.arange(root) + shift_x, move_y * np.arange(root) + shift_y
 
 
-    def _forward_helper(self, x, user_index):
+    def _forward_helper(self, x, user_id):
 
         # setup
-        row, col = i // root, i % root
+        row, col = user_id // self.root, user_id % self.root
         x_start, y_start = self.x_start[row], self.y_start[col]
         x_end, y_end = x_start + self.size_x, y_start + self.size_y
 
@@ -265,14 +277,16 @@ class BasicStamp(nn.Module):
         return x
 
 
-    def forward(self, x, user_index=-1):
+    def forward(self, x, user_id=-1):
 
-        if user_index == -1:
-            for i in range(args.n_malicious):
+        if not self.dba:
+
+            # apply global stamp
+            for i in range(self.n_malicious):
                 x = self._forward_helper(x, i)
 
         else:
-            x = self._forward_helper(x, user_index)
+            x = self._forward_helper(x, user_id)
 
         return x
 
