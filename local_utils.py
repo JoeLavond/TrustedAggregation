@@ -268,11 +268,11 @@ class BasicStamp(nn.Module):
 
         # setup
         row, col = user_id // self.root, user_id % self.root
-        x_start, y_start = self.x_start[row], self.y_start[col]
+        x_start, y_start = self.x_start[col], self.y_start[row]
         x_end, y_end = x_start + self.size_x, y_start + self.size_y
 
         assert (x_end <= x.size(-2) and y_end <= x.size(-1))
-        x[..., row:(row + self.size_x), col:(col + self.size_y)] = 1
+        x[..., y_start:y_end, x_start:x_end] = 1
 
         return x
 

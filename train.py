@@ -14,9 +14,9 @@ from sklearn.model_selection import train_test_split
 
 # visual
 import matplotlib
-matplotlib.use('agg')
+#matplotlib.use('agg')
 import matplotlib.pyplot as plt
-matplotlib.pyplot.switch_backend('agg')
+#matplotlib.pyplot.switch_backend('agg')
 import seaborn as sns
 
 # torch
@@ -66,7 +66,7 @@ def get_args():
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
-    parser.add_argument('--n_malicious', default=1, type=float)
+    parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--n_epochs_pois', default=15, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
@@ -96,8 +96,9 @@ def main():
 
     # output
     args.out_path = (
-        'output/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/d_start' + str(args.m_start) + '--m_start' + str(args.d_start)
+        ('distributed' if args.dba else 'centralized')
+        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
+        + '/d_start' + str(args.d_start) + '--m_start' + str(args.m_start)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -144,7 +145,6 @@ def main():
 
 
     """ Data poisoning """
-
     # establish malicious users
     if args.p_malicious:
         args.n_malicious = int(args.n_users * args.p_malicious)
@@ -159,6 +159,7 @@ def main():
         args.gap, args.gap
     ).cuda(args.gpu_start)
     stamp_model = stamp_model.eval()
+
 
     """ Federated learning setup """
     # initialize global model
@@ -377,7 +378,7 @@ def main():
             (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
                 clean_val_loader, user_model, cost, args.gpu_start + 1,
                 logger=None, title='validation clean',
-                output=(r >= args.d_start)
+                output=1
             )
 
             # execute ks cutoff if defending
@@ -506,15 +507,21 @@ def main():
 
     """ Visualizations """
     logging.disable()
+    print(output_val_ks_all)
 
     # defense
     plt.figure()
-    plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [2*x*val_data_entropy for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [max((2*x, 1)) for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [max((2*x*val_data_entropy, 1)) for x in output_val_ks_all])
     plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
     plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    if args.m_start < args.n_rounds:
+        plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+        plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
+    plt.text(args.d_start, 1, 'd-start')
+    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
+    plt.text(args.m_start, 1, 'a-start')
     plt.xlabel('Round')
     plt.ylim(-.05, 1.05)
     plt.title('KS Cutoff Over Communication Rounds')
@@ -526,8 +533,13 @@ def main():
     plt.plot(range(args.n_rounds + 1), [(y + 1.5 * (y - x)) * val_data_entropy for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
     plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
     plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    if args.m_start < args.n_rounds:
+        plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+        plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
+    plt.text(args.d_start, 1, 'd-start')
+    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
+    plt.text(args.m_start, 1, 'a-start')
     plt.xlabel('Round')
     plt.ylim(-.05, 1.05)
     plt.title('KS Cutoff Over Communication Rounds')
@@ -539,28 +551,16 @@ def main():
     ax2 = ax1.twinx()
     ax1.plot(range(args.n_rounds + 1), output_global_acc_clean, 'g-')
     ax2.plot(range(args.n_rounds + 1), output_global_acc_pois, 'r-')
-    plt.plot(range(1, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [x - 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
-    plt.plot(range(args.m_start, args.n_rounds + 1), [y + 1.5 * (y - x) for x, y in zip(output_malicious_ks_q1, output_malicious_ks_q3)])
+    plt.vlines(args.d_start, -.05, .95, 'b', 'dashed')
+    plt.text(args.d_start, 1, 'd-start')
+    plt.vlines(args.m_start, -.05, .95, 'r', 'dashed')
+    plt.text(args.m_start, 1, 'a-start')
     ax1.set_xlabel('Round')
-    plt.legend(labels=['cutoff', 'cutoff-scaled', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
     ax1.set_ylabel('Correct Classification Rate', c='g')
     ax1.set_ylim(-.05, 1.05)
     ax2.set_ylabel('Attack Success Rate', c='r')
-    ax1.set_ylim(ax1.get_ylim())
+    ax2.set_ylim(ax1.get_ylim())
     plt.title('Testing Sets Evaluated Over Communication Rounds')
-    plt.legend(labels=['test-clean', 'test-poisoned'])
-    plt.savefig(os.path.join(args.out_path, 'global_acc_eval.png'))
-
-    plt.figure()
-    plt.plot(range(args.n_rounds + 1), output_global_acc_clean)
-    plt.plot(range(args.n_rounds + 1), output_global_acc_pois)
-    plt.xlabel('Round')
-    plt.ylabel('Cross Entropy Loss')
-    plt.yscale('log')
-    plt.title('Testing Sets Evaluated Over Communication Rounds')
-    plt.legend(labels=['test-clean', 'test-poisoned'])
     plt.savefig(os.path.join(args.out_path, 'global_acc_eval.png'))
 
 
