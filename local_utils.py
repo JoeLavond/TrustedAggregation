@@ -98,7 +98,7 @@ class CustomDataset(Dataset):
         label_counts = torch.bincount(self.labels).cpu().numpy()
         label_props = label_counts / sum(label_counts)
 
-        return -1 * np.log(sum(label_counts ** 2))
+        return -1 * np.log(sum([x ** 2 for x in label_props]))
 
     def min_entropy(self):
 
