@@ -555,8 +555,6 @@ def main():
     plt.plot(range(args.n_rounds + 1), [min((y + 1.5 * (y - x)) * val_data_shannon, 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
     plt.plot(range(args.n_rounds + 1), [min((y + 1.5 * (y - x)) * val_data_simpson, 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
     plt.plot(range(args.n_rounds + 1), [min((y + 1.5 * (y - x)) * val_data_berger, 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [max(x - 1.5 * (y - x), 0) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
-    plt.plot(range(1, args.n_rounds + 1), [min(y + 1.5 * (y - x), 1) for x, y in zip(output_benign_ks_q1, output_benign_ks_q3)])
     if args.m_start < args.n_rounds:
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
@@ -601,7 +599,7 @@ def main():
     plt.xlabel('Round')
     plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff', 'cutoff-shannon', 'cutoff-simpson', 'cutoff-berger', 'benign-low', 'benign-high', 'malicious-low', 'malicious_high'])
+    plt.legend(labels=['cutoff', 'cutoff-shannon', 'cutoff-simpson', 'cutoff-berger', 'benign-low', 'benign-high'])
     plt.savefig(os.path.join(args.out_path, 'benign_defense_new.png'))
 
     # global
