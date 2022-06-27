@@ -98,8 +98,7 @@ def main():
 
     # output
     args.out_path = (
-        ('runs_balanced' if args.sampler else 'runs_imbalanced')
-        + '/alpha_val' + str(args.alpha_val) + '--n_rounds' + str(args.n_rounds)
+        'runs' + '/alpha_val' + str(args.alpha_val) + '--n_rounds' + str(args.n_rounds)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)

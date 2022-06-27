@@ -1,0 +1,36 @@
+[2022/06/27 14:49:45] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=3, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=5, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=1, alpha_val=10000, window=3, out_path='centralized/alpha10000--alpha_val10000/n_rounds3--d_start1--m_start1')
+[2022/06/27 14:49:51] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 3 ---
+[2022/06/27 14:50:00] - TESTING CLEAN - Time 0.8, Loss 2.3452, Acc 0.1024
+[2022/06/27 14:50:01] - TESTING POIS - Time 0.8, Loss 2.6139, Acc 0.0000
+[2022/06/27 14:50:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/27 14:50:08] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8239, Acc 0.3448
+[2022/06/27 14:50:09] - [True, 0.823, 0.44, 0.56, 0.526, 0.615, 0.5, 0.49, 0.569, 0.597, 0.585]
+[2022/06/27 14:50:34] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 3, Time: 32.8 ---
+[2022/06/27 14:50:37] - TESTING CLEAN - Time 0.8, Loss 2.1237, Acc 0.2068
+[2022/06/27 14:50:38] - TESTING POIS - Time 0.9, Loss 2.2225, Acc 0.1613
+[2022/06/27 14:50:38] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/27 14:50:45] - TRAINING - Epoch: 15, Time 0.4, Loss 1.7705, Acc 0.3671
+[2022/06/27 14:50:46] - [True, 0.361, 0.349, 0.315, 0.23, 0.319, 0.331, 0.228, 0.26, 0.488, 0.254]
+[2022/06/27 14:51:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 3, Time: 32.3 ---
+[2022/06/27 14:51:14] - TESTING CLEAN - Time 0.9, Loss 1.9657, Acc 0.2690
+[2022/06/27 14:51:15] - TESTING POIS - Time 0.8, Loss 2.2660, Acc 0.1698
+[2022/06/27 14:51:15] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/27 14:51:22] - TRAINING - Epoch: 15, Time 0.5, Loss 1.6881, Acc 0.4016
+[2022/06/27 14:51:23] - [True, 0.238, 0.244, 0.29, 0.145, 0.105, 0.268, 0.129, 0.272, 0.315, 0.2]
+[2022/06/27 14:51:48] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 3, Time: 32.9 ---
+[2022/06/27 14:51:52] - TESTING CLEAN - Time 0.9, Loss 1.8589, Acc 0.3210
+[2022/06/27 14:51:53] - TESTING POIS - Time 0.8, Loss 2.4469, Acc 0.1076

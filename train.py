@@ -84,6 +84,7 @@ def get_args():
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
+    parser.add_argument('--window', default=3, type=int)
 
     return parser.parse_args()
 
@@ -132,15 +133,6 @@ def main():
     val_data = train_data.get_user_data(
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
-    val_data_shannon = val_data.shannon_entropy()
-    val_data_shannon /= np.log(args.n_classes)
-    val_data_simpson = val_data.simpson_entropy()
-    val_data_simpson /= np.log(args.n_classes)
-    val_data_berger = val_data.min_entropy()
-    val_data_berger /= np.log(args.n_classes)
-    logger.info((val_data_shannon, val_data_simpson, val_data_berger))
-    logger.info(torch.bincount(val_data.labels))
-    return None
 
     val_data.transformations = None
     clean_val_loader = DataLoader(
@@ -183,7 +175,7 @@ def main():
     output_global_loss_pois, output_global_acc_pois = [], []
 
     # defense
-    output_val_ks_all, output_val_ks_q1, output_val_ks_q3 = [], [], []
+    output_val_ks_all = []
     output_benign_ks_all, output_benign_ks_q1, output_benign_ks_q3 = [], [], []
     output_malicious_ks_all, output_malicious_ks_min = [], []
     output_malicious_ks_q1, output_malicious_ks_q3 = [], []
@@ -282,10 +274,7 @@ def main():
 
     # calculate outlier rule - correct for unbalenced data and current round
     output_val_ks_all.append(val_ks_max)
-    output_val_ks_q3.append(np.quantile(output_val_ks_all, 0.75))
-    output_val_ks_q1.append(np.quantile(output_val_ks_all, 0.25))
-
-    ks_max_cutoff = 2 * output_val_ks_all[-1] * val_data_berger
+    ks_max_cutoff = 2 * output_val_ks_all[-1]
 
     if args.print_all:
         logger.info([ks_max_cutoff] + val_ks)
@@ -506,10 +495,7 @@ def main():
 
         # calculate outlier rule - correct for unbalenced data and current round
         output_val_ks_all.append(val_ks_max)
-        output_val_ks_q3.append(np.quantile(output_val_ks_all, 0.75))
-        output_val_ks_q1.append(np.quantile(output_val_ks_all, 0.25))
-
-        ks_max_cutoff = 2 * output_val_ks_all[-1] * val_data_berger
+        ks_max_cutoff = 2 * output_val_ks_all[-1]
 
         if args.print_all:
             logger.info([ks_max_cutoff] + val_ks)
@@ -533,9 +519,32 @@ def main():
     """ Visualizations """
     logging.disable()
 
+    def _max_smooth_helper(x, i, window):
+        if i < window:
+            out = np.mean(x[:(i + 1)])
+        else:
+            out = np.mean(x[(i - window + 1):(i + 1)])
+        return out
+
+    def max_smooth(x, window):
+        return [_max_smooth_helper(x, i, window) for i in range(len(x))]
+
+    def _max_sample_helper(x, i, window):
+        if i < window:
+            out = np.max(x[:(i + 1)]) * (i + 2) / (i + 1)
+        else:
+            out = np.max(x[(i - window + 1):(i + 1)]) * (window + 1) / window
+        return out
+
+    def max_sample(x, window):
+        return [_max_sample_helper(x, i, window) for i in range(len(x))]
+
     # defense
     plt.figure()
-    plt.plot(range(args.n_rounds + 1), [min((2*x*val_data_berger, 1)) for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [min((2*output_val_ks_all[i] * (i + 1) / (i + 2), 1)) for i in range(len(output_val_ks_all))])
+    plt.plot(range(args.n_rounds + 1), max_sample(output_val_ks_all, args.window))
+    plt.plot(range(args.n_rounds + 1), max_smooth(output_val_ks_all, args.window))
     if args.m_start < args.n_rounds:
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
@@ -546,23 +555,8 @@ def main():
     plt.xlabel('Round')
     plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff-berger', 'malicious-all', 'malicious-low'])
+    plt.legend(labels=['cutoff', 'cutoff-warmup', 'cutoff-window', 'cutoff-smooth', 'malicious-all', 'malicious-low'])
     plt.savefig(os.path.join(args.out_path, 'malicious_defense_old.png'))
-
-    plt.figure()
-    plt.plot(range(args.n_rounds + 1), [min((y + 1.5 * (y - x)) * val_data_berger, 1) for x, y in zip(output_val_ks_q1, output_val_ks_q3)])
-    if args.m_start < args.n_rounds:
-        plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
-        plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
-    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
-    plt.text(args.d_start, 1.0667, 'd-start')
-    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-    plt.text(args.m_start, 1.0333, 'a-start')
-    plt.xlabel('Round')
-    plt.ylim(-.05, 1.1)
-    plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff-berger', 'malicious-all', 'malicious-low'])
-    plt.savefig(os.path.join(args.out_path, 'malicious_defense_new.png'))
 
     # global
     fig, ax1 = plt.subplots()
