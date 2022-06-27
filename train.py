@@ -139,6 +139,8 @@ def main():
     val_data_berger = val_data.min_entropy()
     val_data_berger /= np.log(args.n_classes)
     logger.info((val_data_shannon, val_data_simpson, val_data_berger))
+    logger.info(torch.bincount(val_data.labels))
+    return None
 
     val_data.transformations = None
     clean_val_loader = DataLoader(
