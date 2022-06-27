@@ -25,6 +25,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms as T
 from torch.utils.data import Dataset, DataLoader
+from torchsampler import ImbalancedDatasetSampler as IDS
 
 # source
 sys.path.insert(2, '/home/joe/')
@@ -59,6 +60,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
+    parser.add_argument('--sampler', default=1, type=int)
     parser.add_argument('--n_batch', default=64, type=int)
     parser.add_argument('--mom', default=0.9, type=float)
     parser.add_argument('--wd', default=5e-4, type=float)
@@ -96,7 +98,8 @@ def main():
 
     # output
     args.out_path = (
-        'runs' + '/alpha_val' + str(args.alpha_val) + '--n_rounds' + str(args.n_rounds)
+        ('runs_balanced' if args.sampler else 'runs_imbalanced')
+        + '/alpha_val' + str(args.alpha_val) + '--n_rounds' + str(args.n_rounds)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -136,6 +139,7 @@ def main():
     val_data.transformations = None
     clean_val_loader = DataLoader(
         val_data,
+        sampler=IDS(val_data, labels=val_data.labels) if args.sampler else None,
         batch_size=args.n_batch,
         shuffle=False,
         num_workers=1,
