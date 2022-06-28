@@ -539,12 +539,21 @@ def main():
     def max_sample(x, window):
         return [_max_sample_helper(x, i, window) for i in range(len(x))]
 
+    my_smooth_out = []
+    run_window = 1
+    for i in range(len(output_val_ks_all)):
+        if i == 0:
+            my_smooth_out.append(output_val_ks_all[0])
+        else:
+            run_window += output_val_ks_all[i] >= output_val_ks_all[i - 1]
+            my_smooth_out.append(np.mean(output_val_ks_all[(i - run_window + 1):(i + 1)]))
+
     # defense
     plt.figure()
     plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [min((2*output_val_ks_all[i] * (i + 1) / (i + 2), 1)) for i in range(len(output_val_ks_all))])
-    plt.plot(range(args.n_rounds + 1), max_sample(output_val_ks_all, args.window))
-    plt.plot(range(args.n_rounds + 1), max_smooth(output_val_ks_all, args.window))
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in my_smooth_out])
+    plt.plot(range(args.n_rounds + 1), max_sample([2*x for x in output_val_ks_all], args.window))
+    plt.plot(range(args.n_rounds + 1), max_smooth([2*x for x in output_val_ks_all], args.window))
     if args.m_start < args.n_rounds:
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
@@ -555,7 +564,7 @@ def main():
     plt.xlabel('Round')
     plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff', 'cutoff-warmup', 'cutoff-window', 'cutoff-smooth', 'malicious-all', 'malicious-low'])
+    plt.legend(labels=['cutoff', 'my_smooth', 'cutoff-window', 'cutoff-smooth', 'malicious-all', 'malicious-low'])
     plt.savefig(os.path.join(args.out_path, 'malicious_defense_old.png'))
 
     # global
