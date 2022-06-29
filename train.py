@@ -56,7 +56,7 @@ def get_args():
     parser.add_argument('--n_users', default=100, type=int)
     parser.add_argument('--n_local_data', default=500, type=int)
     parser.add_argument('--p_report', default=0.1, type=float)
-    parser.add_argument('--n_rounds', default=200, type=int)
+    parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
     parser.add_argument('--n_batch', default=64, type=int)
@@ -84,8 +84,8 @@ def get_args():
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--n_warmup', default=9, type=int)
-    parser.add_argument('--p_warmup', default=.9, type=int)
+    parser.add_argument('--n_warmup', default=10, type=int)
+    parser.add_argument('--p_warmup', default=.95, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
@@ -177,10 +177,16 @@ def main():
     output_global_loss_pois, output_global_acc_pois = [], []
 
     # defense
-    output_val_ks_all, output_val_ks_scale = [], []
+    output_val_ks_all, output_val_ks_cut = [], []
     output_benign_ks_all, output_benign_ks_q1, output_benign_ks_q3 = [], [], []
-    output_malicious_ks_all, output_malicious_ks_min = [], []
-    output_malicious_ks_q1, output_malicious_ks_q3 = [], []
+    output_malicious_ks_all, output_malicious_ks_mean, output_malicious_ks_min = [], [], []
+
+    # other
+    output_update_all, output_update_benign, output_update_malicious = 0, 0, 0
+    output_update_prop, output_update_benign_prop = [], []
+
+    output_sensitivity_all, output_specificity_all = [], []
+    output_sensitivity_cum, output_specificity_cum = [], []
 
     """ Import testing data """
     # testing data
@@ -272,22 +278,18 @@ def main():
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
-
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
     c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
     d_scale = (1 / (1 + c_scale))
-    output_val_ks_scale.append(d_scale)
 
-    # smoothing
-    output_val_ks_new = [val_ks_max]
-
-    # calculate outlier rule - correct for unbalenced data and current round
-    ks_max_cutoff = 2 * output_val_ks_all[-1]
+    output_val_ks_cut.append(
+        2 * d_scale * val_ks_max
+    )
 
     if args.print_all:
-        logger.info([ks_max_cutoff] + val_ks)
+        logger.info([output_val_ks_cut[-1]] + val_ks)
 
     # testing
     (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
@@ -318,6 +320,7 @@ def main():
 
         # select subset of users
         user_update_count = 0
+        malicious_update_count = 0
 
         if (r < args.m_start):
 
@@ -336,6 +339,7 @@ def main():
         for i, user_id in enumerate(user_subset_index):
 
             # setup
+            output_update_all += 1
             user_indices = users_data_indices[user_id]
             m_user = m_users[user_id]
 
@@ -399,17 +403,25 @@ def main():
                     lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
+            user_ks_max = max(user_ks)
 
-            user_update = (max(user_ks) < ks_max_cutoff)
+            user_update = (user_ks_max < output_val_ks_cut[-1])
 
             # store output
             if (m_user or args.print_all):
                 logger.info([user_update] + user_ks)
 
             if m_user:
-                output_malicious_ks_all.append(max(user_ks))
+
+                output_update_malicious += user_update
+                output_malicious_ks_all.append(user_ks_max)
+                output_sensitivity_all.append(1 if not user_update else 0)
+
             else:
-                output_benign_ks_all.append(max(user_ks))
+
+                output_update_benign += user_update
+                output_benign_ks_all.append(user_ks_max)
+                output_specificity_all.append(1 if user_update else 0)
 
             # send updates to global
             if ((r < args.d_start) or user_update):
@@ -428,9 +440,14 @@ def main():
         output_benign_ks_q3.append(np.quantile(output_benign_ks_all, 0.75))
         output_benign_ks_q1.append(np.quantile(output_benign_ks_all, 0.25))
 
+        output_sensitivity_cum.append(np.mean(output_sensitivity_all))
+        output_specificity_cum.append(np.mean(output_specificity_all))
+
+        output_update_prop.append(output_update_benign / output_update_all)
+        output_update_benign_prop.append(output_update_benign / (output_update_benign + output_update_malicious))
+
         try:
-            output_malicious_ks_q3.append(np.quantile(output_malicious_ks_all, 0.75))
-            output_malicious_ks_q1.append(np.quantile(output_malicious_ks_all, 0.25))
+            output_malicious_ks_mean.append(np.mean(output_malicious_ks_all))
             output_malicious_ks_min.append(min(output_malicious_ks_all))
         except:
             pass
@@ -505,22 +522,13 @@ def main():
         val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
 
-        # scaling
         d_scale = ((r + 1) / ((r + 1) + c_scale))
-        output_val_ks_scale.append(d_scale)
-
-        # smoothing
-        output_val_ks_new.append(
-            np.mean(
-                output_val_ks_all[np.argmin(output_val_ks_all):]
-            )
+        output_val_ks_cut.append(
+            2 * d_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
         )
 
-        # cutoff
-        ks_max_cutoff = 2 * output_val_ks_all[-1]
-
         if args.print_all:
-            logger.info([ks_max_cutoff] + val_ks)
+            logger.info([output_val_ks_cut[-1]] + val_ks)
 
         # testing
         (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
@@ -542,55 +550,90 @@ def main():
     logging.disable()
 
     # defense
-    plt.figure()
-    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_new])
-    plt.plot(range(args.n_rounds + 1), [min((2*x*y, 1)) for x, y in zip(output_val_ks_new, output_val_ks_scale)])
     if args.m_start < args.n_rounds:
+        plt.figure()
+        plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
+        plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
-    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
-    plt.text(args.d_start, 1.0667, 'd-start')
-    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-    plt.text(args.m_start, 1.0333, 'a-start')
-    plt.xlabel('Round')
-    plt.ylim(-.05, 1.1)
-    plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff', 'cut-smooth', 'cut-smooth-and-scale', 'malicious-all', 'malicious-min'])
-    plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
+        plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+        plt.text(args.d_start, 1.0667, 'd-start')
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
+        plt.xlabel('Round')
+        plt.ylim(-.05, 1.1)
+        plt.title('KS Cutoff Over Communication Rounds')
+        plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
+        plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
 
     plt.figure()
-    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_new])
-    plt.plot(range(args.n_rounds + 1), [min((2*x*y, 1)) for x, y in zip(output_val_ks_new, output_val_ks_scale)])
+    plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
     plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q1)
     plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q3)
     plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
     plt.text(args.d_start, 1.0667, 'd-start')
-    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-    plt.text(args.m_start, 1.0333, 'a-start')
+    if args.m_start < args.n_rounds:
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
     plt.xlabel('Round')
     plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff', 'cut-smooth', 'cut-smooth-and-scale', 'benign-low', 'benign-high'])
+    plt.legend(labels=['cut-old', 'cut-new', 'benign-low', 'benign-high'])
     plt.savefig(os.path.join(args.out_path, 'defense_benign.png'))
+
+    fig, ax1 = plt.subplots()
+    ax1.plot(range(1, args.n_rounds + 1), output_sensitivity_cum, 'g-')
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    if args.m_start < args.n_rounds:
+        ax2 = ax1.twinx()
+        ax2.plot(range(1, args.n_rounds + 1), output_specificity_cum, 'b-')
+        ax2.set_ylabel('Cumulative Specificity', c='b')
+        ax2.set_ylim(ax1.get_ylim())
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
+    ax1.set_xlabel('Round')
+    ax1.set_ylabel('Cumulative Sensitivity', c='g')
+    ax1.set_ylim(-.05, 1.1)
+    plt.title('Defense Success Metrics Over Communication Rounds')
+    plt.savefig(os.path.join(args.out_path, 'defense_eval.png'))
 
     # global
     fig, ax1 = plt.subplots()
-    ax2 = ax1.twinx()
     ax1.plot(range(args.n_rounds + 1), output_global_acc_clean, 'g-')
-    ax2.plot(range(args.n_rounds + 1), output_global_acc_pois, 'r-')
     plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
     plt.text(args.d_start, 1.0667, 'd-start')
-    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-    plt.text(args.m_start, 1.0333, 'a-start')
+    if args.m_start < args.n_rounds:
+        ax2 = ax1.twinx()
+        ax2.plot(range(args.n_rounds + 1), output_global_acc_pois, 'r-')
+        ax2.set_ylabel('Attack Success Rate', c='r')
+        ax2.set_ylim(ax1.get_ylim())
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
     ax1.set_xlabel('Round')
     ax1.set_ylabel('Correct Classification Rate', c='g')
     ax1.set_ylim(-.05, 1.1)
-    ax2.set_ylabel('Attack Success Rate', c='r')
-    ax2.set_ylim(ax1.get_ylim())
     plt.title('Testing Sets Evaluated Over Communication Rounds')
     plt.savefig(os.path.join(args.out_path, 'global_acc_eval.png'))
+
+    fig, ax1 = plt.subplots()
+    ax1.plot(range(1, args.n_rounds + 1), output_update_prop, 'g-')
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    if args.m_start < args.n_rounds:
+        ax2 = ax1.twinx()
+        ax2.plot(range(1, args.n_rounds + 1), output_update_benign_prop, 'b-')
+        ax2.set_ylabel('Benign Update Rate', c='b')
+        ax2.set_ylim(ax1.get_ylim())
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
+    ax1.set_xlabel('Round')
+    ax1.set_ylabel('Update Rate', c='g')
+    ax1.set_ylim(-.05, 1.1)
+    plt.title('Global Update Statistics Over Communication Rounds')
+    plt.savefig(os.path.join(args.out_path, 'global_update_eval.png'))
+
 
 
 if __name__ == "__main__":
