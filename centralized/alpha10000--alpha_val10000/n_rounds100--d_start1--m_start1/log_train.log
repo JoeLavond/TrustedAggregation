@@ -1,0 +1,31 @@
+[2022/06/29 14:26:54] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=100, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=5, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=1, alpha_val=10000, n_warmup=10, p_warmup=0.95, remove_val=1, out_path='centralized/alpha10000--alpha_val10000/n_rounds100--d_start1--m_start1')
+[2022/06/29 14:27:01] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 100 ---
+[2022/06/29 14:27:10] - TESTING CLEAN - Time 0.9, Loss 2.3452, Acc 0.1024
+[2022/06/29 14:27:11] - TESTING POIS - Time 0.8, Loss 2.6139, Acc 0.0000
+[2022/06/29 14:27:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/29 14:27:18] - TRAINING - Epoch: 15, Time 0.4, Loss 1.8630, Acc 0.3164
+[2022/06/29 14:27:19] - [True, 0.569, 0.585, 0.585, 0.49, 0.728, 0.77, 0.581, 0.788, 0.607, 0.627]
+[2022/06/29 14:27:44] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 100, Time: 33.2 ---
+[2022/06/29 14:27:48] - TESTING CLEAN - Time 0.8, Loss 2.1226, Acc 0.2070
+[2022/06/29 14:27:49] - TESTING POIS - Time 0.8, Loss 2.2320, Acc 0.1547
+[2022/06/29 14:27:49] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/29 14:27:56] - TRAINING - Epoch: 15, Time 0.4, Loss 1.7485, Acc 0.3773
+[2022/06/29 14:27:57] - [True, 0.47, 0.47, 0.317, 0.335, 0.169, 0.27, 0.226, 0.274, 0.458, 0.321]
+[2022/06/29 14:28:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 100, Time: 33.6 ---
+[2022/06/29 14:28:27] - TESTING CLEAN - Time 0.9, Loss 1.9702, Acc 0.2744
+[2022/06/29 14:28:28] - TESTING POIS - Time 0.8, Loss 2.2170, Acc 0.1578
+[2022/06/29 14:28:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/29 14:28:35] - TRAINING - Epoch: 15, Time 0.4, Loss 1.6158, Acc 0.4280
+[2022/06/29 14:28:35] - [True, 0.369, 0.312, 0.25, 0.137, 0.163, 0.246, 0.107, 0.272, 0.347, 0.115]

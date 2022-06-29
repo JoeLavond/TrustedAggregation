@@ -1,0 +1,21 @@
+[2022/06/29 14:27:34] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=100, alpha=1, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=5, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=1, alpha_val=1, n_warmup=10, p_warmup=0.95, remove_val=1, out_path='centralized/alpha1--alpha_val1/n_rounds100--d_start1--m_start1')
+[2022/06/29 14:27:41] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 100 ---
+[2022/06/29 14:27:50] - TESTING CLEAN - Time 0.8, Loss 2.4391, Acc 0.1000
+[2022/06/29 14:27:51] - TESTING POIS - Time 0.7, Loss 2.4559, Acc 0.0000
+[2022/06/29 14:27:51] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/29 14:27:57] - TRAINING - Epoch: 15, Time 0.4, Loss 1.2466, Acc 0.5778
+[2022/06/29 14:27:58] - [True, 1.0, 0.893, 0.998, 1.0, 0.95, 0.466, 0.988, 0.96, 0.694, 0.853]
+[2022/06/29 14:28:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 100, Time: 30.8 ---
+[2022/06/29 14:28:25] - TESTING CLEAN - Time 0.7, Loss 2.1978, Acc 0.1820
+[2022/06/29 14:28:26] - TESTING POIS - Time 0.8, Loss 2.1782, Acc 0.2391
+[2022/06/29 14:28:26] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/06/29 14:28:32] - TRAINING - Epoch: 15, Time 0.4, Loss 1.2017, Acc 0.5838
+[2022/06/29 14:28:33] - [True, 0.863, 0.427, 0.784, 1.0, 0.484, 0.335, 0.413, 0.71, 0.375, 0.492]
