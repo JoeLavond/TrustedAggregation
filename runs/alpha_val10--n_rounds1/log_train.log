@@ -1,9 +1,0 @@
-[2022/06/27 13:21:13] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=1, alpha=10000, sampler=1, n_batch=64, mom=0.9, wd=0.0005, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=5, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, alpha_val=10, m_start=2, d_start=2, out_path='runs/alpha_val10--n_rounds1')
-[2022/06/27 13:21:15] - tensor([37, 74, 49, 74, 55, 27, 74, 52, 26, 28])
-[2022/06/27 13:21:15] - Note: NumExpr detected 48 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
-[2022/06/27 13:21:15] - NumExpr defaulting to 8 threads.
-[2022/06/27 13:21:20] - 
-
---- GLOBAL VALIDATION - Round: 0 of 1 ---
-[2022/06/27 13:21:29] - TESTING CLEAN - Time 0.9, Loss 2.3452, Acc 0.1024
-[2022/06/27 13:21:30] - TESTING POIS - Time 0.8, Loss 2.6139, Acc 0.0000

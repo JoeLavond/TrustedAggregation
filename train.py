@@ -84,7 +84,9 @@ def get_args():
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--window', default=3, type=int)
+    parser.add_argument('--n_warmup', default=9, type=int)
+    parser.add_argument('--p_warmup', default=.9, type=int)
+    parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
 
@@ -175,7 +177,7 @@ def main():
     output_global_loss_pois, output_global_acc_pois = [], []
 
     # defense
-    output_val_ks_all = []
+    output_val_ks_all, output_val_ks_scale = [], []
     output_benign_ks_all, output_benign_ks_q1, output_benign_ks_q3 = [], [], []
     output_malicious_ks_all, output_malicious_ks_min = [], []
     output_malicious_ks_q1, output_malicious_ks_q3 = [], []
@@ -270,10 +272,18 @@ def main():
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
+
     val_ks_max = max(val_ks)
+    output_val_ks_all.append(val_ks_max)
+
+    c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
+    d_scale = (1 / (1 + c_scale))
+    output_val_ks_scale.append(d_scale)
+
+    # smoothing
+    output_val_ks_new = [val_ks_max]
 
     # calculate outlier rule - correct for unbalenced data and current round
-    output_val_ks_all.append(val_ks_max)
     ks_max_cutoff = 2 * output_val_ks_all[-1]
 
     if args.print_all:
@@ -311,13 +321,13 @@ def main():
 
         if (r < args.m_start):
 
-            user_subset_index = torch.randperm(args.n_users - args.n_malicious)[:int(args.n_users * args.p_report)]
+            user_subset_index = torch.randperm(args.n_users - args.n_malicious - args.remove_val)[:int(args.n_users * args.p_report)]
             user_subset_index += args.n_malicious  # no malicious users
 
         else:
 
             # force malicious users in subset if past round start
-            user_subset_index = torch.randperm(args.n_users - args.n_malicious)[:int(args.n_users * args.p_report)]
+            user_subset_index = torch.randperm(args.n_users - args.n_malicious - args.remove_val)[:int(args.n_users * args.p_report)]
             user_subset_index += args.n_malicious
             user_subset_index = [i if i < args.n_malicious else user_subset_index[i] for i in range(len(user_subset_index))]
 
@@ -491,10 +501,22 @@ def main():
                 lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
         ]
-        val_ks_max = max(val_ks)
 
-        # calculate outlier rule - correct for unbalenced data and current round
+        val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
+
+        # scaling
+        d_scale = ((r + 1) / ((r + 1) + c_scale))
+        output_val_ks_scale.append(d_scale)
+
+        # smoothing
+        output_val_ks_new.append(
+            np.mean(
+                output_val_ks_all[np.argmax(output_val_ks_all):]
+            )
+        )
+
+        # cutoff
         ks_max_cutoff = 2 * output_val_ks_all[-1]
 
         if args.print_all:
@@ -519,41 +541,11 @@ def main():
     """ Visualizations """
     logging.disable()
 
-    def _max_smooth_helper(x, i, window):
-        if i < window:
-            out = np.mean(x[:(i + 1)])
-        else:
-            out = np.mean(x[(i - window + 1):(i + 1)])
-        return out
-
-    def max_smooth(x, window):
-        return [_max_smooth_helper(x, i, window) for i in range(len(x))]
-
-    def _max_sample_helper(x, i, window):
-        if i < window:
-            out = np.max(x[:(i + 1)]) * (i + 2) / (i + 1)
-        else:
-            out = np.max(x[(i - window + 1):(i + 1)]) * (window + 1) / window
-        return out
-
-    def max_sample(x, window):
-        return [_max_sample_helper(x, i, window) for i in range(len(x))]
-
-    my_smooth_out = []
-    run_window = 1
-    for i in range(len(output_val_ks_all)):
-        if i == 0:
-            my_smooth_out.append(output_val_ks_all[0])
-        else:
-            run_window += output_val_ks_all[i] >= output_val_ks_all[i - 1]
-            my_smooth_out.append(np.mean(output_val_ks_all[(i - run_window + 1):(i + 1)]))
-
     # defense
     plt.figure()
     plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in my_smooth_out])
-    plt.plot(range(args.n_rounds + 1), max_sample([2*x for x in output_val_ks_all], args.window))
-    plt.plot(range(args.n_rounds + 1), max_smooth([2*x for x in output_val_ks_all], args.window))
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_new])
+    plt.plot(range(args.n_rounds + 1), [min((2*x*y, 1)) for x, y in zip(output_val_ks_new, output_val_ks_scale)])
     if args.m_start < args.n_rounds:
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
@@ -564,8 +556,24 @@ def main():
     plt.xlabel('Round')
     plt.ylim(-.05, 1.1)
     plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cutoff', 'my_smooth', 'cutoff-window', 'cutoff-smooth', 'malicious-all', 'malicious-low'])
-    plt.savefig(os.path.join(args.out_path, 'malicious_defense_old.png'))
+    plt.legend(labels=['cutoff', 'cut-smooth', 'cut-smooth-and-scale', 'malicious-all', 'malicious-min'])
+    plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
+
+    plt.figure()
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_all])
+    plt.plot(range(args.n_rounds + 1), [min((2*x, 1)) for x in output_val_ks_new])
+    plt.plot(range(args.n_rounds + 1), [min((2*x*y, 1)) for x, y in zip(output_val_ks_new, output_val_ks_scale)])
+    plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q1)
+    plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q3)
+    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+    plt.text(args.d_start, 1.0667, 'd-start')
+    plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+    plt.text(args.m_start, 1.0333, 'a-start')
+    plt.xlabel('Round')
+    plt.ylim(-.05, 1.1)
+    plt.title('KS Cutoff Over Communication Rounds')
+    plt.legend(labels=['cutoff', 'cut-smooth', 'cut-smooth-and-scale', 'benign-low', 'benign-high'])
+    plt.savefig(os.path.join(args.out_path, 'defense_benign.png'))
 
     # global
     fig, ax1 = plt.subplots()
