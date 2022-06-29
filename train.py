@@ -512,7 +512,7 @@ def main():
         # smoothing
         output_val_ks_new.append(
             np.mean(
-                output_val_ks_all[np.argmax(output_val_ks_all):]
+                output_val_ks_all[np.argmin(output_val_ks_all):]
             )
         )
 
