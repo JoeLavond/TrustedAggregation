@@ -70,7 +70,7 @@ def get_args():
     parser.add_argument('--n_epochs_pois', default=15, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
-    parser.add_argument('--n_epochs', default=5, type=int)
+    parser.add_argument('--n_epochs', default=10, type=int)
     parser.add_argument('--lr', default=0.01, type=float)
 
     """ Data poisoning """
@@ -373,7 +373,7 @@ def main():
             (user_train_loss, user_train_acc) = gu.training(
                 user_loader, user_model, cost, user_opt,
                 args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
-                logger=(logger if m_user else None), print_all=args.print_all
+                logger=(logger if (m_user or args.print_all) else None), print_all=args.print_all
             )
 
             # malicious scaling of model weights
@@ -422,6 +422,18 @@ def main():
                 output_update_benign += user_update
                 output_benign_ks_all.append(user_ks_max)
                 output_specificity_all.append(1 if user_update else 0)
+
+            # evaluate
+            if args.print_all:
+                (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+                    clean_test_loader, global_model, cost, args.gpu_start,
+                    logger=logger, title='testing clean'
+                )
+
+                (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+                    pois_test_loader, global_model, cost, args.gpu_start,
+                    logger=logger, title='testing pois'
+                )
 
             # send updates to global
             if ((r < args.d_start) or user_update):
@@ -551,10 +563,14 @@ def main():
 
     # defense
     if args.m_start < args.n_rounds:
+
         plt.figure()
         plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
         plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
-        plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
+        if args.dba:
+            plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_mean)
+        else:
+            plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
         plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
         plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
         plt.text(args.d_start, 1.0667, 'd-start')
@@ -565,6 +581,22 @@ def main():
         plt.title('KS Cutoff Over Communication Rounds')
         plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
         plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
+
+        fig, ax1 = plt.subplots()
+        ax1.plot(range(1, args.n_rounds + 1), output_sensitivity_cum, 'g-')
+        plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+        plt.text(args.d_start, 1.0667, 'd-start')
+        ax2 = ax1.twinx()
+        ax2.plot(range(1, args.n_rounds + 1), output_specificity_cum, 'b-')
+        ax2.set_ylabel('Cumulative Specificity', c='b')
+        ax2.set_ylim(ax1.get_ylim())
+        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+        plt.text(args.m_start, 1.0333, 'a-start')
+        ax1.set_xlabel('Round')
+        ax1.set_ylabel('Cumulative Sensitivity', c='g')
+        ax1.set_ylim(-.05, 1.1)
+        plt.title('Defense Success Metrics Over Communication Rounds')
+        plt.savefig(os.path.join(args.out_path, 'defense_eval.png'))
 
     plt.figure()
     plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
@@ -581,23 +613,6 @@ def main():
     plt.title('KS Cutoff Over Communication Rounds')
     plt.legend(labels=['cut-old', 'cut-new', 'benign-low', 'benign-high'])
     plt.savefig(os.path.join(args.out_path, 'defense_benign.png'))
-
-    fig, ax1 = plt.subplots()
-    ax1.plot(range(1, args.n_rounds + 1), output_sensitivity_cum, 'g-')
-    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
-    plt.text(args.d_start, 1.0667, 'd-start')
-    if args.m_start < args.n_rounds:
-        ax2 = ax1.twinx()
-        ax2.plot(range(1, args.n_rounds + 1), output_specificity_cum, 'b-')
-        ax2.set_ylabel('Cumulative Specificity', c='b')
-        ax2.set_ylim(ax1.get_ylim())
-        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-        plt.text(args.m_start, 1.0333, 'a-start')
-    ax1.set_xlabel('Round')
-    ax1.set_ylabel('Cumulative Sensitivity', c='g')
-    ax1.set_ylim(-.05, 1.1)
-    plt.title('Defense Success Metrics Over Communication Rounds')
-    plt.savefig(os.path.join(args.out_path, 'defense_eval.png'))
 
     # global
     fig, ax1 = plt.subplots()
