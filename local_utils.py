@@ -84,13 +84,17 @@ class CustomDataset(Dataset):
             self.transformations
         )
 
-    def shannon_entropy(self):
+    def shannon_entropy(self, agg=1):
 
         # setup
         label_counts = torch.bincount(self.labels).cpu().numpy()
         label_props = label_counts / sum(label_counts)
+        temp = label_props * np.log(label_props)
 
-        return -1 * sum(label_props * np.log(label_props))
+        if agg:
+            return -1 * sum(temp)
+        else:
+            return -1 * len(temp) * temp
 
     def simpson_entropy(self):
 
@@ -203,7 +207,7 @@ class CustomDataset(Dataset):
                 model, target, n_batch, gpu_start,
                 user_id=user_id
             )
-            #to_pois.view_imgs()
+            to_pois.view_imgs()
 
             user_images[:n_pois] = to_pois.images
             user_labels[:n_pois] = to_pois.labels
@@ -294,7 +298,7 @@ class BasicStamp(nn.Module):
 
     def forward(self, x, user_id=-1):
 
-        if not self.dba:
+        if (not self.dba or user_id == -1):
 
             # apply global stamp
             for i in range(self.n_malicious):

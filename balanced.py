@@ -98,7 +98,7 @@ def main():
 
     # output
     args.out_path = (
-        'runs' + '/alpha_val' + str(args.alpha_val) + '--n_rounds' + str(args.n_rounds)
+        'runs' + '/alpha_val' + str(args.alpha_val) + '--sampler' + str(args.sampler) + '/n_rounds' + str(args.n_rounds)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -134,6 +134,14 @@ def main():
     )
     label_counts = torch.bincount(val_data.labels, minlength=args.n_classes)
     logger.info(label_counts)
+
+    val_data_entropy = val_data.shannon_entropy(agg=0)
+    val_data_entropy /= np.log(args.n_classes)
+    logger.info(val_data_entropy)
+
+    val_data_entropy2 = val_data.shannon_entropy(agg=1)
+    val_data_entropy2 /= np.log(args.n_classes)
+    logger.info(val_data_entropy2)
 
     val_data.transformations = None
     clean_val_loader = DataLoader(
@@ -269,6 +277,9 @@ def main():
     ]
 
     # store
+    benign_ks_max = []
+    benign_ks_max_all = []
+
     benign_ks_mean = []
     benign_ks_std = []
     benign_ks_ind = []
@@ -324,6 +335,7 @@ def main():
 
         """ Local model training """
         temp_benign_ks_all = []
+        temp_benign_ks_max = []
         for i, user_id in enumerate(user_subset_index):
 
             # setup
@@ -392,6 +404,7 @@ def main():
             ]
 
             temp_benign_ks_all.append(user_ks)
+            temp_benign_ks_max.append(max(user_ks))
             benign_ks_ind.append(np.argmax(user_ks))
 
             # send updates to global
@@ -411,6 +424,9 @@ def main():
         temp_benign_ks_all = np.array(temp_benign_ks_all)
         benign_ks_mean.append(np.mean(temp_benign_ks_all, axis=0))
         benign_ks_std.append(np.std(temp_benign_ks_all, axis=0))
+
+        benign_ks_max_all += temp_benign_ks_max
+        benign_ks_max.append(max(temp_benign_ks_max))
 
         # update global weights
         if (user_update_count > 0):
@@ -508,22 +524,27 @@ def main():
     val_ks_all = np.array(val_ks_all)
     val_ks_ind = np.array(val_ks_ind)
 
-    # Argmax counts
-    plt.figure()
-    plt.bar(x=range(args.n_classes), height=np.bincount(benign_ks_ind, minlength=args.n_classes))
-    plt.title('Benign KS Argmax Counts')
-    plt.xlabel('Class')
-    plt.savefig(os.path.join(args.out_path, 'hist_argmax_benign.png'))
-    plt.close()
-
-    plt.figure()
-    plt.bar(x=range(args.n_classes), height=np.bincount(val_ks_ind, minlength=args.n_classes))
-    plt.title(f'Val KS Argmax Counts: {label_counts}')
-    plt.xlabel('Class')
-    plt.savefig(os.path.join(args.out_path, 'hist_argmax_val.png'))
-    plt.close()
 
     # KS over rounds
+    for i in range(len(val_ks_all)):
+        val_ks_all[i, :] *= (np.ones_like(val_data_entropy) - np.abs(np.ones_like(val_data_entropy) - val_data_entropy))
+
+    plt.figure()
+    plt.bar(x=np.arange(.25, args.n_classes + .25, 1), height=np.bincount(benign_ks_ind, minlength=args.n_classes))
+    plt.bar(x=np.arange(-.25, args.n_classes - .25, 1), height=np.bincount(val_ks_all.argmax(axis=1), minlength=args.n_classes))
+    plt.title('Scaled KS Argmax Counts')
+    plt.xlabel('Class')
+    plt.savefig(os.path.join(args.out_path, 'hist_argmax.png'))
+    plt.close()
+
+    plt.figure()
+    sns.kdeplot(benign_ks_max_all)
+    sns.kdeplot(val_ks_all.max(axis=1))
+    plt.legend(labels=['benign', 'val'])
+    plt.title(f'Scaled Class KS Max Values')
+    plt.savefig(os.path.join(args.out_path, f'hist_max.png'))
+    plt.close()
+
     for i in range(args.n_classes):
 
         # setup
@@ -537,7 +558,7 @@ def main():
         plt.plot(range(len(benign_ks_low)), benign_ks_low)
         plt.plot(range(len(benign_ks_high)), benign_ks_high)
         plt.legend(labels=['val', 'benign-low', 'benign-high'])
-        plt.title(f'Class {i} KS Values, Val Class Prop {label_counts[i] / sum(label_counts)}')
+        plt.title(f'Scaled Class {i} KS Values, Val Class Prop {label_counts[i] / sum(label_counts):.3f}, Entropy {val_data_entropy[i]:.3f}')
         plt.savefig(os.path.join(args.out_path, f'ks_class_{i}.png'))
         plt.close()
 
