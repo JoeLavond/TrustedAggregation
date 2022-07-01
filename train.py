@@ -136,6 +136,9 @@ def main():
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
 
+    val_data_entropy = val_data.shannon_entropy(agg=0)
+    val_data_entropy /= np.log(args.n_classes)
+
     val_data.transformations = None
     clean_val_loader = DataLoader(
         val_data,
@@ -216,7 +219,6 @@ def main():
     # poison subset of test data
     pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
-    pois_test_data.view_imgs()
 
     pois_test_loader = DataLoader(
                 pois_test_data,
@@ -279,6 +281,13 @@ def main():
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
+    print(val_ks)
+
+    val_ks = [
+        val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
+    ]
+    print(val_ks)
+
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
@@ -404,8 +413,8 @@ def main():
                     lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
-            user_ks_max = max(user_ks)
 
+            user_ks_max = max(user_ks)
             user_update = (user_ks_max < output_val_ks_cut[-1])
 
             # store output
@@ -530,6 +539,10 @@ def main():
             round(
                 lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
+        ]
+
+        val_ks = [
+            val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
         ]
 
         val_ks_max = max(val_ks)
