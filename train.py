@@ -562,57 +562,59 @@ def main():
     logging.disable()
 
     # defense
-    if args.m_start < args.n_rounds:
+    if args.d_start < args.n_rounds:
+
+        if args.m_start < args.n_rounds:
+
+            plt.figure()
+            plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
+            plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
+            if args.dba:
+                plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_mean)
+            else:
+                plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
+            plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
+            plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+            plt.text(args.d_start, 1.0667, 'd-start')
+            plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+            plt.text(args.m_start, 1.0333, 'a-start')
+            plt.xlabel('Round')
+            plt.ylim(-.05, 1.1)
+            plt.title('KS Cutoff Over Communication Rounds')
+            plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
+            plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
+
+            fig, ax1 = plt.subplots()
+            ax1.plot(range(1, args.n_rounds + 1), output_sensitivity_cum, 'g-')
+            plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
+            plt.text(args.d_start, 1.0667, 'd-start')
+            ax2 = ax1.twinx()
+            ax2.plot(range(1, args.n_rounds + 1), output_specificity_cum, 'b-')
+            ax2.set_ylabel('Cumulative Specificity', c='b')
+            ax2.set_ylim(ax1.get_ylim())
+            plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+            plt.text(args.m_start, 1.0333, 'a-start')
+            ax1.set_xlabel('Round')
+            ax1.set_ylabel('Cumulative Sensitivity', c='g')
+            ax1.set_ylim(-.05, 1.1)
+            plt.title('Defense Success Metrics Over Communication Rounds')
+            plt.savefig(os.path.join(args.out_path, 'defense_eval.png'))
 
         plt.figure()
         plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
         plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
-        if args.dba:
-            plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_mean)
-        else:
-            plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
-        plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
+        plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q1)
+        plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q3)
         plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
         plt.text(args.d_start, 1.0667, 'd-start')
-        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-        plt.text(args.m_start, 1.0333, 'a-start')
+        if args.m_start < args.n_rounds:
+            plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
+            plt.text(args.m_start, 1.0333, 'a-start')
         plt.xlabel('Round')
         plt.ylim(-.05, 1.1)
         plt.title('KS Cutoff Over Communication Rounds')
-        plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
-        plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
-
-        fig, ax1 = plt.subplots()
-        ax1.plot(range(1, args.n_rounds + 1), output_sensitivity_cum, 'g-')
-        plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
-        plt.text(args.d_start, 1.0667, 'd-start')
-        ax2 = ax1.twinx()
-        ax2.plot(range(1, args.n_rounds + 1), output_specificity_cum, 'b-')
-        ax2.set_ylabel('Cumulative Specificity', c='b')
-        ax2.set_ylim(ax1.get_ylim())
-        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-        plt.text(args.m_start, 1.0333, 'a-start')
-        ax1.set_xlabel('Round')
-        ax1.set_ylabel('Cumulative Sensitivity', c='g')
-        ax1.set_ylim(-.05, 1.1)
-        plt.title('Defense Success Metrics Over Communication Rounds')
-        plt.savefig(os.path.join(args.out_path, 'defense_eval.png'))
-
-    plt.figure()
-    plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
-    plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
-    plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q1)
-    plt.plot(range(1, args.n_rounds + 1), output_benign_ks_q3)
-    plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
-    plt.text(args.d_start, 1.0667, 'd-start')
-    if args.m_start < args.n_rounds:
-        plt.vlines(args.m_start, -.05, 1, 'r', 'dashed')
-        plt.text(args.m_start, 1.0333, 'a-start')
-    plt.xlabel('Round')
-    plt.ylim(-.05, 1.1)
-    plt.title('KS Cutoff Over Communication Rounds')
-    plt.legend(labels=['cut-old', 'cut-new', 'benign-low', 'benign-high'])
-    plt.savefig(os.path.join(args.out_path, 'defense_benign.png'))
+        plt.legend(labels=['cut-old', 'cut-new', 'benign-low', 'benign-high'])
+        plt.savefig(os.path.join(args.out_path, 'defense_benign.png'))
 
     # global
     fig, ax1 = plt.subplots()
