@@ -98,7 +98,7 @@ def main():
 
     # output
     args.out_path = (
-        'runs' + '/alpha_val' + str(args.alpha_val) + '--sampler' + str(args.sampler) + '/n_rounds' + str(args.n_rounds)
+        'runs_balenced' + '/alpha_val' + str(args.alpha_val) + '--sampler' + str(args.sampler) + '/n_rounds' + str(args.n_rounds)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)

@@ -92,9 +92,11 @@ class CustomDataset(Dataset):
         temp = label_props * np.log(label_props)
 
         if agg:
-            return -1 * sum(temp)
+            entropy = -1 * sum(temp)
         else:
-            return -1 * len(temp) * temp
+            entropy = -1 * len(temp) * temp
+
+        return entropy
 
     def simpson_entropy(self):
 
@@ -104,13 +106,17 @@ class CustomDataset(Dataset):
 
         return -1 * np.log(sum([x ** 2 for x in label_props]))
 
-    def min_entropy(self):
+    def min_entropy(self, agg=1):
 
         # setup
         label_counts = torch.bincount(self.labels).cpu().numpy()
+        label_counts -= (1 - agg)
         label_props = label_counts / sum(label_counts)
 
-        entropy = -1 * np.log(max(label_props))
+        if agg:
+            entropy = -1 * np.log(max(label_props))
+        else:
+            entropy = -1 * np.log(label_props)
 
         return entropy
 

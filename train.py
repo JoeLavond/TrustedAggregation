@@ -588,10 +588,12 @@ def main():
             plt.figure()
             plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
             plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
-            if args.dba:
+            if args.n_malicious > 1:
                 plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_mean)
+                plt.legend(labels=['cut-old', 'cut-new', 'malicious-mean', 'malicious-min'])
             else:
                 plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
+                plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
             plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
             plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
             plt.text(args.d_start, 1.0667, 'd-start')
@@ -600,7 +602,6 @@ def main():
             plt.xlabel('Round')
             plt.ylim(-.05, 1.1)
             plt.title('KS Cutoff Over Communication Rounds')
-            plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
             plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
 
             fig, ax1 = plt.subplots()
