@@ -1,0 +1,44 @@
+[2022/07/05 08:02:30] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=10, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=9, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=1, d_scale=1, alpha_val=10000, n_warmup=1, p_warmup=0.9, remove_val=1, out_path='centralized/alpha10000--alpha_val10000--d_scale1/n_rounds10--d_start1--m_start1--n_malicious9')
+[2022/07/05 08:02:37] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 10 ---
+[2022/07/05 08:02:49] - TESTING CLEAN - Time 0.9, Loss 2.3452, Acc 0.1024
+[2022/07/05 08:02:49] - TESTING POIS - Time 0.8, Loss 2.6139, Acc 0.0000
+[2022/07/05 08:02:49] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/05 08:02:57] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8855, Acc 0.3103
+[2022/07/05 08:02:57] - [True, 0.845, 0.419, 0.468, 0.633, 0.554, 0.671, 0.454, 0.651, 0.641, 0.599]
+[2022/07/05 08:02:57] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/05 08:03:05] - TRAINING - Epoch: 15, Time 0.5, Loss 1.7604, Acc 0.3407
+[2022/07/05 08:03:05] - [True, 0.78, 0.585, 0.565, 0.562, 0.492, 0.433, 0.591, 0.605, 0.583, 0.615]
+[2022/07/05 08:03:05] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/05 08:03:13] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8996, Acc 0.3239
+[2022/07/05 08:03:13] - [True, 0.702, 0.51, 0.645, 0.444, 0.556, 0.74, 0.496, 0.425, 0.54, 0.617]
+[2022/07/05 08:03:13] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/05 08:03:21] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8026, Acc 0.3475
+[2022/07/05 08:03:21] - [True, 0.946, 0.567, 0.514, 0.478, 0.462, 0.635, 0.577, 0.569, 0.573, 0.558]
+[2022/07/05 08:03:22] - 
+
+--- LOCAL TRAINING - Local Update: 5 of 10, User: 4, Malicious: Yes ---
+[2022/07/05 08:03:29] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8214, Acc 0.3475
+[2022/07/05 08:03:29] - [True, 0.599, 0.411, 0.698, 0.589, 0.669, 0.438, 0.512, 0.552, 0.635, 0.694]
+[2022/07/05 08:03:29] - 
+
+--- LOCAL TRAINING - Local Update: 6 of 10, User: 5, Malicious: Yes ---
+[2022/07/05 08:03:37] - TRAINING - Epoch: 15, Time 0.5, Loss 1.7750, Acc 0.3725
+[2022/07/05 08:03:37] - [True, 0.861, 0.431, 0.861, 0.601, 0.512, 0.55, 0.571, 0.556, 0.585, 0.627]
+[2022/07/05 08:03:38] - 
+
+--- LOCAL TRAINING - Local Update: 7 of 10, User: 6, Malicious: Yes ---
+[2022/07/05 08:03:45] - TRAINING - Epoch: 15, Time 0.5, Loss 1.8073, Acc 0.3434
+[2022/07/05 08:03:46] - [True, 0.627, 0.52, 0.478, 0.571, 0.54, 0.661, 0.601, 0.55, 0.526, 0.496]
+[2022/07/05 08:03:46] - 
+
+--- LOCAL TRAINING - Local Update: 8 of 10, User: 7, Malicious: Yes ---
