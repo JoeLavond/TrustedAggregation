@@ -83,9 +83,10 @@ def get_args():
     parser.add_argument('--gap', default=1, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
+    parser.add_argument('--d_scale', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--n_warmup', default=10, type=int)
-    parser.add_argument('--p_warmup', default=.95, type=int)
+    parser.add_argument('--n_warmup', default=1, type=int)
+    parser.add_argument('--p_warmup', default=.90, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
@@ -100,8 +101,8 @@ def main():
     # output
     args.out_path = (
         ('distributed' if args.dba else 'centralized')
-        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start)
+        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val) + '--d_scale' + str(args.d_scale)
+        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -281,21 +282,23 @@ def main():
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
-    print(val_ks)
 
-    val_ks = [
-        val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
-    ]
-    print(val_ks)
+    if args.d_scale:
+        val_ks = [
+            val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
+        ]
 
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
-    c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
-    d_scale = (1 / (1 + c_scale))
+    if args.n_warmup > 1:
+        c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
+        w_scale = (1 / (1 + c_scale))
+    else:
+        w_scale = 1
 
     output_val_ks_cut.append(
-        2 * d_scale * val_ks_max
+        2 * w_scale * val_ks_max
     )
 
     if args.print_all:
@@ -541,16 +544,18 @@ def main():
             ) for c in range(global_output_layer.shape[-1])
         ]
 
-        val_ks = [
-            val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
-        ]
+        if args.d_scale:
+            val_ks = [
+                val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
+            ]
 
         val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
 
-        d_scale = ((r + 1) / ((r + 1) + c_scale))
+        w_scale = ((r + 1) / ((r + 1) + c_scale)) if args.n_warmup > 1 else 1
+
         output_val_ks_cut.append(
-            2 * d_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
+            2 * w_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
         )
 
         if args.print_all:
