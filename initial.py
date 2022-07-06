@@ -83,9 +83,8 @@ def get_args():
     parser.add_argument('--gap', default=1, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
+    parser.add_argument('--d_scale', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--n_warmup', default=10, type=int)
-    parser.add_argument('--p_warmup', default=.95, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
@@ -99,9 +98,9 @@ def main():
 
     # output
     args.out_path = (
-        ('distributed' if args.dba else 'centralized')
-        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start)
+        'runs'
+        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val) + '--d_scale' + str(args.d_scale)
+        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -135,6 +134,9 @@ def main():
     val_data = train_data.get_user_data(
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
+
+    val_data_entropy = val_data.shannon_entropy(agg=0)
+    val_data_entropy /= np.log(args.n_classes)
 
     val_data.transformations = None
     clean_val_loader = DataLoader(
@@ -170,6 +172,37 @@ def main():
         gu.StdChannels(cifar_mean, cifar_std),
         resnet.resnet18(pretrained=False)
     ).cuda(args.gpu_start)
+
+    global_model = global_model.train()
+    user_data = train_data.get_user_data(
+        users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
+    )
+
+
+
+    """ EXPERIMENTAL: ONE EPOCH OF TRUSTED TRAINING FOR INITIALIZATION """
+    user_loader = DataLoader(
+        user_data,
+        batch_size=args.n_batch,
+        shuffle=True,
+        num_workers=1,
+        pin_memory=True
+    )
+
+    user_opt = optim.SGD(
+        global_model.parameters(),
+        lr=args.lr, weight_decay=args.wd, momentum=args.wd
+    )
+
+    # train local model
+    (user_train_loss, user_train_acc) = gu.training(
+        user_loader, global_model, cost, user_opt,
+        1, args.gpu_start,
+        logger=(logger if args.print_all else None), print_all=args.print_all
+    )
+
+
+
     global_model = global_model.eval()
 
     # global
@@ -216,7 +249,6 @@ def main():
     # poison subset of test data
     pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
-    pois_test_data.view_imgs()
 
     pois_test_loader = DataLoader(
                 pois_test_data,
@@ -279,14 +311,17 @@ def main():
             lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
+
+    if args.d_scale:
+        val_ks = [
+            val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
+        ]
+
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
-    c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
-    d_scale = (1 / (1 + c_scale))
-
     output_val_ks_cut.append(
-        2 * d_scale * val_ks_max
+        2 * val_ks_max
     )
 
     if args.print_all:
@@ -404,8 +439,8 @@ def main():
                     lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
-            user_ks_max = max(user_ks)
 
+            user_ks_max = max(user_ks)
             user_update = (user_ks_max < output_val_ks_cut[-1])
 
             # store output
@@ -532,12 +567,16 @@ def main():
             ) for c in range(global_output_layer.shape[-1])
         ]
 
+        if args.d_scale:
+            val_ks = [
+                val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
+            ]
+
         val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
 
-        d_scale = ((r + 1) / ((r + 1) + c_scale))
         output_val_ks_cut.append(
-            2 * d_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
+            2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
         )
 
         if args.print_all:
@@ -570,10 +609,12 @@ def main():
             plt.figure()
             plt.plot(range(args.n_rounds + 1), [2*x for x in output_val_ks_all])
             plt.plot(range(args.n_rounds + 1), output_val_ks_cut)
-            if args.dba:
+            if args.n_malicious > 1:
                 plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_mean)
+                plt.legend(labels=['cut-old', 'cut-new', 'malicious-mean', 'malicious-min'])
             else:
                 plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_all)
+                plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
             plt.plot(range(args.m_start, args.n_rounds + 1), output_malicious_ks_min)
             plt.vlines(args.d_start, -.05, 1, 'b', 'dashed')
             plt.text(args.d_start, 1.0667, 'd-start')
@@ -582,7 +623,6 @@ def main():
             plt.xlabel('Round')
             plt.ylim(-.05, 1.1)
             plt.title('KS Cutoff Over Communication Rounds')
-            plt.legend(labels=['cut-old', 'cut-new', 'malicious-all', 'malicious-min'])
             plt.savefig(os.path.join(args.out_path, 'defense_malicious.png'))
 
             fig, ax1 = plt.subplots()

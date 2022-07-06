@@ -85,8 +85,6 @@ def get_args():
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--d_scale', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--n_warmup', default=1, type=int)
-    parser.add_argument('--p_warmup', default=.90, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
@@ -291,14 +289,8 @@ def main():
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
-    if args.n_warmup > 1:
-        c_scale = args.n_warmup * (1 - args.p_warmup) / args.p_warmup
-        w_scale = (1 / (1 + c_scale))
-    else:
-        w_scale = 1
-
     output_val_ks_cut.append(
-        2 * w_scale * val_ks_max
+        2 * val_ks_max
     )
 
     if args.print_all:
@@ -552,10 +544,8 @@ def main():
         val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
 
-        w_scale = ((r + 1) / ((r + 1) + c_scale)) if args.n_warmup > 1 else 1
-
         output_val_ks_cut.append(
-            2 * w_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
+            2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
         )
 
         if args.print_all:
