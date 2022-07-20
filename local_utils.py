@@ -94,7 +94,7 @@ class CustomDataset(Dataset):
         if agg:
             entropy = -1 * sum(temp)
         else:
-            entropy = -1 * len(temp) * temp
+            entropy = -1 * temp
 
         return entropy
 
