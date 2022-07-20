@@ -20,7 +20,7 @@ def abs_scaling(x, c):
     temp = np.array([y * np.log(y) if y > 0 else 0 for y in x])
     temp /= ((1/c) * np.log((1/c)))
     temp[temp > 2] = 2
-    out = 1 - (1 - temp) ** 2
+    out = 1 - np.abs((1 - temp))
 
     print(out)
     return out
