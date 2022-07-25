@@ -1,0 +1,165 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2023_conference, times}
+
+% --- Default packages --- 
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+\usepackage{hyperref}
+\usepackage{url}
+
+% --- Custom packages --- 
+\usepackage{graphicx}
+
+
+\title{Title \\ Subtitle}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{%
+    Joseph Lavond \& Yao Li  \\
+    Department of Statistics and Operations Research \\
+    University of North Carolina at Chapel Hill \\
+    Chapel Hill, NC 27514, USA \\
+    \texttt{\{jlavond, yaoli\}@unc.email.edu} \\
+    %
+    \And
+    Minhao Cheng \\
+    Computer Science and Engineering \\
+    Hong Kong University of Science and Technology \\
+    Clear Water Bay, Hong Kong \\
+    \texttt{minhaocheng@ust.hk}
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+Abstract text here.
+\end{abstract}
+
+% ----- Content -----
+\section{Introduction}
+
+Federated learning is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. These restrictions are essential in areas where data privacy or security is critical such as healthcare and defense. However, federated learning is also valuable to companies that can shift much of the computing workload to local devices instead. Furthermore, the local datasets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning.
+
+At a high level, federated learning is an iterative procedure of rounds until it meets some termination criteria. These rounds consist of sending the global model to users and selecting a subset of users to update the global model. Those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated in some manner to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure privacy or keep the necessary resources minimal. 
+
+Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all future users. An example of such harm is a backdoor attack, where training attempt to get a model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. Recent work, such as by Li et al., creates backdoor triggers that are not detectable in the data by human or computer vision. However, in federated learning, only the resulting model gradients or weights are communicated, so there is potentially no need to hide the trigger in the data. Furthermore, without access to leverage user input data, there is less information available to help detect and prevent such malicious intent.
+
+Our contribution to federated learning is establishing defense criteria for federated learning, which is effective against multiple attackers, model scaling, and attacks before global model convergence. Furthermore, our threshold still allows many regular users to update the global model, resulting in little to no performance degradation and requiring only a minimal increase in computational resources or time.
+
+%
+\section{Related Work}
+
+%
+\section{Setting Details}
+
+We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over M communication rounds with N users. Each iteration randomly selects K users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average of returning model weights by the FedAvg procedure, detailed in McMahan et al. 
+
+To produce local datasets that do not have to be independent and identically distributed, we sample from any training data set using a Dirichlet distribution with specified parameter alpha. The Dirichlet sample determines the proportion of each class included in that user's dataset. Larger values of alpha produce more balanced class distributions.
+
+We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to that of the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. For global model evaluation, we split the test set, added the backdoor trigger to half, and removed any target class observations from that half's data. We use classification accuracy from the first half to measure model success and the proportion of the poisoned half predicted as the target class, known as attack success rate, to measure the backdoor's extent.
+
+We must assume that malicious users cannot compromise the aggregation method used to update the global model other than modify their returned local model weights. However, we make the additional assumption that there exists one user who we can be confident is trustworthy to place in charge of gate-keeping the global model for updates. That user will evaluate incoming model weights and determine whether each contribution is allowed to participate in the FedAvg procedure. Their decision will be made independently of other users and thus will not violate any data privacy or security concerns.
+
+%
+\section{Method}
+
+Our method attempts, for a single benign user, to detect unusually distributed output layers of the returning user models. We intend to refer to this single trusted user as the validation user. In each communication round, this user completes the following additional steps to create an estimated upper bound for the most considerable change a non-malicious user can make to the output layer of the global model:
+\begin{enumerate}
+    \item The validation user computes and stores a forward pass of the current global model on their local data.
+    \item They perform local training of the global model and then calculate and store a forward pass of their data on their updated model.
+    \item The user determines a defense threshold from these former forward passes by computing the distance between the output layers of the original and updated model.
+    \item When the subset of K users submits their updated model weights, each has a forward pass performed on the validation user's local data and the distance calculated between the previous global model and their locally trained models. If their distance exceeds the proposed round threshold, we omit their submitted model from participating in the update. 
+\end{enumerate}
+
+Note that only step 2 has a high relative computation cost as local training will require gradient calculations. However, in the Federated Learning setting, users often train on local compute resources. Therefore, the validation user will do this step simultaneously with the local training of other users. The only additional steps not being done during parts of Federated Learning are forward passes, which are less complex and easily acceleratable by modern computing architectures.
+
+In addition, the computation of the distance between output layer distributions of the models is also efficient. We avoid distributional assumptions on the output layer by using each class's empirical cumulative distribution function (CDF) \footnote{$\hat F_x(t) = \dfrac{\sum_i I(x_i \leq t)}{\testrm{length}(x)}$}, and we measure the class conditional distributional difference using the Kolmogorov-Smirnov (KS) distance \footnote{$KS(F_1, F_2) = \sup_t | F_1(t) - F_2(t) |$}. Using the property that the empirical CDFs are step functions, note that the KS distance between the empirical CDFs only needs to be computed for each of the values of the class scores on the local user's data for both the global and trusted user's updated model. Furthermore, this computation is embarrassingly parallelizable, meaning that each value can be computed separately, without communication, between the calculations. 
+
+
+Thus, for each user in the subset of K users and the validation user, the additional steps to Federated Learning result in a vector of KS distances, $\rvd$, one for each class. Again, recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. Hence, we want to estimate the most prominent possible KS distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $[0, b_c]$ for each class c where $b_c$ is our estimate for the maximum possible change to the output layer of class c through local training by a non-malicious user. Note, this representation is conservative for other uni-modal distributions, as the Uniform distribution has the largest variance of uni-modal distributions over the same support. Therefore, we aim to estimate and use the maximum of $b_c$, the maximal benign change to any class, as a cutoff for returning user models. Recall that doubling a single sample from a Uniform distribution is an unbiased estimate for the maximum of the distribution. Since the class distances are Uniform, and we have a single sample for each communication round, doubling the KS distances for the validation user is an unbiased estimate for each $b_c$, and we will use $\max_c (2 * d_c)$, where $\rvd$ is the trusted user's KS distances. Note, that we are not claiming that our threshold is unbiased for $\max_c (b_c)$. However, we will clearly demonstrate its usefulness after a few modifications to address the following concerns that we observe with the original cutoff:
+\begin{enumerate}
+    \item There extreme instability round-to-round in our threshold. A lucky malicious user can get past a cutoff that is large for that round due to instability.
+    \item In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have a large opportunity to impact the model at the beginning of Federated Learning.
+    \item The values of our threshold depend heavily on the distribution of class labels for the validated user.
+\end{enumerate}
+Our final threshold includes the following solutions to the above problems.
+
+%
+\subsection{Global Min-Mean Threshold}
+
+We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. By assuming that certain consecutive rounds have the same value of $b_c$, we can use instead the running average of the cutoff across rounds which would have the same expected value with reduced variability. Note, we can view this average as smoothing across all previous values with equal weight. Although smoothing solves our first problem of instability, smoothing methods exacerbate the second problem where $b_c$ tend to decrease rapidly over the first few communication rounds. When $b_c$ are decreasing, we do not wish to use any of the previous communication rounds for our threshold. Our solution is to use as our cutoff the running mean, since the lowest observed value, (Global Min-Mean) of the maximum class distance for the validated user. Our solution quickly adapts to decreasing values of $b_c$. As $b_c$ shrinks, we observe new global minimums and the start of the threshold is reset. In addition, when $b_c$ stabilizes, the averaging smooths our cutoff, keeping lucky malicious users from getting past a volatile threshold.
+
+%
+\subsection{Entropy Based Distance Scaling}
+
+In some cases, it may not be possible to have a trusted user with balanced distribution of class labels. Having the ability to construct a cutoff from unbalanced data helps when data cannot be collected, and avoids any data privacy or security issues associated with needed to share one's local class labels with other users. From initial experimentation, we saw classes that are either over or under represented both result in larger KS values than for benign users with a balanced distribution of class labels. From information theory, Shannon Entropy \footnote{For a discrete random variable $\rvx$ with levels c, entropy is defined $H(x) = - \sum_c P(x_c) \log P(x_c)$} is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. Consider instead each class's contribution towards entropy, $H_c(x) = - P(x_c) \log P(x_c)$, and let D be the total number of classes. For multi-class classification problems, we propose scaling the distance between global and update models for each class by the following factor $S_c(x)$. Note that $S(x)$, the collection of $S_c(x)$, only needs to be computed once, as it only depends upon the local user's class label distribution and does not depend on the distance values that it scales.
+
+\begin{align}
+    y_c &= \min \left( x_c, \dfrac{1}{e} \right) \\
+    z_c &= \min \left( \dfrac{P(y_c) \ln \left( P(y_c) \right)}{\dfrac{1}{D} \ln \left( \dfrac{1}{D} \right)}, 2 \right) \\
+    S_c &= 1 - | 1 - z_c |    
+\end{align}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.34]{article/99_visuals/abs_scaling.png}
+    \caption{Entropy Based Scaling, $S_c$, for Several Size Classification Problems}
+    \label{fig:scaling}
+\end{figure}
+
+See Figure \ref{fig:scaling} for $S_c(x)$ plotted as a function of the class proportions for several values of $D$, the total number of classes. Observe the following  properties:
+\begin{enumerate}
+    \item Scaling is between 0 and 1, and there is no scaling when a given class is balanced
+    \item Under-represented classes are scaled down to zero
+    \item For many-class classification problems, we are less trusting of an over-represented class as we have more potential classes for at least one to be approximately balanced.
+\end{enumerate}
+
+We believe further research is needed regarding extremely imbalanced edge cases. However, we propose this scaling as a remedy for reasonably imbalanced data, demonstrating its promising effectiveness in our experimentation.
+
+\section{EXPERIMENTS}
+
+%
+\subsection{Data}
+Our experiments use the CIFAR-10 dataset, which consists of 60000 32x32 color images in 10 classes, with 6000 images per class. We use the test set of 10000 images, with 500 images per class, for model evaluation. For simplicity, we select two main sets of hyperparameters for benign and malicious users. To further show the effectiveness of our method, we choose an unrealistic and unreasonable strong attack setting. Most importantly, we force all malicious users to be included in the subset of users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold to prevent even strong backdoor attacks against the global model.
+
+Our malicious users perform data poisoning on a given proportion of their data (including the target class) by adding a backdoor trigger (stamp) and setting the label to the target class. This is an example of a targeted backdoor attack, where an attacker aims to teach a specific behavior to the model when presented with a trigger. In this case, the malicious user wants the model to classify any image as the target class when the image contains the stamp.
+
+%
+\subsection{Balanced Data}
+Consider the case where the trusted user has an approximately balanced distribution of class labels. Figure \ref{} shows the results of Federated Learning on a Resnet-18 model 
+
+\subsection{Unbalanced Data}
+
+\subsection{Many Attackers}
+
+
+
+\section{Conclusion}
+
+
+\bibliography{iclr2023_conference}
+\bibliographystyle{iclr2023_conference}
+
+\appendix
+\section{Appendix}
+You may include other additional sections here.
+
+\end{document}
