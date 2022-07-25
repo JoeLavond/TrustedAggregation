@@ -102,6 +102,9 @@ def main():
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
+        os.makedirs(
+            os.path.join(args.out_path, 'data')
+        )
 
     gu.set_seeds(args.seed)
     logger = gu.get_log(args.out_path)
@@ -133,14 +136,13 @@ def main():
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
 
-    val_data_entropy = val_data.shannon_entropy(agg=0)
-    val_data_entropy /= ((1 / args.n_classes) * np.log(1 / args.n_classes))
-    val_data_entropy[val_data_entropy > 2] = 2
+    val_data_scaling = val_data.entropy_scaling(c=args.n_classes)
+    val_data_scaling = 1 - np.abs(1 - val_data_scaling)
 
     # store output
     output_val_ks = []
     output_val_ks.append(
-        [-1] + val_data_entropy
+        [-1] + val_data_scaling.tolist()
     )
 
     val_data.transformations = None
@@ -281,9 +283,7 @@ def main():
         [0] + val_ks
     )
 
-    val_ks = [
-        val_ks[i] * (1 - (1 - val_data_entropy[i]) ** 2) for i in range(len(val_ks))
-    ]
+    val_ks = np.array(val_ks) * val_data_scaling
     val_ks_max = max(val_ks)
     output_val_ks_all.append(val_ks_max)
 
@@ -335,7 +335,6 @@ def main():
         for i, user_id in enumerate(user_subset_index):
 
             # setup
-            output_update_all += 1
             user_indices = users_data_indices[user_id]
             m_user = m_users[user_id]
 
@@ -503,10 +502,7 @@ def main():
             [r] + val_ks
         )
 
-        val_ks = [
-            val_ks[i] * (1 - np.abs(1 - val_data_entropy[i])) for i in range(len(val_ks))
-        ]
-
+        val_ks = np.array(val_ks) * val_data_scaling
         val_ks_max = max(val_ks)
         output_val_ks_all.append(val_ks_max)
 
@@ -529,17 +525,17 @@ def main():
     """ Save output """
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'output_global_acc.npy')
+        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
     )
 
     output_val_ks = np.array(output_val_ks)
     np.save(
-        os.path.join(args.out_path, 'output_val_ks.npy')
+        os.path.join(args.out_path, 'data', 'output_val_ks.npy'), output_val_ks
     )
 
     output_user_ks = np.array(output_user_ks)
     np.save(
-        os.path.join(args.out_path, 'output_user_ks.npy')
+        os.path.join(args.out_path, 'data', 'output_user_ks.npy'), output_user_ks
     )
 
 

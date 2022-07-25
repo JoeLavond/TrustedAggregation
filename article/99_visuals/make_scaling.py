@@ -57,7 +57,7 @@ def main():
     plt.text((1 / 15), 1.05, 'balanced', c='g')
     plt.title('D = 15')
 
-    plt.savefig('abs_scaling.png')
+    plt.savefig('scaling.png')
 
 
 if __name__ == "__main__":

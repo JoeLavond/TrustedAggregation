@@ -84,41 +84,18 @@ class CustomDataset(Dataset):
             self.transformations
         )
 
-    def shannon_entropy(self, agg=1):
+    def entropy_scaling(self, c):
 
         # setup
         label_counts = torch.bincount(self.labels).cpu().numpy()
         label_props = label_counts / sum(label_counts)
-        temp = label_props * np.log(label_props)
+        label_props = np.minimum(label_props, 1 / np.exp(1))
 
-        if agg:
-            entropy = -1 * sum(temp)
-        else:
-            entropy = -1 * temp
+        temp = [x * np.log(x) if x > 0 else 0 for x in label_props]
+        temp = np.array(temp) / ((1 / c) * np.log((1 / c)))
+        temp[temp > 2] = 2
 
-        return entropy
-
-    def simpson_entropy(self):
-
-        # setup
-        label_counts = torch.bincount(self.labels).cpu().numpy()
-        label_props = label_counts / sum(label_counts)
-
-        return -1 * np.log(sum([x ** 2 for x in label_props]))
-
-    def min_entropy(self, agg=1):
-
-        # setup
-        label_counts = torch.bincount(self.labels).cpu().numpy()
-        label_counts -= (1 - agg)
-        label_props = label_counts / sum(label_counts)
-
-        if agg:
-            entropy = -1 * np.log(max(label_props))
-        else:
-            entropy = -1 * np.log(label_props)
-
-        return entropy
+        return temp
 
 
     """ Class functions """
