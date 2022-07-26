@@ -82,6 +82,7 @@ def plot_scaling(data_val, data_user, d_rounds, path):
 
     # visual
     plt.figure()
+    plt.xlabel('Communication Round')
     plt.xlim(1, d_rounds)
 
     plt.title('Entropy Scaled Threshold Over Rounds')
@@ -142,6 +143,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
     # visual - benign
     ax1.set_title('Threshold vs. Benign Over Rounds')
     ax1.set_ylim(-0.05, 1.05)
+    ax1.set_xlabel('Communication Round')
     ax1.set_xlim(1, d_rounds)
 
     ax1.plot(data_val_r, benign_upper, '--b')
@@ -156,6 +158,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
     # visual - malicious
     ax2.set_title('Threshold vs. Malicious Over Rounds')
     ax2.set_ylim(-0.05, 1.05)
+    ax2.set_xlabel('Communication Round')
     ax2.set_xlim(1, d_rounds)
 
     if n_malicious > 1:
