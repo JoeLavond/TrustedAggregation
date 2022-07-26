@@ -110,7 +110,7 @@ We needed to develop a stable cutoff that is a meaningful estimate of the maximu
 %
 \subsection{Entropy Based Distance Scaling}
 
-In some cases, it may not be possible to have a trusted user with balanced distribution of class labels. Having the ability to construct a cutoff from unbalanced data helps when data cannot be collected, and avoids any data privacy or security issues associated with needed to share one's local class labels with other users. From initial experimentation, we saw classes that are either over or under represented both result in larger KS values than for benign users with a balanced distribution of class labels. From information theory, Shannon Entropy \footnote{For a discrete random variable $\rvx$ with levels c, entropy is defined $H(x) = - \sum_c P(x_c) \log P(x_c)$} is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. Consider instead each class's contribution towards entropy, $H_c(x) = - P(x_c) \log P(x_c)$, and let D be the total number of classes. For multi-class classification problems, we propose scaling the distance between global and update models for each class by the following factor $S_c(x)$. Note that $S(x)$, the collection of $S_c(x)$, only needs to be computed once, as it only depends upon the local user's class label distribution and does not depend on the distance values that it scales.
+In some cases, it may not be possible to have a trusted user with balanced distribution of class labels. Having the ability to construct a cutoff from unbalanced data helps when data cannot be collected, and avoids any data privacy or security issues associated with needed to share one's local class labels with other users. From initial experimentation, we saw classes that are either over or under represented both result in larger KS values than for benign users with a balanced distribution of class labels. From information theory, Shannon Entropy \footnote{For a discrete random variable $\rvx$ with levels c, entropy is defined $H(x) = - \sum_c P(x_c) \log P(x_c)$} is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. Consider instead each class's contribution towards entropy, $H_c(x) = - P(x_c) \log P(x_c)$, and let D be the total number of classes. For multi-class classification problems, we propose scaling the distance between global and update models for each class by the following factor $S_c(x)$. Note that $S(x)$, the collection of $S_c(x)$, only needs to be computed once, as it only depends upon the local user's class label distribution and does not depend on the distance values it scales.
 
 \begin{align}
     y_c &= \min \left( x_c, \dfrac{1}{e} \right) \\
@@ -147,6 +147,8 @@ Our malicious users perform data poisoning on a given proportion of their data (
 Consider the case where the trusted user has an approximately balanced distribution of class labels. Figure \ref{} shows the results of Federated Learning on a Resnet-18 model 
 
 \subsection{Unbalanced Data}
+
+
 
 \subsection{Many Attackers}
 
