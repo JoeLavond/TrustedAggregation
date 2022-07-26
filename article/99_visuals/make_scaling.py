@@ -32,8 +32,8 @@ def main():
     plt.sca(axarr[0])
     plt.plot(x, abs_c3)
     plt.ylim(0, 1.1)
-    plt.vlines((1 / 2), 0, 1, 'g', 'dashed')
-    plt.text((1 / 2), 1.05, 'balanced', c='g')
+    plt.vlines((1 / 3), 0, 1, 'g', 'dashed')
+    plt.text((1 / 3), 1.05, 'balanced', c='g')
     plt.title('D = 3')
 
     plt.sca(axarr[1])
