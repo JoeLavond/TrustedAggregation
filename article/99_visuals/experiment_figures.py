@@ -85,7 +85,7 @@ def plot_scaling(data_val, data_user, d_rounds, path):
     plt.xlabel('Communication Round')
     plt.xlim(1, d_rounds)
 
-    plt.title('Entropy Scaled Threshold Over Rounds')
+    plt.title('Entropy-Based Threshold Scaling')
     plt.plot(data_val_r, benign_upper, '--b')
     plt.plot(data_val_r, benign_lower, '--b')
     plt.plot(data_val_r, data_val_max_thresh, '-r')
@@ -141,7 +141,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
     fig1, (ax1, ax2) = plt.subplots(ncols=2, sharey=True, figsize=(8, 4))
 
     # visual - benign
-    ax1.set_title('Threshold vs. Benign Over Rounds')
+    ax1.set_title('Threshold vs. Benign')
     ax1.set_ylim(-0.05, 1.05)
     ax1.set_xlabel('Communication Round')
     ax1.set_xlim(1, d_rounds)
@@ -156,7 +156,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
     ])
 
     # visual - malicious
-    ax2.set_title('Threshold vs. Malicious Over Rounds')
+    ax2.set_title('Threshold vs. Malicious')
     ax2.set_ylim(-0.05, 1.05)
     ax2.set_xlabel('Communication Round')
     ax2.set_xlim(1, d_rounds)
@@ -256,7 +256,8 @@ def main():
 
 
     """ Global Accuracy """
-    fig, axarr = plt.subplots(ncols=4, sharey=True, figsize=(16, 4))
+    fig, axarr = plt.subplots(ncols=4, sharey=True, sharex=True, figsize=(16, 4))
+
     for index in range(len(titles)):
 
         # import files
@@ -275,15 +276,20 @@ def main():
         # global acc
         plt.sca(axarr[index])
         plt.title(titles[index])
+        plt.xlabel('Communication Rounds')
         plt.plot(range(1, len(temp_global) + 1), temp_global[:, 1], '-b')
         plt.plot(range(1, len(temp_global) + 1), temp_global[:, 2], '-r')
         plt.ylim(-0.05, 1.05)
-        plt.xlabel('Communication Round')
 
+        copy = axarr[index].twinx()
+        copy.set_ylim(-0.05, 1.05)
+        copy.set_yticklabels([])
 
-    fig.legend(labels=['Accuracy', 'Attack Success Rate'], loc=7)
-    fig.tight_layout()
-    fig.subplots_adjust(right=0.85)
+        if index == 0:
+            axarr[0].set_ylabel('Classification Accuracy', c='b')
+
+        if (index + 1) == len(titles):
+            copy.set_ylabel('Attack Success Rate', c='r')
 
     plt.savefig(
         os.path.join(path, 'visuals', 'accuracy.png')
