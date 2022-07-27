@@ -1,0 +1,37 @@
+[2022/07/27 15:10:41] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=50, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=1.0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=1, alpha_val=10000, remove_val=1, out_path='distributed/alpha10000--alpha_val10000/n_rounds50--d_start1--m_start1--n_malicious1')
+[2022/07/27 15:10:47] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 50 ---
+[2022/07/27 15:10:58] - TESTING CLEAN - Time 0.7, Loss 2.3452, Acc 0.1024
+[2022/07/27 15:10:59] - TESTING POIS - Time 0.7, Loss 2.5493, Acc 0.0000
+[2022/07/27 15:10:59] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/27 15:11:06] - TRAINING - Epoch: 15, Time 0.4, Loss 1.9078, Acc 0.2698
+[2022/07/27 15:11:50] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 50, Time: 51.4 ---
+[2022/07/27 15:11:57] - TESTING CLEAN - Time 1.0, Loss 2.0037, Acc 0.2438
+[2022/07/27 15:11:57] - TESTING POIS - Time 0.9, Loss 2.5561, Acc 0.0933
+[2022/07/27 15:11:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/27 15:12:04] - TRAINING - Epoch: 15, Time 0.4, Loss 1.7769, Acc 0.3671
+[2022/07/27 15:12:51] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 50, Time: 53.8 ---
+[2022/07/27 15:12:57] - TESTING CLEAN - Time 0.9, Loss 1.8335, Acc 0.3300
+[2022/07/27 15:12:58] - TESTING POIS - Time 0.8, Loss 2.7901, Acc 0.0744
+[2022/07/27 15:12:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/27 15:13:05] - TRAINING - Epoch: 15, Time 0.5, Loss 1.5813, Acc 0.4442
+[2022/07/27 15:13:51] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 50, Time: 53.1 ---
+[2022/07/27 15:13:57] - TESTING CLEAN - Time 0.9, Loss 1.7125, Acc 0.3702
+[2022/07/27 15:13:58] - TESTING POIS - Time 0.8, Loss 2.9947, Acc 0.0940
+[2022/07/27 15:13:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/27 15:14:05] - TRAINING - Epoch: 15, Time 0.4, Loss 1.4697, Acc 0.4929

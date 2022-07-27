@@ -98,7 +98,7 @@ def plot_scaling(data_val, data_user, d_rounds, path):
     ])
 
     if path is not None:
-        plt.savefig(os.path.join(path, 'visuals', f'scaling--d_rounds{d_rounds}.png'))
+        plt.savefig(os.path.join(path, 'visuals', f'scaling--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
     #plt.show()
     plt.close()
@@ -194,7 +194,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
         ax2.legend(labels=c_labels)
 
     if path is not None:
-        plt.savefig(os.path.join(path, 'visuals', f'threshold--d_rounds{d_rounds}.png'))
+        plt.savefig(os.path.join(path, 'visuals', f'threshold--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
     #plt.show()
     plt.close()
@@ -292,7 +292,7 @@ def main():
             copy.set_ylabel('Attack Success Rate', c='r')
 
     plt.savefig(
-        os.path.join(path, 'visuals', 'accuracy.png')
+        os.path.join(path, 'visuals', 'accuracy.png'), bbox_inches='tight'
     )
     #plt.show()
     plt.close()
