@@ -19,6 +19,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--n_malicious', default=4, type=int)
+    parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
@@ -51,13 +52,12 @@ def get_quantiles(r, values):
     return np.array(q1), np.array(q3)
 
 
-def plot_scaling(data_val, data_user, d_rounds, path):
+def plot_scaling(data_val, data_user, d_rounds, path, suffix):
 
     # validation user
     data_val, data_user = np.array(data_val), np.array(data_user)
     data_val = data_val[:-1]  # remove last validation check for next iteration never run
     data_val, scaling = data_val[1:], data_val[0, 1:]  # remove scaling row, remove round from scaling
-    print('scaling:', scaling)
     data_val_r, data_val_values = data_val[:, 0], data_val[:, 1:]  # seperate round from data
 
     data_val_max = data_val_values.max(axis=1)
@@ -83,13 +83,13 @@ def plot_scaling(data_val, data_user, d_rounds, path):
     # visual
     plt.figure()
     plt.xlabel('Communication Round')
-    plt.xlim(1, d_rounds)
+    plt.xlim(0, d_rounds)
 
     plt.title('Entropy-Based Threshold Scaling')
-    plt.plot(data_val_r, benign_upper, '--b')
-    plt.plot(data_val_r, benign_lower, '--b')
-    plt.plot(data_val_r, data_val_max_thresh, '-r')
-    plt.plot(data_val_r, data_val_scaled_max_thresh, '-g')
+    plt.plot(data_val_r + 1, benign_upper, '--b')
+    plt.plot(data_val_r + 1, benign_lower, '--b')
+    plt.plot(data_val_r + 1, data_val_max_thresh, '-r')
+    plt.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
     plt.legend(labels=[
         'benign max ks: q3 + 1.5 * IQR',
         'benign max ks: q1 - 1.5 * IQR',
@@ -98,19 +98,22 @@ def plot_scaling(data_val, data_user, d_rounds, path):
     ])
 
     if path is not None:
-        plt.savefig(os.path.join(path, 'visuals', f'scaling--d_rounds{d_rounds}.png'), bbox_inches='tight')
+        plt.savefig(os.path.join(path, 'visuals', f'scaling{suffix}--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
     plt.show()
     plt.close()
 
 
-def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
+def plot_threshold(
+    data_val, data_user, d_rounds,
+    path, suffix,
+    n_malicious, m_start
+    ):
 
     # validation user
     data_val, data_user = np.array(data_val), np.array(data_user)
     data_val = data_val[:-1]  # remove last validation check for next iteration never run
     data_val, scaling = data_val[1:], data_val[0, 1:]  # remove scaling row, remove round from scaling
-    print('scaling:', scaling)
     data_val_r, data_val_values = data_val[:, 0], data_val[:, 1:]  # seperate round from data
 
     data_val_max = data_val_values.max(axis=1)
@@ -142,24 +145,26 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
 
     # visual - benign
     ax1.set_title('Threshold vs. Benign')
-    ax1.set_ylim(-0.05, 1.05)
+    ax1.set_ylim(-0.05, 1.1)
     ax1.set_xlabel('Communication Round')
-    ax1.set_xlim(1, d_rounds)
+    ax1.set_xlim(0, d_rounds)
 
-    ax1.plot(data_val_r, benign_upper, '--b')
-    ax1.plot(data_val_r, benign_lower, '--b')
-    ax1.plot(data_val_r, data_val_scaled_max_thresh, '-g')
+    ax1.plot(data_val_r + 1, benign_upper, '--b')
+    ax1.plot(data_val_r + 1, benign_lower, '--b')
+    ax1.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
     ax1.legend(labels=[
         'benign max ks: q3 + 1.5 * IQR',
         'benign max ks: q1 - 1.5 * IQR',
         'scaled threshold'
     ])
+    ax1.vlines(m_start, 0, 1, colors='r')
+    ax1.text(m_start, 1.033, 'attack start', c='r')
 
     # visual - malicious
     ax2.set_title('Threshold vs. Malicious')
-    ax2.set_ylim(-0.05, 1.05)
+    ax2.set_ylim(-0.05, 1.1)
     ax2.set_xlabel('Communication Round')
-    ax2.set_xlim(1, d_rounds)
+    ax2.set_xlim(0, d_rounds)
 
     if n_malicious > 1:
 
@@ -171,9 +176,9 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
         malicious_lower = data_malicious_max_q1 - 1.5 * (data_malicious_max_q3 - data_malicious_max_q1)
         malicious_lower = np.maximum(np.minimum(malicious_lower, 1), 0)
 
-        ax2.plot(data_val_r, malicious_upper, '--r')
-        ax2.plot(data_val_r, malicious_lower, '--r')
-        ax2.plot(data_val_r, data_val_scaled_max_thresh, '-g')
+        ax2.plot(data_val_r + 1, malicious_upper, '--r')
+        ax2.plot(data_val_r + 1, malicious_lower, '--r')
+        ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
 
         c_labels=[
             'malicious max ks: q3 + 1.5 * IQR',
@@ -184,8 +189,8 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
 
     else:
 
-        ax2.plot(data_val_r, data_malicious_max, '--r')
-        ax2.plot(data_val_r, data_val_scaled_max_thresh, '-g')
+        ax2.plot(data_val_r + 1, data_malicious_max, '--r')
+        ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
 
         c_labels=[
             'malicious max ks',
@@ -193,8 +198,11 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
         ]
         ax2.legend(labels=c_labels)
 
+    ax2.vlines(m_start, 0, 1, colors='r')
+    ax2.text(m_start, 1.033, 'attack start', c='r')
+
     if path is not None:
-        plt.savefig(os.path.join(path, 'visuals', f'threshold--d_rounds{d_rounds}.png'), bbox_inches='tight')
+        plt.savefig(os.path.join(path, 'visuals', f'threshold{suffix}--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
     plt.show()
     plt.close()
@@ -213,17 +221,19 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
+    suffix = '--n_malicious' + str(args.n_malicious) + '--m_start' + str(args.m_start)
 
     if not os.path.exists(os.path.join(path, 'visuals')):
-        os.mkdir(os.path.join(path, 'visuals'))
+        os.mkdir(path, 'visuals')
+
 
     # experiments
     titles = ['No Attack or Defense', 'Attack Only', 'Defense Only', 'Attack and Defense']
     values = [
         (args.n_rounds + 1, args.n_rounds + 1),
-        (args.n_rounds + 1, 1),
+        (args.n_rounds + 1, args.m_start),
         (1, args.n_rounds + 1),
-        (1, 1)
+        (1, args.m_start)
    ]
 
 
@@ -238,7 +248,7 @@ def main():
     temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
     temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
 
-    plot_scaling(temp_val, temp_user, args.d_rounds, path)
+    plot_scaling(temp_val, temp_user, args.d_rounds, path, suffix)
 
 
     """ Defense Plot - Thresholding """
@@ -252,7 +262,7 @@ def main():
     temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
     temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
 
-    plot_threshold(temp_val, temp_user, args.d_rounds, path, args.n_malicious)
+    plot_threshold(temp_val, temp_user, args.d_rounds, path, suffix, args.n_malicious, args.m_start)
 
 
     """ Global Accuracy """
@@ -262,6 +272,75 @@ def main():
 
         # import files
         i, j = values[index]
+
+        try:
+
+            subdir = os.path.join(
+                path,
+                'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + (
+                    '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious) if j == args.m_start else '--m_start' + str(j) + '--n_malicious' + str(1)
+                )
+            )
+
+            temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
+            temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
+            temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
+
+        except:
+
+            subdir = os.path.join(
+                path,
+                'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + (
+                    '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious)
+                )
+            )
+
+            temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
+            temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
+            temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
+
+        # data manipulation
+
+        # global acc
+        plt.sca(axarr[index])
+        plt.title(titles[index])
+        plt.xlabel('Communication Rounds')
+        plt.plot(range(1, len(temp_global) + 1), temp_global[:, 1], '-b')
+        plt.plot(range(1, len(temp_global) + 1), temp_global[:, 2], '-r')
+        plt.ylim(-0.05, 1.1)
+
+        if j == args.m_start:
+            plt.vlines(args.m_start, 0, 1, colors='r')
+            plt.text(args.m_start, 1.033, 'attack start', c='r')
+
+        copy = axarr[index].twinx()
+        copy.set_ylim(-0.05, 1.1)
+        copy.set_yticklabels([])
+
+        if index == 0:
+            axarr[0].set_ylabel('Classification Accuracy', c='b')
+
+        if (index + 1) == len(titles):
+            copy.set_ylabel('Attack Success Rate', c='r')
+
+    plt.savefig(
+        os.path.join(path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
+    )
+    plt.show()
+    plt.close()
+
+
+    """ Only attack plots """
+    fig, axarr = plt.subplots(ncols=2, sharey=True, sharex=True, figsize=(8, 4))
+
+    k = 0
+    for index in range(len(titles)):
+
+        # import files
+        i, j = values[index]
+        if j != args.m_start:
+            continue
+
         subdir = os.path.join(
             path,
             'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious)
@@ -274,25 +353,30 @@ def main():
         # data manipulation
 
         # global acc
-        plt.sca(axarr[index])
+        plt.sca(axarr[k])
         plt.title(titles[index])
         plt.xlabel('Communication Rounds')
         plt.plot(range(1, len(temp_global) + 1), temp_global[:, 1], '-b')
         plt.plot(range(1, len(temp_global) + 1), temp_global[:, 2], '-r')
-        plt.ylim(-0.05, 1.05)
+        plt.ylim(-0.05, 1.1)
 
-        copy = axarr[index].twinx()
-        copy.set_ylim(-0.05, 1.05)
+        if j == args.m_start:
+            plt.vlines(args.m_start, 0, 1, colors='r')
+            plt.text(args.m_start, 1.033, 'attack start', c='r')
+
+        copy = axarr[k].twinx()
+        copy.set_ylim(-0.05, 1.1)
         copy.set_yticklabels([])
 
-        if index == 0:
+        if k == 0:
             axarr[0].set_ylabel('Classification Accuracy', c='b')
-
-        if (index + 1) == len(titles):
+        else:
             copy.set_ylabel('Attack Success Rate', c='r')
 
+        k += 1
+
     plt.savefig(
-        os.path.join(path, 'visuals', 'accuracy.png'), bbox_inches='tight'
+        os.path.join(path, 'visuals', f'attack_accuracy{suffix}.png'), bbox_inches='tight'
     )
     plt.show()
     plt.close()
