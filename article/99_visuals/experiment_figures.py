@@ -16,7 +16,7 @@ def get_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--dba', default=0, type=int)
-    parser.add_argument('--n_rounds', default=250, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
@@ -100,7 +100,7 @@ def plot_scaling(data_val, data_user, d_rounds, path):
     if path is not None:
         plt.savefig(os.path.join(path, 'visuals', f'scaling--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -196,7 +196,7 @@ def plot_threshold(data_val, data_user, d_rounds, path, n_malicious):
     if path is not None:
         plt.savefig(os.path.join(path, 'visuals', f'threshold--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
-    #plt.show()
+    plt.show()
     plt.close()
 
 
@@ -294,7 +294,7 @@ def main():
     plt.savefig(
         os.path.join(path, 'visuals', 'accuracy.png'), bbox_inches='tight'
     )
-    #plt.show()
+    plt.show()
     plt.close()
 
 
