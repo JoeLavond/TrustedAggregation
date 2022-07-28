@@ -15,10 +15,10 @@ import seaborn as sns
 def get_args():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dba', default=0, type=int)
+    parser.add_argument('--dba', default=1, type=int)
     parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
-    parser.add_argument('--n_malicious', default=1, type=int)
+    parser.add_argument('--n_malicious', default=4, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
