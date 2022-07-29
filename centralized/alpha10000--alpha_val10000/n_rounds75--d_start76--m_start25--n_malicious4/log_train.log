@@ -1,0 +1,1197 @@
+[2022/07/28 13:46:08] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=75, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=25, m_scale=1, p_malicious=None, n_malicious=4, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=76, alpha_val=10000, remove_val=1, out_path='centralized/alpha10000--alpha_val10000/n_rounds75--d_start76--m_start25--n_malicious4')
+[2022/07/28 13:46:15] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 75 ---
+[2022/07/28 13:46:26] - TESTING CLEAN - Time 0.9, Loss 2.3452, Acc 0.1024
+[2022/07/28 13:46:27] - TESTING POIS - Time 0.8, Loss 2.6139, Acc 0.0000
+[2022/07/28 13:47:19] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 75, Time: 52.1 ---
+[2022/07/28 13:47:26] - TESTING CLEAN - Time 0.9, Loss 2.0075, Acc 0.2522
+[2022/07/28 13:47:26] - TESTING POIS - Time 0.8, Loss 2.4221, Acc 0.1727
+[2022/07/28 13:48:19] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 75, Time: 52.9 ---
+[2022/07/28 13:48:26] - TESTING CLEAN - Time 0.9, Loss 1.8169, Acc 0.3290
+[2022/07/28 13:48:26] - TESTING POIS - Time 0.8, Loss 2.7900, Acc 0.0758
+[2022/07/28 13:49:18] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 75, Time: 52.0 ---
+[2022/07/28 13:49:25] - TESTING CLEAN - Time 0.8, Loss 1.7010, Acc 0.3706
+[2022/07/28 13:49:25] - TESTING POIS - Time 0.9, Loss 2.9114, Acc 0.0864
+[2022/07/28 13:50:18] - 
+
+--- GLOBAL EVALUATIONS - Round: 4 of 75, Time: 52.9 ---
+[2022/07/28 13:50:25] - TESTING CLEAN - Time 0.8, Loss 1.6192, Acc 0.4028
+[2022/07/28 13:50:25] - TESTING POIS - Time 0.8, Loss 3.0799, Acc 0.0669
+[2022/07/28 13:51:18] - 
+
+--- GLOBAL EVALUATIONS - Round: 5 of 75, Time: 52.6 ---
+[2022/07/28 13:51:25] - TESTING CLEAN - Time 0.9, Loss 1.5421, Acc 0.4282
+[2022/07/28 13:51:25] - TESTING POIS - Time 0.8, Loss 3.1492, Acc 0.0758
+[2022/07/28 13:52:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 6 of 75, Time: 54.6 ---
+[2022/07/28 13:52:26] - TESTING CLEAN - Time 0.7, Loss 1.5156, Acc 0.4464
+[2022/07/28 13:52:27] - TESTING POIS - Time 0.7, Loss 3.1663, Acc 0.0831
+[2022/07/28 13:53:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 7 of 75, Time: 53.1 ---
+[2022/07/28 13:53:26] - TESTING CLEAN - Time 0.9, Loss 1.4600, Acc 0.4760
+[2022/07/28 13:53:27] - TESTING POIS - Time 0.8, Loss 3.4935, Acc 0.0471
+[2022/07/28 13:54:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 8 of 75, Time: 53.0 ---
+[2022/07/28 13:54:26] - TESTING CLEAN - Time 0.9, Loss 1.4276, Acc 0.4892
+[2022/07/28 13:54:27] - TESTING POIS - Time 0.9, Loss 3.5289, Acc 0.0587
+[2022/07/28 13:55:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 9 of 75, Time: 53.1 ---
+[2022/07/28 13:55:27] - TESTING CLEAN - Time 0.9, Loss 1.3851, Acc 0.5048
+[2022/07/28 13:55:27] - TESTING POIS - Time 0.9, Loss 3.6108, Acc 0.0536
+[2022/07/28 13:56:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 10 of 75, Time: 52.9 ---
+[2022/07/28 13:56:27] - TESTING CLEAN - Time 0.8, Loss 1.3260, Acc 0.5262
+[2022/07/28 13:56:27] - TESTING POIS - Time 0.8, Loss 3.9539, Acc 0.0422
+[2022/07/28 13:57:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 11 of 75, Time: 53.1 ---
+[2022/07/28 13:57:27] - TESTING CLEAN - Time 0.9, Loss 1.3100, Acc 0.5358
+[2022/07/28 13:57:28] - TESTING POIS - Time 0.9, Loss 4.0262, Acc 0.0533
+[2022/07/28 13:58:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 12 of 75, Time: 52.9 ---
+[2022/07/28 13:58:27] - TESTING CLEAN - Time 0.9, Loss 1.2634, Acc 0.5536
+[2022/07/28 13:58:28] - TESTING POIS - Time 0.8, Loss 4.1246, Acc 0.0587
+[2022/07/28 13:59:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 13 of 75, Time: 53.3 ---
+[2022/07/28 13:59:28] - TESTING CLEAN - Time 0.9, Loss 1.2460, Acc 0.5634
+[2022/07/28 13:59:29] - TESTING POIS - Time 0.9, Loss 4.2451, Acc 0.0458
+[2022/07/28 14:00:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 14 of 75, Time: 52.8 ---
+[2022/07/28 14:00:28] - TESTING CLEAN - Time 0.9, Loss 1.2218, Acc 0.5730
+[2022/07/28 14:00:28] - TESTING POIS - Time 0.8, Loss 4.4355, Acc 0.0413
+[2022/07/28 14:01:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 15 of 75, Time: 52.8 ---
+[2022/07/28 14:01:28] - TESTING CLEAN - Time 0.9, Loss 1.2150, Acc 0.5810
+[2022/07/28 14:01:28] - TESTING POIS - Time 0.8, Loss 4.4486, Acc 0.0498
+[2022/07/28 14:02:22] - 
+
+--- GLOBAL EVALUATIONS - Round: 16 of 75, Time: 53.3 ---
+[2022/07/28 14:02:28] - TESTING CLEAN - Time 0.9, Loss 1.1957, Acc 0.5836
+[2022/07/28 14:02:29] - TESTING POIS - Time 0.9, Loss 4.6423, Acc 0.0482
+[2022/07/28 14:03:22] - 
+
+--- GLOBAL EVALUATIONS - Round: 17 of 75, Time: 52.8 ---
+[2022/07/28 14:03:28] - TESTING CLEAN - Time 0.8, Loss 1.1850, Acc 0.5924
+[2022/07/28 14:03:29] - TESTING POIS - Time 0.8, Loss 4.8225, Acc 0.0480
+[2022/07/28 14:04:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 18 of 75, Time: 52.5 ---
+[2022/07/28 14:04:28] - TESTING CLEAN - Time 0.9, Loss 1.1671, Acc 0.5966
+[2022/07/28 14:04:29] - TESTING POIS - Time 0.8, Loss 4.8326, Acc 0.0427
+[2022/07/28 14:05:22] - 
+
+--- GLOBAL EVALUATIONS - Round: 19 of 75, Time: 53.8 ---
+[2022/07/28 14:05:29] - TESTING CLEAN - Time 0.9, Loss 1.1343, Acc 0.6032
+[2022/07/28 14:05:30] - TESTING POIS - Time 0.8, Loss 4.8669, Acc 0.0431
+[2022/07/28 14:06:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 20 of 75, Time: 53.2 ---
+[2022/07/28 14:06:29] - TESTING CLEAN - Time 0.9, Loss 1.1226, Acc 0.6082
+[2022/07/28 14:06:30] - TESTING POIS - Time 0.8, Loss 5.2316, Acc 0.0338
+[2022/07/28 14:07:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 21 of 75, Time: 53.1 ---
+[2022/07/28 14:07:30] - TESTING CLEAN - Time 0.9, Loss 1.1072, Acc 0.6144
+[2022/07/28 14:07:30] - TESTING POIS - Time 0.8, Loss 5.3305, Acc 0.0367
+[2022/07/28 14:08:24] - 
+
+--- GLOBAL EVALUATIONS - Round: 22 of 75, Time: 53.2 ---
+[2022/07/28 14:08:30] - TESTING CLEAN - Time 0.9, Loss 1.1066, Acc 0.6208
+[2022/07/28 14:08:31] - TESTING POIS - Time 0.8, Loss 5.2646, Acc 0.0389
+[2022/07/28 14:09:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 23 of 75, Time: 52.7 ---
+[2022/07/28 14:09:30] - TESTING CLEAN - Time 0.9, Loss 1.0895, Acc 0.6230
+[2022/07/28 14:09:31] - TESTING POIS - Time 0.8, Loss 5.5148, Acc 0.0371
+[2022/07/28 14:10:24] - 
+
+--- GLOBAL EVALUATIONS - Round: 24 of 75, Time: 52.9 ---
+[2022/07/28 14:10:30] - TESTING CLEAN - Time 0.9, Loss 1.0766, Acc 0.6320
+[2022/07/28 14:10:31] - TESTING POIS - Time 0.8, Loss 5.4967, Acc 0.0340
+[2022/07/28 14:10:31] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:10:38] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5684, Acc 0.8337
+[2022/07/28 14:10:39] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:10:46] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5912, Acc 0.8024
+[2022/07/28 14:10:47] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:10:54] - TRAINING - Epoch: 15, Time 0.5, Loss 0.6596, Acc 0.8057
+[2022/07/28 14:10:55] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:11:02] - TRAINING - Epoch: 15, Time 0.5, Loss 0.6170, Acc 0.7879
+[2022/07/28 14:11:34] - 
+
+--- GLOBAL EVALUATIONS - Round: 25 of 75, Time: 63.4 ---
+[2022/07/28 14:11:41] - TESTING CLEAN - Time 0.9, Loss 1.0602, Acc 0.6468
+[2022/07/28 14:11:42] - TESTING POIS - Time 0.8, Loss 3.8732, Acc 0.0829
+[2022/07/28 14:11:42] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:11:49] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5688, Acc 0.8276
+[2022/07/28 14:11:50] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:11:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5215, Acc 0.8306
+[2022/07/28 14:11:58] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:12:05] - TRAINING - Epoch: 15, Time 0.4, Loss 0.6228, Acc 0.7976
+[2022/07/28 14:12:05] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:12:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5923, Acc 0.8040
+[2022/07/28 14:12:45] - 
+
+--- GLOBAL EVALUATIONS - Round: 26 of 75, Time: 63.4 ---
+[2022/07/28 14:12:51] - TESTING CLEAN - Time 0.8, Loss 1.0647, Acc 0.6406
+[2022/07/28 14:12:52] - TESTING POIS - Time 0.8, Loss 3.3716, Acc 0.1278
+[2022/07/28 14:12:52] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:13:00] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5007, Acc 0.8296
+[2022/07/28 14:13:00] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:13:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4780, Acc 0.8508
+[2022/07/28 14:13:08] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:13:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5857, Acc 0.8097
+[2022/07/28 14:13:16] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:13:23] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5323, Acc 0.8384
+[2022/07/28 14:13:55] - 
+
+--- GLOBAL EVALUATIONS - Round: 27 of 75, Time: 63.0 ---
+[2022/07/28 14:14:02] - TESTING CLEAN - Time 0.9, Loss 1.0599, Acc 0.6430
+[2022/07/28 14:14:02] - TESTING POIS - Time 0.8, Loss 2.7967, Acc 0.2382
+[2022/07/28 14:14:02] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:14:10] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5045, Acc 0.8377
+[2022/07/28 14:14:10] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:14:18] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4333, Acc 0.8891
+[2022/07/28 14:14:18] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:14:26] - TRAINING - Epoch: 15, Time 0.5, Loss 0.5305, Acc 0.8239
+[2022/07/28 14:14:26] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:14:33] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4714, Acc 0.8687
+[2022/07/28 14:15:06] - 
+
+--- GLOBAL EVALUATIONS - Round: 28 of 75, Time: 63.5 ---
+[2022/07/28 14:15:12] - TESTING CLEAN - Time 0.9, Loss 1.0705, Acc 0.6448
+[2022/07/28 14:15:13] - TESTING POIS - Time 0.8, Loss 2.2268, Acc 0.3620
+[2022/07/28 14:15:13] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:15:20] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3824, Acc 0.8803
+[2022/07/28 14:15:21] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:15:28] - TRAINING - Epoch: 15, Time 0.4, Loss 0.4331, Acc 0.8710
+[2022/07/28 14:15:29] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:15:36] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4216, Acc 0.8785
+[2022/07/28 14:15:37] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:15:44] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4115, Acc 0.8727
+[2022/07/28 14:16:16] - 
+
+--- GLOBAL EVALUATIONS - Round: 29 of 75, Time: 63.1 ---
+[2022/07/28 14:16:23] - TESTING CLEAN - Time 0.9, Loss 1.0619, Acc 0.6480
+[2022/07/28 14:16:24] - TESTING POIS - Time 0.9, Loss 1.8397, Acc 0.4831
+[2022/07/28 14:16:24] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:16:31] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4431, Acc 0.8600
+[2022/07/28 14:16:31] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:16:39] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3442, Acc 0.9113
+[2022/07/28 14:16:40] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:16:47] - TRAINING - Epoch: 15, Time 0.5, Loss 0.4174, Acc 0.8644
+[2022/07/28 14:16:47] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:16:55] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3419, Acc 0.9091
+[2022/07/28 14:17:27] - 
+
+--- GLOBAL EVALUATIONS - Round: 30 of 75, Time: 63.6 ---
+[2022/07/28 14:17:34] - TESTING CLEAN - Time 0.9, Loss 1.0726, Acc 0.6482
+[2022/07/28 14:17:34] - TESTING POIS - Time 0.8, Loss 1.6820, Acc 0.5373
+[2022/07/28 14:17:34] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:17:42] - TRAINING - Epoch: 15, Time 0.4, Loss 0.3551, Acc 0.8986
+[2022/07/28 14:17:42] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:17:50] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3523, Acc 0.8810
+[2022/07/28 14:17:50] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:17:58] - TRAINING - Epoch: 15, Time 0.4, Loss 0.3806, Acc 0.8765
+[2022/07/28 14:17:58] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:18:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3464, Acc 0.9111
+[2022/07/28 14:18:40] - 
+
+--- GLOBAL EVALUATIONS - Round: 31 of 75, Time: 65.3 ---
+[2022/07/28 14:18:46] - TESTING CLEAN - Time 0.9, Loss 1.0624, Acc 0.6440
+[2022/07/28 14:18:47] - TESTING POIS - Time 0.8, Loss 1.8235, Acc 0.5296
+[2022/07/28 14:18:47] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:18:55] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3309, Acc 0.9006
+[2022/07/28 14:18:55] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:19:02] - TRAINING - Epoch: 15, Time 0.4, Loss 0.3151, Acc 0.9073
+[2022/07/28 14:19:03] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:19:10] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3394, Acc 0.9130
+[2022/07/28 14:19:11] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:19:18] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3352, Acc 0.9010
+[2022/07/28 14:19:51] - 
+
+--- GLOBAL EVALUATIONS - Round: 32 of 75, Time: 63.7 ---
+[2022/07/28 14:19:57] - TESTING CLEAN - Time 0.9, Loss 1.0669, Acc 0.6442
+[2022/07/28 14:19:58] - TESTING POIS - Time 0.8, Loss 1.5151, Acc 0.5996
+[2022/07/28 14:19:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:20:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3019, Acc 0.9148
+[2022/07/28 14:20:06] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:20:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2760, Acc 0.9415
+[2022/07/28 14:20:14] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:20:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3218, Acc 0.9170
+[2022/07/28 14:20:22] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:20:29] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2657, Acc 0.9293
+[2022/07/28 14:21:01] - 
+
+--- GLOBAL EVALUATIONS - Round: 33 of 75, Time: 63.3 ---
+[2022/07/28 14:21:08] - TESTING CLEAN - Time 0.9, Loss 1.0716, Acc 0.6504
+[2022/07/28 14:21:09] - TESTING POIS - Time 0.8, Loss 1.5308, Acc 0.6064
+[2022/07/28 14:21:09] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:21:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2803, Acc 0.9310
+[2022/07/28 14:21:16] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:21:24] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2742, Acc 0.9173
+[2022/07/28 14:21:24] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:21:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3435, Acc 0.9028
+[2022/07/28 14:21:32] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:21:39] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2843, Acc 0.9152
+[2022/07/28 14:22:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 34 of 75, Time: 62.8 ---
+[2022/07/28 14:22:18] - TESTING CLEAN - Time 0.9, Loss 1.0897, Acc 0.6510
+[2022/07/28 14:22:18] - TESTING POIS - Time 0.8, Loss 1.5069, Acc 0.6169
+[2022/07/28 14:22:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:22:26] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2638, Acc 0.9209
+[2022/07/28 14:22:26] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:22:34] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2927, Acc 0.9113
+[2022/07/28 14:22:34] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:22:42] - TRAINING - Epoch: 15, Time 0.5, Loss 0.3109, Acc 0.9271
+[2022/07/28 14:22:42] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:22:50] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2258, Acc 0.9354
+[2022/07/28 14:23:22] - 
+
+--- GLOBAL EVALUATIONS - Round: 35 of 75, Time: 63.3 ---
+[2022/07/28 14:23:28] - TESTING CLEAN - Time 0.9, Loss 1.0734, Acc 0.6572
+[2022/07/28 14:23:29] - TESTING POIS - Time 0.8, Loss 1.3227, Acc 0.6598
+[2022/07/28 14:23:29] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:23:36] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2557, Acc 0.9331
+[2022/07/28 14:23:37] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:23:44] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2298, Acc 0.9415
+[2022/07/28 14:23:45] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:23:52] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2534, Acc 0.9393
+[2022/07/28 14:23:53] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:24:00] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2149, Acc 0.9434
+[2022/07/28 14:24:32] - 
+
+--- GLOBAL EVALUATIONS - Round: 36 of 75, Time: 63.4 ---
+[2022/07/28 14:24:39] - TESTING CLEAN - Time 0.9, Loss 1.0696, Acc 0.6580
+[2022/07/28 14:24:40] - TESTING POIS - Time 0.8, Loss 1.3522, Acc 0.6580
+[2022/07/28 14:24:40] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:24:47] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2267, Acc 0.9351
+[2022/07/28 14:24:47] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:24:55] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2300, Acc 0.9315
+[2022/07/28 14:24:55] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:25:03] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2472, Acc 0.9393
+[2022/07/28 14:25:03] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:25:11] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1973, Acc 0.9475
+[2022/07/28 14:25:43] - 
+
+--- GLOBAL EVALUATIONS - Round: 37 of 75, Time: 63.4 ---
+[2022/07/28 14:25:49] - TESTING CLEAN - Time 0.9, Loss 1.0658, Acc 0.6598
+[2022/07/28 14:25:50] - TESTING POIS - Time 0.9, Loss 1.3173, Acc 0.6704
+[2022/07/28 14:25:50] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:25:58] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2004, Acc 0.9452
+[2022/07/28 14:25:58] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:26:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2093, Acc 0.9456
+[2022/07/28 14:26:06] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:26:13] - TRAINING - Epoch: 15, Time 0.4, Loss 0.2100, Acc 0.9393
+[2022/07/28 14:26:14] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:26:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2190, Acc 0.9434
+[2022/07/28 14:26:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 38 of 75, Time: 63.7 ---
+[2022/07/28 14:27:00] - TESTING CLEAN - Time 0.9, Loss 1.0921, Acc 0.6496
+[2022/07/28 14:27:01] - TESTING POIS - Time 0.8, Loss 1.4591, Acc 0.6471
+[2022/07/28 14:27:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:27:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1808, Acc 0.9675
+[2022/07/28 14:27:09] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:27:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2127, Acc 0.9456
+[2022/07/28 14:27:17] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:27:24] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2402, Acc 0.9271
+[2022/07/28 14:27:25] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:27:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2035, Acc 0.9434
+[2022/07/28 14:28:05] - 
+
+--- GLOBAL EVALUATIONS - Round: 39 of 75, Time: 63.7 ---
+[2022/07/28 14:28:11] - TESTING CLEAN - Time 0.9, Loss 1.0764, Acc 0.6618
+[2022/07/28 14:28:12] - TESTING POIS - Time 0.8, Loss 1.3953, Acc 0.6747
+[2022/07/28 14:28:12] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:28:19] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2137, Acc 0.9351
+[2022/07/28 14:28:20] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:28:27] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2023, Acc 0.9536
+[2022/07/28 14:28:28] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:28:35] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1874, Acc 0.9575
+[2022/07/28 14:28:36] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:28:43] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1858, Acc 0.9475
+[2022/07/28 14:29:15] - 
+
+--- GLOBAL EVALUATIONS - Round: 40 of 75, Time: 63.4 ---
+[2022/07/28 14:29:22] - TESTING CLEAN - Time 0.9, Loss 1.0818, Acc 0.6590
+[2022/07/28 14:29:23] - TESTING POIS - Time 0.8, Loss 1.3131, Acc 0.6816
+[2022/07/28 14:29:23] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:29:30] - TRAINING - Epoch: 15, Time 0.5, Loss 0.2053, Acc 0.9513
+[2022/07/28 14:29:31] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:29:38] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1711, Acc 0.9556
+[2022/07/28 14:29:39] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:29:46] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1889, Acc 0.9534
+[2022/07/28 14:29:46] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:29:54] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1989, Acc 0.9333
+[2022/07/28 14:30:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 41 of 75, Time: 63.9 ---
+[2022/07/28 14:30:33] - TESTING CLEAN - Time 0.9, Loss 1.0858, Acc 0.6648
+[2022/07/28 14:30:34] - TESTING POIS - Time 0.8, Loss 1.2529, Acc 0.6918
+[2022/07/28 14:30:34] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:30:41] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1863, Acc 0.9493
+[2022/07/28 14:30:42] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:30:49] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1939, Acc 0.9395
+[2022/07/28 14:30:50] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:30:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1976, Acc 0.9494
+[2022/07/28 14:30:57] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:31:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1802, Acc 0.9616
+[2022/07/28 14:31:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 42 of 75, Time: 63.4 ---
+[2022/07/28 14:31:43] - TESTING CLEAN - Time 0.9, Loss 1.0687, Acc 0.6624
+[2022/07/28 14:31:44] - TESTING POIS - Time 0.8, Loss 1.2198, Acc 0.7047
+[2022/07/28 14:31:44] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:31:52] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1592, Acc 0.9513
+[2022/07/28 14:31:52] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:32:00] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1958, Acc 0.9456
+[2022/07/28 14:32:00] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:32:07] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1732, Acc 0.9534
+[2022/07/28 14:32:08] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:32:15] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1374, Acc 0.9596
+[2022/07/28 14:32:48] - 
+
+--- GLOBAL EVALUATIONS - Round: 43 of 75, Time: 63.7 ---
+[2022/07/28 14:32:54] - TESTING CLEAN - Time 0.9, Loss 1.0855, Acc 0.6636
+[2022/07/28 14:32:55] - TESTING POIS - Time 0.8, Loss 1.2334, Acc 0.7038
+[2022/07/28 14:32:55] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:33:03] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1448, Acc 0.9696
+[2022/07/28 14:33:03] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:33:10] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1646, Acc 0.9556
+[2022/07/28 14:33:11] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:33:18] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1541, Acc 0.9615
+[2022/07/28 14:33:19] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:33:26] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1759, Acc 0.9556
+[2022/07/28 14:33:59] - 
+
+--- GLOBAL EVALUATIONS - Round: 44 of 75, Time: 63.5 ---
+[2022/07/28 14:34:05] - TESTING CLEAN - Time 0.9, Loss 1.0831, Acc 0.6608
+[2022/07/28 14:34:06] - TESTING POIS - Time 0.9, Loss 1.1569, Acc 0.7207
+[2022/07/28 14:34:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:34:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1473, Acc 0.9574
+[2022/07/28 14:34:14] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:34:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1446, Acc 0.9698
+[2022/07/28 14:34:22] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:34:29] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1656, Acc 0.9555
+[2022/07/28 14:34:30] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:34:37] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1600, Acc 0.9576
+[2022/07/28 14:35:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 45 of 75, Time: 63.9 ---
+[2022/07/28 14:35:16] - TESTING CLEAN - Time 0.9, Loss 1.0933, Acc 0.6660
+[2022/07/28 14:35:17] - TESTING POIS - Time 0.8, Loss 1.1712, Acc 0.7158
+[2022/07/28 14:35:17] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:35:24] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1364, Acc 0.9736
+[2022/07/28 14:35:25] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:35:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1467, Acc 0.9597
+[2022/07/28 14:35:33] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:35:40] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1496, Acc 0.9615
+[2022/07/28 14:35:41] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:35:48] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1433, Acc 0.9697
+[2022/07/28 14:36:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 46 of 75, Time: 63.7 ---
+[2022/07/28 14:36:27] - TESTING CLEAN - Time 0.8, Loss 1.0961, Acc 0.6646
+[2022/07/28 14:36:28] - TESTING POIS - Time 0.8, Loss 1.1345, Acc 0.7218
+[2022/07/28 14:36:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:36:35] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1545, Acc 0.9675
+[2022/07/28 14:36:36] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:36:43] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1822, Acc 0.9536
+[2022/07/28 14:36:44] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:36:51] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1507, Acc 0.9696
+[2022/07/28 14:36:52] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:36:59] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1314, Acc 0.9677
+[2022/07/28 14:37:32] - 
+
+--- GLOBAL EVALUATIONS - Round: 47 of 75, Time: 63.8 ---
+[2022/07/28 14:37:38] - TESTING CLEAN - Time 0.9, Loss 1.0912, Acc 0.6660
+[2022/07/28 14:37:39] - TESTING POIS - Time 0.8, Loss 1.1116, Acc 0.7347
+[2022/07/28 14:37:39] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:37:46] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1357, Acc 0.9736
+[2022/07/28 14:37:47] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:37:54] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1278, Acc 0.9657
+[2022/07/28 14:37:55] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:38:02] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1822, Acc 0.9514
+[2022/07/28 14:38:03] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:38:10] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1299, Acc 0.9758
+[2022/07/28 14:38:42] - 
+
+--- GLOBAL EVALUATIONS - Round: 48 of 75, Time: 63.4 ---
+[2022/07/28 14:38:49] - TESTING CLEAN - Time 0.9, Loss 1.0775, Acc 0.6724
+[2022/07/28 14:38:50] - TESTING POIS - Time 0.9, Loss 1.1299, Acc 0.7364
+[2022/07/28 14:38:50] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:38:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1576, Acc 0.9615
+[2022/07/28 14:38:58] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:39:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1533, Acc 0.9637
+[2022/07/28 14:39:06] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:39:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1373, Acc 0.9595
+[2022/07/28 14:39:13] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:39:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1216, Acc 0.9717
+[2022/07/28 14:39:53] - 
+
+--- GLOBAL EVALUATIONS - Round: 49 of 75, Time: 63.8 ---
+[2022/07/28 14:40:00] - TESTING CLEAN - Time 0.8, Loss 1.0853, Acc 0.6678
+[2022/07/28 14:40:00] - TESTING POIS - Time 0.8, Loss 1.1012, Acc 0.7402
+[2022/07/28 14:40:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:40:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0997, Acc 0.9716
+[2022/07/28 14:40:09] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:40:16] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1279, Acc 0.9718
+[2022/07/28 14:40:16] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:40:24] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1264, Acc 0.9717
+[2022/07/28 14:40:24] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:40:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1113, Acc 0.9798
+[2022/07/28 14:41:04] - 
+
+--- GLOBAL EVALUATIONS - Round: 50 of 75, Time: 63.7 ---
+[2022/07/28 14:41:11] - TESTING CLEAN - Time 1.0, Loss 1.1039, Acc 0.6726
+[2022/07/28 14:41:11] - TESTING POIS - Time 0.8, Loss 1.1413, Acc 0.7407
+[2022/07/28 14:41:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:41:19] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1451, Acc 0.9675
+[2022/07/28 14:41:19] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:41:27] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1287, Acc 0.9677
+[2022/07/28 14:41:27] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:41:34] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1233, Acc 0.9757
+[2022/07/28 14:41:35] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:41:42] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1090, Acc 0.9818
+[2022/07/28 14:42:15] - 
+
+--- GLOBAL EVALUATIONS - Round: 51 of 75, Time: 63.4 ---
+[2022/07/28 14:42:21] - TESTING CLEAN - Time 0.9, Loss 1.0772, Acc 0.6744
+[2022/07/28 14:42:22] - TESTING POIS - Time 0.8, Loss 1.0618, Acc 0.7522
+[2022/07/28 14:42:22] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:42:29] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1241, Acc 0.9777
+[2022/07/28 14:42:30] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:42:37] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1354, Acc 0.9677
+[2022/07/28 14:42:38] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:42:45] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1293, Acc 0.9696
+[2022/07/28 14:42:46] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:42:53] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1051, Acc 0.9798
+[2022/07/28 14:43:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 52 of 75, Time: 63.7 ---
+[2022/07/28 14:43:32] - TESTING CLEAN - Time 0.9, Loss 1.0965, Acc 0.6720
+[2022/07/28 14:43:33] - TESTING POIS - Time 0.8, Loss 1.1999, Acc 0.7291
+[2022/07/28 14:43:33] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:43:40] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1102, Acc 0.9736
+[2022/07/28 14:43:41] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:43:48] - TRAINING - Epoch: 15, Time 0.4, Loss 0.1140, Acc 0.9738
+[2022/07/28 14:43:49] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:43:56] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1354, Acc 0.9575
+[2022/07/28 14:43:56] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:44:04] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0992, Acc 0.9758
+[2022/07/28 14:44:36] - 
+
+--- GLOBAL EVALUATIONS - Round: 53 of 75, Time: 63.1 ---
+[2022/07/28 14:44:42] - TESTING CLEAN - Time 0.9, Loss 1.0996, Acc 0.6776
+[2022/07/28 14:44:43] - TESTING POIS - Time 0.8, Loss 1.1098, Acc 0.7482
+[2022/07/28 14:44:43] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:44:50] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1183, Acc 0.9777
+[2022/07/28 14:44:51] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:44:58] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1226, Acc 0.9657
+[2022/07/28 14:44:59] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:45:06] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1095, Acc 0.9757
+[2022/07/28 14:45:07] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:45:14] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1043, Acc 0.9758
+[2022/07/28 14:45:47] - 
+
+--- GLOBAL EVALUATIONS - Round: 54 of 75, Time: 63.5 ---
+[2022/07/28 14:45:53] - TESTING CLEAN - Time 1.0, Loss 1.0814, Acc 0.6758
+[2022/07/28 14:45:54] - TESTING POIS - Time 0.8, Loss 1.1890, Acc 0.7302
+[2022/07/28 14:45:54] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:46:01] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0888, Acc 0.9838
+[2022/07/28 14:46:02] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:46:09] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1175, Acc 0.9758
+[2022/07/28 14:46:10] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:46:17] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1190, Acc 0.9777
+[2022/07/28 14:46:18] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:46:25] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0790, Acc 0.9838
+[2022/07/28 14:46:57] - 
+
+--- GLOBAL EVALUATIONS - Round: 55 of 75, Time: 63.5 ---
+[2022/07/28 14:47:04] - TESTING CLEAN - Time 0.9, Loss 1.0966, Acc 0.6814
+[2022/07/28 14:47:05] - TESTING POIS - Time 0.8, Loss 1.1950, Acc 0.7331
+[2022/07/28 14:47:05] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:47:14] - TRAINING - Epoch: 15, Time 0.6, Loss 0.0902, Acc 0.9817
+[2022/07/28 14:47:15] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:47:22] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0964, Acc 0.9738
+[2022/07/28 14:47:23] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:47:30] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1129, Acc 0.9798
+[2022/07/28 14:47:31] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:47:38] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1092, Acc 0.9818
+[2022/07/28 14:48:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 56 of 75, Time: 65.8 ---
+[2022/07/28 14:48:17] - TESTING CLEAN - Time 0.9, Loss 1.0872, Acc 0.6796
+[2022/07/28 14:48:18] - TESTING POIS - Time 0.8, Loss 1.0830, Acc 0.7527
+[2022/07/28 14:48:18] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:48:25] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1148, Acc 0.9757
+[2022/07/28 14:48:26] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:48:33] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1082, Acc 0.9758
+[2022/07/28 14:48:34] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:48:41] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1246, Acc 0.9696
+[2022/07/28 14:48:41] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:48:49] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0964, Acc 0.9758
+[2022/07/28 14:49:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 57 of 75, Time: 63.7 ---
+[2022/07/28 14:49:28] - TESTING CLEAN - Time 0.9, Loss 1.0776, Acc 0.6802
+[2022/07/28 14:49:29] - TESTING POIS - Time 0.8, Loss 1.0250, Acc 0.7620
+[2022/07/28 14:49:29] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:49:36] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0800, Acc 0.9797
+[2022/07/28 14:49:37] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:49:44] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1062, Acc 0.9657
+[2022/07/28 14:49:45] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:49:52] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1201, Acc 0.9696
+[2022/07/28 14:49:52] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:50:00] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0860, Acc 0.9859
+[2022/07/28 14:50:32] - 
+
+--- GLOBAL EVALUATIONS - Round: 58 of 75, Time: 63.4 ---
+[2022/07/28 14:50:38] - TESTING CLEAN - Time 0.9, Loss 1.1012, Acc 0.6826
+[2022/07/28 14:50:39] - TESTING POIS - Time 0.8, Loss 1.0389, Acc 0.7647
+[2022/07/28 14:50:39] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:50:46] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0899, Acc 0.9838
+[2022/07/28 14:50:47] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:50:54] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0663, Acc 0.9919
+[2022/07/28 14:50:55] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:51:02] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1021, Acc 0.9737
+[2022/07/28 14:51:03] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:51:10] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0758, Acc 0.9818
+[2022/07/28 14:51:43] - 
+
+--- GLOBAL EVALUATIONS - Round: 59 of 75, Time: 63.9 ---
+[2022/07/28 14:51:49] - TESTING CLEAN - Time 0.9, Loss 1.0893, Acc 0.6830
+[2022/07/28 14:51:50] - TESTING POIS - Time 0.8, Loss 1.0990, Acc 0.7533
+[2022/07/28 14:51:50] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:51:57] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0803, Acc 0.9858
+[2022/07/28 14:51:58] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:52:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1128, Acc 0.9778
+[2022/07/28 14:52:06] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:52:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1182, Acc 0.9777
+[2022/07/28 14:52:13] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:52:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0816, Acc 0.9899
+[2022/07/28 14:52:53] - 
+
+--- GLOBAL EVALUATIONS - Round: 60 of 75, Time: 63.3 ---
+[2022/07/28 14:53:00] - TESTING CLEAN - Time 0.9, Loss 1.0938, Acc 0.6838
+[2022/07/28 14:53:00] - TESTING POIS - Time 0.8, Loss 1.0421, Acc 0.7678
+[2022/07/28 14:53:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:53:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0756, Acc 0.9838
+[2022/07/28 14:53:09] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:53:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1205, Acc 0.9677
+[2022/07/28 14:53:17] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:53:24] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0851, Acc 0.9838
+[2022/07/28 14:53:25] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:53:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0906, Acc 0.9798
+[2022/07/28 14:54:05] - 
+
+--- GLOBAL EVALUATIONS - Round: 61 of 75, Time: 64.1 ---
+[2022/07/28 14:54:11] - TESTING CLEAN - Time 0.9, Loss 1.0845, Acc 0.6780
+[2022/07/28 14:54:12] - TESTING POIS - Time 0.8, Loss 1.0215, Acc 0.7731
+[2022/07/28 14:54:12] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:54:19] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0681, Acc 0.9878
+[2022/07/28 14:54:20] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:54:27] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0829, Acc 0.9859
+[2022/07/28 14:54:28] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:54:35] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0905, Acc 0.9818
+[2022/07/28 14:54:36] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:54:43] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0783, Acc 0.9838
+[2022/07/28 14:55:16] - 
+
+--- GLOBAL EVALUATIONS - Round: 62 of 75, Time: 63.8 ---
+[2022/07/28 14:55:22] - TESTING CLEAN - Time 0.9, Loss 1.0900, Acc 0.6810
+[2022/07/28 14:55:23] - TESTING POIS - Time 0.9, Loss 0.9903, Acc 0.7776
+[2022/07/28 14:55:23] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:55:30] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0952, Acc 0.9797
+[2022/07/28 14:55:31] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:55:38] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0892, Acc 0.9718
+[2022/07/28 14:55:39] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:55:46] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0715, Acc 0.9899
+[2022/07/28 14:55:47] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:55:54] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0876, Acc 0.9818
+[2022/07/28 14:56:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 63 of 75, Time: 63.2 ---
+[2022/07/28 14:56:33] - TESTING CLEAN - Time 0.8, Loss 1.0867, Acc 0.6844
+[2022/07/28 14:56:34] - TESTING POIS - Time 0.9, Loss 1.0206, Acc 0.7702
+[2022/07/28 14:56:34] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:56:41] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1083, Acc 0.9777
+[2022/07/28 14:56:41] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:56:49] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0832, Acc 0.9819
+[2022/07/28 14:56:49] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:56:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0929, Acc 0.9777
+[2022/07/28 14:56:57] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:57:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0756, Acc 0.9879
+[2022/07/28 14:57:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 64 of 75, Time: 63.6 ---
+[2022/07/28 14:57:44] - TESTING CLEAN - Time 0.9, Loss 1.0899, Acc 0.6878
+[2022/07/28 14:57:44] - TESTING POIS - Time 0.8, Loss 0.9597, Acc 0.7782
+[2022/07/28 14:57:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:57:52] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0911, Acc 0.9777
+[2022/07/28 14:57:52] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:58:00] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0835, Acc 0.9738
+[2022/07/28 14:58:00] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:58:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0814, Acc 0.9858
+[2022/07/28 14:58:08] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:58:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0774, Acc 0.9798
+[2022/07/28 14:58:48] - 
+
+--- GLOBAL EVALUATIONS - Round: 65 of 75, Time: 63.4 ---
+[2022/07/28 14:58:54] - TESTING CLEAN - Time 0.9, Loss 1.0804, Acc 0.6866
+[2022/07/28 14:58:55] - TESTING POIS - Time 0.8, Loss 0.9944, Acc 0.7780
+[2022/07/28 14:58:55] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 14:59:03] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0645, Acc 0.9939
+[2022/07/28 14:59:03] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 14:59:11] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0991, Acc 0.9798
+[2022/07/28 14:59:11] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 14:59:18] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0968, Acc 0.9818
+[2022/07/28 14:59:19] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 14:59:26] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0839, Acc 0.9798
+[2022/07/28 14:59:59] - 
+
+--- GLOBAL EVALUATIONS - Round: 66 of 75, Time: 63.9 ---
+[2022/07/28 15:00:05] - TESTING CLEAN - Time 0.9, Loss 1.0947, Acc 0.6832
+[2022/07/28 15:00:06] - TESTING POIS - Time 0.9, Loss 1.0249, Acc 0.7789
+[2022/07/28 15:00:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:00:14] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0880, Acc 0.9736
+[2022/07/28 15:00:14] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:00:22] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0869, Acc 0.9839
+[2022/07/28 15:00:22] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:00:30] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0657, Acc 0.9858
+[2022/07/28 15:00:30] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:00:38] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0969, Acc 0.9778
+[2022/07/28 15:01:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 67 of 75, Time: 63.8 ---
+[2022/07/28 15:01:16] - TESTING CLEAN - Time 0.9, Loss 1.0812, Acc 0.6840
+[2022/07/28 15:01:17] - TESTING POIS - Time 0.8, Loss 1.0949, Acc 0.7676
+[2022/07/28 15:01:17] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:01:25] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0809, Acc 0.9858
+[2022/07/28 15:01:25] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:01:33] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0763, Acc 0.9859
+[2022/07/28 15:01:33] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:01:41] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0720, Acc 0.9838
+[2022/07/28 15:01:41] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:01:49] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0729, Acc 0.9818
+[2022/07/28 15:02:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 68 of 75, Time: 63.7 ---
+[2022/07/28 15:02:27] - TESTING CLEAN - Time 0.9, Loss 1.0845, Acc 0.6844
+[2022/07/28 15:02:28] - TESTING POIS - Time 0.8, Loss 0.9261, Acc 0.7924
+[2022/07/28 15:02:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:02:36] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0730, Acc 0.9838
+[2022/07/28 15:02:36] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:02:44] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0633, Acc 0.9859
+[2022/07/28 15:02:44] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:02:52] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1178, Acc 0.9717
+[2022/07/28 15:02:52] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:02:59] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0518, Acc 0.9919
+[2022/07/28 15:03:32] - 
+
+--- GLOBAL EVALUATIONS - Round: 69 of 75, Time: 63.5 ---
+[2022/07/28 15:03:38] - TESTING CLEAN - Time 0.9, Loss 1.0842, Acc 0.6848
+[2022/07/28 15:03:39] - TESTING POIS - Time 0.9, Loss 1.0375, Acc 0.7711
+[2022/07/28 15:03:39] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:03:47] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0710, Acc 0.9858
+[2022/07/28 15:03:47] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:03:54] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0544, Acc 0.9899
+[2022/07/28 15:03:55] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:04:02] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0816, Acc 0.9777
+[2022/07/28 15:04:03] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:04:10] - TRAINING - Epoch: 15, Time 0.5, Loss 0.1057, Acc 0.9677
+[2022/07/28 15:04:43] - 
+
+--- GLOBAL EVALUATIONS - Round: 70 of 75, Time: 63.8 ---
+[2022/07/28 15:04:49] - TESTING CLEAN - Time 0.9, Loss 1.0931, Acc 0.6862
+[2022/07/28 15:04:50] - TESTING POIS - Time 0.8, Loss 1.0017, Acc 0.7864
+[2022/07/28 15:04:50] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:04:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0900, Acc 0.9838
+[2022/07/28 15:04:58] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:05:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0582, Acc 0.9919
+[2022/07/28 15:05:06] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:05:13] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0657, Acc 0.9838
+[2022/07/28 15:05:14] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:05:21] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0629, Acc 0.9919
+[2022/07/28 15:05:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 71 of 75, Time: 63.6 ---
+[2022/07/28 15:06:00] - TESTING CLEAN - Time 0.8, Loss 1.0940, Acc 0.6908
+[2022/07/28 15:06:01] - TESTING POIS - Time 0.8, Loss 1.0091, Acc 0.7842
+[2022/07/28 15:06:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:06:08] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0662, Acc 0.9899
+[2022/07/28 15:06:09] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:06:16] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0874, Acc 0.9798
+[2022/07/28 15:06:16] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:06:24] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0978, Acc 0.9777
+[2022/07/28 15:06:24] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:06:32] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0700, Acc 0.9838
+[2022/07/28 15:07:04] - 
+
+--- GLOBAL EVALUATIONS - Round: 72 of 75, Time: 63.5 ---
+[2022/07/28 15:07:11] - TESTING CLEAN - Time 0.9, Loss 1.0916, Acc 0.6902
+[2022/07/28 15:07:11] - TESTING POIS - Time 0.8, Loss 0.9349, Acc 0.7858
+[2022/07/28 15:07:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:07:19] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0813, Acc 0.9838
+[2022/07/28 15:07:19] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:07:27] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0657, Acc 0.9798
+[2022/07/28 15:07:27] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:07:35] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0736, Acc 0.9858
+[2022/07/28 15:07:35] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:07:43] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0916, Acc 0.9677
+[2022/07/28 15:08:15] - 
+
+--- GLOBAL EVALUATIONS - Round: 73 of 75, Time: 63.7 ---
+[2022/07/28 15:08:21] - TESTING CLEAN - Time 0.9, Loss 1.0801, Acc 0.6918
+[2022/07/28 15:08:22] - TESTING POIS - Time 0.8, Loss 0.9995, Acc 0.7867
+[2022/07/28 15:08:22] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:08:30] - TRAINING - Epoch: 15, Time 0.4, Loss 0.0803, Acc 0.9817
+[2022/07/28 15:08:30] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:08:38] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0809, Acc 0.9839
+[2022/07/28 15:08:38] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:08:45] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0567, Acc 0.9899
+[2022/07/28 15:08:46] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:08:53] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0748, Acc 0.9838
+[2022/07/28 15:09:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 74 of 75, Time: 64.0 ---
+[2022/07/28 15:09:33] - TESTING CLEAN - Time 0.9, Loss 1.0706, Acc 0.6986
+[2022/07/28 15:09:33] - TESTING POIS - Time 0.8, Loss 0.9723, Acc 0.7896
+[2022/07/28 15:09:33] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/07/28 15:09:41] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0470, Acc 0.9939
+[2022/07/28 15:09:41] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/07/28 15:09:49] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0618, Acc 0.9899
+[2022/07/28 15:09:49] - 
+
+--- LOCAL TRAINING - Local Update: 3 of 10, User: 2, Malicious: Yes ---
+[2022/07/28 15:09:57] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0860, Acc 0.9838
+[2022/07/28 15:09:57] - 
+
+--- LOCAL TRAINING - Local Update: 4 of 10, User: 3, Malicious: Yes ---
+[2022/07/28 15:10:05] - TRAINING - Epoch: 15, Time 0.5, Loss 0.0758, Acc 0.9838
+[2022/07/28 15:10:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 75 of 75, Time: 63.7 ---
+[2022/07/28 15:10:44] - TESTING CLEAN - Time 0.9, Loss 1.0766, Acc 0.6920
+[2022/07/28 15:10:45] - TESTING POIS - Time 0.8, Loss 0.9842, Acc 0.7911
