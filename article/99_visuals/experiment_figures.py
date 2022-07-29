@@ -3,6 +3,7 @@
 import argparse
 import numpy as np
 import os
+import re
 
 # visual
 import matplotlib
@@ -15,7 +16,7 @@ import seaborn as sns
 def get_args():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dba', default=1, type=int)
+    parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--n_malicious', default=4, type=int)
@@ -100,7 +101,7 @@ def plot_scaling(data_val, data_user, d_rounds, path, suffix):
     if path is not None:
         plt.savefig(os.path.join(path, 'visuals', f'scaling{suffix}--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -176,8 +177,10 @@ def plot_threshold(
         malicious_lower = data_malicious_max_q1 - 1.5 * (data_malicious_max_q3 - data_malicious_max_q1)
         malicious_lower = np.maximum(np.minimum(malicious_lower, 1), 0)
 
-        ax2.plot(data_val_r + 1, malicious_upper, '--r')
-        ax2.plot(data_val_r + 1, malicious_lower, '--r')
+        u_data_malicious_r = np.sort(np.unique(data_malicious_r))
+
+        ax2.plot(u_data_malicious_r + 1, malicious_upper, '--r')
+        ax2.plot(u_data_malicious_r + 1, malicious_lower, '--r')
         ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
 
         c_labels=[
@@ -189,7 +192,9 @@ def plot_threshold(
 
     else:
 
-        ax2.plot(data_val_r + 1, data_malicious_max, '--r')
+        u_data_malicious_r = np.sort(np.unique(data_malicious_r))
+
+        ax2.plot(u_data_malicious_r + 1, data_malicious_max, '--r')
         ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
 
         c_labels=[
@@ -204,7 +209,7 @@ def plot_threshold(
     if path is not None:
         plt.savefig(os.path.join(path, 'visuals', f'threshold{suffix}--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -230,23 +235,20 @@ def main():
     # experiments
     titles = ['No Attack or Defense', 'Attack Only', 'Defense Only', 'Attack and Defense']
     values = [
-        (args.n_rounds + 1, args.n_rounds + 1),
-        (args.n_rounds + 1, args.m_start),
-        (1, args.n_rounds + 1),
-        (1, args.m_start)
+        (args.n_rounds + 1, args.n_rounds + 1),  # no attack or defense
+        (args.n_rounds + 1, args.m_start),  # attack only
+        (1, args.n_rounds + 1),  # defense only
+        (1, args.m_start)  # attack and defense
    ]
 
 
     """ Defense Plot - Entropy Scaling """
     # import no attack nor defense data
     (i, j) = values[0]
-    subdir = os.path.join(
-        path,
-        'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious)
-    )
+    to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start251--m_start251', f.path)]
 
-    temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
-    temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
+    temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
+    temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)
 
     plot_scaling(temp_val, temp_user, args.d_rounds, path, suffix)
 
@@ -273,7 +275,7 @@ def main():
         # import files
         i, j = values[index]
 
-        try:
+        if j == args.m_start:
 
             subdir = os.path.join(
                 path,
@@ -286,20 +288,17 @@ def main():
             temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
             temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
 
-        except:
+        else:
 
-            subdir = os.path.join(
-                path,
-                'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + (
-                    '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious)
-                )
-            )
+            if i == args.n_rounds:
+                to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start251--m_start251', f.path)]
 
-            temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
-            temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
-            temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
+            else:
+                to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start1--m_start251', f.path)]
 
-        # data manipulation
+            temp_global = np.load(os.path.join(to_reads[0], 'data/output_global_acc.npy'), allow_pickle=True)
+            temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
+            temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)
 
         # global acc
         plt.sca(axarr[index])
@@ -326,7 +325,7 @@ def main():
     plt.savefig(
         os.path.join(path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
     )
-    plt.show()
+    #plt.show()
     plt.close()
 
 
@@ -378,7 +377,7 @@ def main():
     plt.savefig(
         os.path.join(path, 'visuals', f'attack_accuracy{suffix}.png'), bbox_inches='tight'
     )
-    plt.show()
+    #plt.show()
     plt.close()
 
 
