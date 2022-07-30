@@ -144,22 +144,23 @@ For global model evaluation, we split the test set, added the backdoor trigger t
 
 %
 \subsection{Main Results}
-We demonstrate ... in Figure \ref{}
+We first demonstrate the performance of our threshold when both the trusted and other users have balanced data in Figure \ref{fig:accuracy_balanced}. This figure shows the classification accuracy and the attack success rate of the global model over 250 communication rounds. For this experiment, a single malicious user is included in the subset of users to potentially update the global model every single communication round. The two leftmost figures show, without defense, that the global model can be effectively attacked where the model's classification accuracy does not change. However, the right images show that the use of our defense cutoff does not decrease classification accuracy and prevents backdoor attacks regardless of whether a backdoor attack is present. 
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=1.2\textwidth]{centralized/alpha10000--alpha_val10000/visuals/accuracy.png}
+    \includegraphics[width=\textwidth]{centralized/alpha10000--alpha_val10000/visuals/accuracy.png}
     \caption{Global Model Performance With Balanced Users and Trusted User}
     \label{fig:accuracy_balanced}
 \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{centralized/alpha10000--alpha_val10000/visuals/threshold--d_rounds50.png}
-    \caption{Threshold Performance With Balanced Users and Trusted User}
-    \label{fig:defense_balanced}
-\end{figure}
+Figure \ref{fig:threshold_balanced} shows the ability of our threshold to differentiate between benign and malicious user submission. 
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=.75\textwidth]{centralized/alpha10000--alpha_val10000/visuals/threshold--d_rounds50.png}
+    \caption{Threshold Performance With Balanced Users and Trusted User}
+    \label{fig:threshold_balanced}
+\end{figure}
 
 
 
