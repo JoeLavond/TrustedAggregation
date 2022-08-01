@@ -9,6 +9,7 @@
 
 % --- Custom packages --- 
 \usepackage{graphicx}
+\usepackage{float}
 
 
 \title{Title \\ Subtitle}
@@ -53,6 +54,8 @@
 Abstract text here.
 \end{abstract}
 
+
+
 % ----- Content -----
 \section{Introduction}
 
@@ -90,9 +93,12 @@ Thus, for each user in the subset of K users and the validation user, the additi
 \begin{enumerate}
     \item There is extreme instability round-to-round in our threshold. A lucky malicious user can get past a large cutoff for that round due to instability.
     \item In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have a large opportunity to impact the model at the beginning of Federated Learning.
-    \item The threshold values depend heavily on the distribution of class labels for the validated user.
+    \item The class distributional differences are larger and more variable for users with imbalanced classes. Also, the threshold values specifically depend heavily on the distribution of class labels for the validated user.
 \end{enumerate}
-Our final threshold includes the following solutions to the above problems.
+
+We refocus our efforts to estimate an upper bound for the most considerable change a non-malicious user with balanced data can make to the output
+layer of the global model. Our final conservative threshold includes the following solutions to the above problems.
+
 
 %
 \subsection{Global Min-Mean Threshold}
@@ -110,7 +116,7 @@ In some cases, having a trusted user with a balanced distribution of class label
     S_c &= 1 - | 1 - z_c |    
 \end{align}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{article/99_visuals/scaling.png}
     \caption{Entropy Based Scaling ($S_c$) for Several Size Classification Problems}
@@ -131,7 +137,7 @@ We believe further research is needed regarding extremely imbalanced edge cases.
 %
 \subsection{Setting}
 
-We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over M communication rounds with N users. Each iteration randomly selects K users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average of returning model weights by the FedAvg procedure. 
+We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over M communication rounds with N users. Each iteration randomly selects K users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returning model weights by the FedAvg procedure. 
 
 To produce local datasets that do not have to be independent and identically distributed, we sample from any training data set using a Dirichlet distribution with specified parameter alpha. The Dirichlet sample determines the proportion of each class included in that user's dataset. Larger values of alpha produce more balanced class distributions. We separately control alpha for benign, malicious, and validation users. Our experiments use the CIFAR-10 dataset, which consists of 60000 32x32 color images in 10 classes, with 6000 images per class. We use the test set of 10000 images, with 500 images per class, for model evaluation. Our experiments use the ResNet18 model architecture, a state-of-the-ark off-the-shelf classifier for object recognition, initially proposed in \cite{resnet}. 
 
@@ -144,24 +150,36 @@ For global model evaluation, we split the test set, added the backdoor trigger t
 
 %
 \subsection{Main Results}
-We demonstrate ... in Figure \ref{}
+We first demonstrate the performance of our threshold when both the trusted and other users have balanced data in Figure \ref{fig:centralized--alpha10000--alpha_val10000--accuracy--n_malicious1--m_start1}. This figure shows the classification accuracy and the attack success rate of the global model over 250 communication rounds. For this experiment, a single malicious user is included in the subset of users to potentially update the global model every single communication round. The two leftmost figures show, without defense, that the global model can be effectively attacked where the model's classification accuracy does not change. However, the right images show that the use of our defense cutoff prevents backdoor attacks and does not decrease model performance, regardless of whether a backdoor attack is present. 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=1.2\textwidth]{centralized/alpha10000--alpha_val10000/visuals/accuracy.png}
-    \caption{Global Model Performance With Balanced Users and Trusted User}
-    \label{fig:accuracy_balanced}
+    \includegraphics[width=\textwidth]{centralized/alpha10000--alpha_val10000/visuals/accuracy--n_malicious1--m_start1.png}
+    \caption{Global Model Performance For Balanced Users And Balanced Trusted User}
+    \label{fig:centralized--alpha10000--alpha_val10000--accuracy--n_malicious1--m_start1}
 \end{figure}
 
-\begin{figure}[h]
+Figure \ref{fig:centralized--alpha10000--alpha_val10000--threshold--n_malicious1--m_start1--d_rounds50} shows the ability of our threshold to differentiate between benign and malicious user submission. The Threshold vs. Benign figure shows the upper and lower bounds on values considered outliers for each round. We can see our threshold closely follows what we would expect to be the largest possible value a benign user contributes. Additionally, the threshold can clearly distinguish malicious users with at least one larger class output layer distributional difference. 
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{centralized/alpha10000--alpha_val10000/visuals/threshold--d_rounds50.png}
-    \caption{Threshold Performance With Balanced Users and Trusted User}
-    \label{fig:defense_balanced}
+    \includegraphics[width=.75\textwidth]{centralized/alpha10000--alpha_val10000/visuals/threshold--n_malicious1--m_start1--d_rounds50.png}
+    \caption{Threshold Performance For Balanced Users And Balanced Trusted User}
+    \label{fig:centralized--alpha10000--alpha_val10000--threshold--n_malicious1--m_start1--d_rounds50}
 \end{figure}
 
+Next, we highlight the ability of our threshold to estimate these benign users' upper bound even when the validation user has imbalanced data. As shown in Figure \ref{fig:centralized--alpha10000--alpha_val1--scaling--d_rounds50.png}, the scaled threshold corrects for the large Kolmogorov Smirnov values of imbalanced classes and gives a reasonable representation for the most considerable value that a benign user with balanced data. The model and threshold performance remain similar to the balanced validation user case; see Appendix \ref{sec.imbal_val} for actual plots. Without scaling, malicious users have an enormous opportunity to backdoor the global model in the early communication rounds. Unfortunately, even with scaling, it still takes several communication rounds to give an accurate cutoff and INSERT COMMENT REGARDING WEAKER AGAINST MULTIPLE ATTACKERS.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.5\textwidth]{centralized/alpha10000--alpha_val1/visuals/scaling--n_malicious1--m_start1--d_rounds50.png}
+    \caption{Caption}
+    \label{fig:centralized--alpha10000--alpha_val1--scaling--d_rounds50.png}
+\end{figure}
 
+Note that our threshold is also effective against backdoor attacks when the users have imbalanced data. INSERT COMMENT ABOUT REJECTING MORE BENIGN USERS AND MODEL CONVERGENCE TAKING LONGER. See Appendix \ref{sec.imbal_users} for model performance plots under this setting.
+
+INSERT MULTIPLE ATTACKERS
 
 % 
 \section{Conclusion}
@@ -172,7 +190,45 @@ We demonstrate ... in Figure \ref{}
 
 %
 \appendix
-\section{Appendix}
-You may include other additional sections here.
+
+%
+\section{Main Results Continued}
+
+%
+\subsection{Balanced Users, Imbalanced Validation User}
+\label{sec.imbal_val}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{centralized/alpha10000--alpha_val1/visuals/accuracy--n_malicious1--m_start1.png}
+    \caption{Global Model Performance For Balanced Users And Imbalanced Trusted User}
+    \label{fig:centralized--alpha10000--alpha_val1--accuracy--n_malicious1--m_start1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.75\textwidth]{centralized/alpha10000--alpha_val1/visuals/threshold--n_malicious1--m_start1--d_rounds50.png}
+    \caption{Threshold Performance For Balanced Users And Imbalanced Trusted User}
+    \label{fig:centralized--alpha10000--alpha_val1--threshold--n_malicious1--m_start1--d_rounds50}
+\end{figure}
+
+%
+\subsection{Balanced Users, Imbalanced Validation User}
+\label{sec.imbal_users}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{centralized/alpha1--alpha_val1/visuals/accuracy--n_malicious1--m_start1.png}
+    \caption{Global Model Performance For Imbalanced Users And Balanced Trusted User}
+    \label{fig:centralized--alpha1--alpha_val10000--accuracy--n_malicious1--m_start1}
+\end{figure} 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{centralized/alpha1--alpha_val1/visuals/accuracy--n_malicious1--m_start1.png}
+    \caption{Global Model Performance For Imbalanced Users And Imbalanced Trusted User}
+    \label{fig:centralized--alpha1--alpha_val1--accuracy--n_malicious1--m_start1}
+\end{figure} 
+
 
 \end{document}
