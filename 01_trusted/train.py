@@ -407,18 +407,6 @@ def main():
                 user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
             )
 
-            # evaluate
-            if args.print_all:
-                (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
-                    clean_test_loader, global_model, cost, args.gpu_start,
-                    logger=logger, title='testing clean'
-                )
-
-                (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
-                    pois_test_loader, global_model, cost, args.gpu_start,
-                    logger=logger, title='testing pois'
-                )
-
             # send updates to global
             if ((r < args.d_start) or user_update):
                 user_update_count += 1

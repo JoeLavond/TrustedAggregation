@@ -238,6 +238,58 @@ class CustomDataset(Dataset):
 
 
 """ Model """
+def global_median_(global_model, model_list, gpu=0):
+    """
+    Function: Update global model (in-place) with the elementwise median of suggested model weights
+    Usage: Model filtering of users for federated learning
+    """
+
+    # iterate over model weights simulataneously
+    for (_, global_weights), obj in zip(
+        global_model.state_dict().items(),
+        *[model.state_dict().items() for model in model_list]
+    ):
+        obj = [temp[1] for temp in obj]  # keep model weights not names
+        global_weights.copy_(
+            torch.quantile(torch.stack(obj), q=0.5, dim=0).cuda(gpu)  # return median weight across models
+        )
+
+    return None
+
+
+def global_mean_(global_model, model_list, beta=.1):
+    """
+    Function: Update global model (in-place) with the trimmed mean of suggested model weights
+        Trimmed mean is the elementwise mean with the top and bottom beta of data removed
+    Usage: Model filtering of users for federated learning
+    """
+
+    assert 0 <= beta and beta < 1/2, 'invalid value of beta outside of [0, 1/2)'
+
+    # iterate over model weights simulataneously
+    for (_, global_weights), obj in zip(
+        global_model.state_dict().items(),
+        *[model.state_dict().items() for model in model_list]
+    ):
+
+        # setup
+        obj = [temp[1] for temp in obj]  # keep model weights not names
+
+        n = len(obj)
+        k = int(n * beta)  # how many models is beta of model_list
+
+        # remove beta largest and smallest entries elementwise
+        stacked = torch.stack(obj)
+        obj_sorted, _ = torch.sort(stacked, dim=0)
+        trimmed = obj_sorted[k:(n - k)]
+
+        # replace global weights with elementwise trimmed mean
+        global_weights.copy_(trimmed.mean(dim=0).cuda(gpu))
+
+    return None
+
+
+# visible stamp
 class BasicStamp(nn.Module):
 
     def __init__(

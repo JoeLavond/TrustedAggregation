@@ -84,6 +84,7 @@ def get_args():
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
+    parser.add_argument('--trim_mean', default=0, type=int)
 
     return parser.parse_args()
 
@@ -96,16 +97,16 @@ def main():
 
     # output
     args.out_path = (
-        ('distributed' if args.dba else 'centralized')
-        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
+        ('trim_mean' if args.trim_mean else 'median')  # agg method
+        + '/' + ('distributed' if args.dba else 'centralized')
+        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start)
+        + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
         os.makedirs(
             os.path.join(args.out_path, 'data')
         )
-
     gu.set_seeds(args.seed)
     logger = gu.get_log(args.out_path)
     logger.info(args)
@@ -131,29 +132,6 @@ def main():
     users_data_indices = train_data.sample(args.n_users - 1, args.n_local_data, args.alpha, args.n_classes)
     [val_data_indices] = train_data.sample(1, args.n_local_data, args.alpha_val, args.n_classes)
     users_data_indices.append(val_data_indices)
-
-    val_data = train_data.get_user_data(
-        val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
-    )
-
-    val_data_scaling = val_data.entropy_scaling(c=args.n_classes)
-    val_data_scaling = 1 - np.abs(1 - val_data_scaling)
-
-    # store output
-    output_val_ks = []
-    output_val_ks.append(
-        [-1] + val_data_scaling.tolist()
-    )
-
-    val_data.transformations = None
-    clean_val_loader = DataLoader(
-        val_data,
-        batch_size=args.n_batch,
-        shuffle=False,
-        num_workers=1,
-        pin_memory=True
-    )
-
 
     """ Data poisoning """
     # establish malicious users
@@ -184,10 +162,6 @@ def main():
     # global
     output_global_acc = []
 
-    # defense
-    output_user_ks = []
-    output_val_ks_all = []
-
 
     """ Import testing data """
     # testing data
@@ -195,7 +169,6 @@ def main():
         root='/home/joe/data/',
         train=False,
         download=True
-
     )
 
     clean_test_x, pois_test_x, clean_test_y, pois_test_y = train_test_split(
@@ -233,60 +206,6 @@ def main():
         0, args.n_rounds
     )
 
-    # validation
-    (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
-        clean_val_loader, global_model, cost, args.gpu_start,
-        logger=None, title='validation clean',
-        output=1
-    )
-
-    """ Validation User """
-    # copy global model and subset to user local data
-    user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
-    user_data = train_data.get_user_data(
-        users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
-    )
-
-    user_loader = DataLoader(
-        user_data,
-        batch_size=args.n_batch,
-        shuffle=True,
-        num_workers=1,
-        pin_memory=True
-    )
-
-    user_opt = optim.SGD(
-        user_model.parameters(),
-        lr=args.lr, weight_decay=args.wd, momentum=args.wd
-    )
-
-    # train local model
-    (user_train_loss, user_train_acc) = gu.training(
-        user_loader, user_model, cost, user_opt,
-        args.n_epochs, args.gpu_start + 1,
-        logger=(logger if args.print_all else None), print_all=args.print_all
-    )
-
-    # validation
-    (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-        clean_val_loader, user_model, cost, args.gpu_start + 1,
-        logger=None, title='validation clean',
-        output=1
-    )
-
-    val_ks = [
-        round(
-            lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
-        ) for c in range(global_output_layer.shape[-1])
-    ]
-    output_val_ks.append(
-        [0] + val_ks
-    )
-
-    val_ks = np.array(val_ks) * val_data_scaling
-    val_ks_max = max(val_ks)
-    output_val_ks_all.append(val_ks_max)
-
     # testing
     (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
         clean_test_loader, global_model, cost, args.gpu_start,
@@ -309,15 +228,12 @@ def main():
 
         # setup
         round_start = time.time()
-        global_update = copy.deepcopy(global_model).cpu()
-        with torch.no_grad():
-            for name, weight in global_update.state_dict().items():
-                weight.zero_()
+        global_updates = []
 
-        # select subset of users
         user_update_count = 0
         malicious_update_count = 0
 
+        # select subset of users
         if (r < args.m_start):
 
             user_subset_index = torch.randperm(args.n_users - args.n_malicious - args.remove_val)[:int(args.n_users * args.p_report)]
@@ -383,128 +299,22 @@ def main():
                             args.m_scale * (user_weights - global_weights) + global_weights
                         )
 
-
-            """ External validation """
-            # validation
-            (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-                clean_val_loader, user_model, cost, args.gpu_start + 1,
-                logger=None, title='validation clean',
-                output=1
-            )
-
-            # execute ks cutoff if defending
-            user_ks = [
-                round(
-                    lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
-                ) for c in range(global_output_layer.shape[-1])
-            ]
-            output_user_ks.append(
-                [m_user, r] + user_ks
-            )
-
-            user_ks_max = max(user_ks)
-            user_update = (
-                user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
-            )
-
-            # evaluate
-            if args.print_all:
-                (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
-                    clean_test_loader, global_model, cost, args.gpu_start,
-                    logger=logger, title='testing clean'
-                )
-
-                (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
-                    pois_test_loader, global_model, cost, args.gpu_start,
-                    logger=logger, title='testing pois'
-                )
-
             # send updates to global
-            if ((r < args.d_start) or user_update):
-                user_update_count += 1
-                with torch.no_grad():
-                    for (_, global_weights), (_, update_weights), (_, user_weights) in zip(
-                        global_model.state_dict().items(),
-                        global_update.state_dict().items(),
-                        user_model.state_dict().items()
-                    ):
-                        update_weights += (user_weights.cpu() - global_weights.cpu())
+            global_updates.append(user_model.cpu())
 
 
         """ Global model training """
         # update global weights
-        if (user_update_count > 0):
-            with torch.no_grad():
-                for (_, global_weights), (_, update_weights) in zip(
-                    global_model.state_dict().items(),
-                    global_update.state_dict().items()
-                ):
-                    try:
-                        update_weights /= user_update_count
-                    except:
-                        update_weights.copy_((update_weights / user_update_count).long())
-
-                    global_weights += update_weights.cuda(args.gpu_start)
+        if args.trim_mean:
+            lu.global_trimmean_(global_model, global_updates)
+        else:
+            lu.global_median_(global_model, global_updates)
 
         round_end = time.time()
         logger.info(
             '\n\n--- GLOBAL EVALUATIONS - Round: %d of %d, Time: %.1f ---',
             r, args.n_rounds, round_end - round_start
         )
-
-        # validation
-        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
-            clean_val_loader, global_model, cost, args.gpu_start,
-            logger=None, title='validation clean',
-            output=1
-        )
-
-        """ Validation User """
-        # copy global model and subset to user local data
-        user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
-        user_data = train_data.get_user_data(
-            users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
-        )
-
-        user_loader = DataLoader(
-            user_data,
-            batch_size=args.n_batch,
-            shuffle=True,
-            num_workers=1,
-            pin_memory=True
-        )
-
-        user_opt = optim.SGD(
-            user_model.parameters(),
-            lr=args.lr, weight_decay=args.wd, momentum=args.wd
-        )
-
-        # train local model
-        (user_train_loss, user_train_acc) = gu.training(
-            user_loader, user_model, cost, user_opt,
-            args.n_epochs, args.gpu_start + 1,
-            logger=(logger if args.print_all else None), print_all=args.print_all
-        )
-
-        # validation
-        (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
-            clean_val_loader, user_model, cost, args.gpu_start + 1,
-            logger=None, title='validation clean',
-            output=1
-        )
-
-        val_ks = [
-            round(
-                lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
-            ) for c in range(global_output_layer.shape[-1])
-        ]
-        output_val_ks.append(
-            [r] + val_ks
-        )
-
-        val_ks = np.array(val_ks) * val_data_scaling
-        val_ks_max = max(val_ks)
-        output_val_ks_all.append(val_ks_max)
 
         # testing
         (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
@@ -526,16 +336,6 @@ def main():
     output_global_acc = np.array(output_global_acc)
     np.save(
         os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
-    )
-
-    output_val_ks = np.array(output_val_ks)
-    np.save(
-        os.path.join(args.out_path, 'data', 'output_val_ks.npy'), output_val_ks
-    )
-
-    output_user_ks = np.array(output_user_ks)
-    np.save(
-        os.path.join(args.out_path, 'data', 'output_user_ks.npy'), output_user_ks
     )
 
 
