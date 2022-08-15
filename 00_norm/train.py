@@ -81,10 +81,10 @@ def get_args():
     parser.add_argument('--size_y', default=1, type=int)
     parser.add_argument('--gap', default=1, type=int)
     # defense
-    parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
     parser.add_argument('--trim_mean', default=0, type=int)
+    parser.add_argument('--beta', default=0.1, type=int)
 
     return parser.parse_args()
 
@@ -99,7 +99,7 @@ def main():
     args.out_path = (
         ('trim_mean' if args.trim_mean else 'median')  # agg method
         + '/' + ('distributed' if args.dba else 'centralized')
-        + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start)
+        + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
     if not os.path.exists(args.out_path):
@@ -306,7 +306,7 @@ def main():
         """ Global model training """
         # update global weights
         if args.trim_mean:
-            lu.global_trimmean_(global_model, global_updates)
+            lu.global_mean_(global_model, global_updates, args.beta)
         else:
             lu.global_median_(global_model, global_updates)
 

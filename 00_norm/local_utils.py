@@ -257,7 +257,7 @@ def global_median_(global_model, model_list, gpu=0):
     return None
 
 
-def global_mean_(global_model, model_list, beta=.1):
+def global_mean_(global_model, model_list, beta=.1, gpu=0):
     """
     Function: Update global model (in-place) with the trimmed mean of suggested model weights
         Trimmed mean is the elementwise mean with the top and bottom beta of data removed
