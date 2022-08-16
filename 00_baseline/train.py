@@ -98,10 +98,12 @@ def main():
     # output
     args.out_path = (
         ('mean' if args.trim_mean else 'median')  # agg method
-        + '/' + ('distributed' if args.dba else 'centralized')
+        + ('/distributed' if args.dba else '/centralized')
+        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
+
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
         os.makedirs(

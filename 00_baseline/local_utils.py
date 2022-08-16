@@ -285,8 +285,12 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
         obj_sorted, _ = torch.sort(stacked, dim=0)
         trimmed = obj_sorted[k:(n - k)]
 
+        # compute trimmed mean
+        trimmed_mean = trimmed.sum(dim=0)
+        trimmed_mean /= ((1 - 2*beta) * n)
+
         # replace global weights with elementwise trimmed mean
-        global_weights.copy_(trimmed.mean(dim=0).cuda(gpu).type(global_weights.dtype))
+        global_weights.copy_(trimmed_mean)
 
     return None
 
