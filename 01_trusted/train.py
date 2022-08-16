@@ -304,10 +304,14 @@ def main():
 
 
     """ Federated learning communication rounds """
+    round_scaling = 2
     for r in range(args.n_rounds):
-        r += 1
+
+        if args.warmup and r < args.n_classes:
+            round_scaling = ((args.n_classes - r) + 1) / (args.n_classes - r)
 
         # setup
+        r += 1
         round_start = time.time()
         global_update = copy.deepcopy(global_model).cpu()
         with torch.no_grad():
@@ -404,7 +408,7 @@ def main():
 
             user_ks_max = max(user_ks)
             user_update = (
-                user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
+                user_ks_max < (round_scaling * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
             )
 
             # send updates to global
