@@ -159,14 +159,14 @@ We make use of the empirical CDF function to avoid distributional assumptions on
 %
 \subsection{Threshold Construction}
 
-Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. Hence, we want to estimate the most prominent possible KS distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. Therefore, we aim to estimate and use a representation for the maximum of $b_c$ ($U$), the maximal benign change to any class, as a cutoff for returning user models. Letting $D$ represent the total number of classes, equation \ref{eq:base_thresh} shows under our distributional assumptions that twice the maximum of the class conditional differences is typically a useful upper bound for benign submissions.
+Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. Hence, we want to estimate the most prominent possible KS distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. Therefore, we aim to estimate and use a representation for the maximum of $b_c$ ($U$), the maximal benign change to any class, as a cutoff for returning user models. Letting $D$ represent the total number of classes, equation \ref{eq:geq_bound} shows under our distributional assumptions that twice the maximum of the class conditional differences is typically a useful upper bound for benign submissions.
 
 \begin{align}
     & \textrm{Suppose } \forall c \in \mathopen[ D \mathclose], (KS)_c \sim Uniform(0, b_c) \nonumber \\
     & \textrm{Let } j = \argmax_c \left( b_c \right) \textrm{ such that } b_j = \max_c \left( b_c \right) \nonumber \\
     & \quad \max_c \left( (KS)_c \right) \geq (KS)_j \nonumber \\
-    & \quad E \left[ \max_c \left( (KS)_c \right) \right] \geq E \left[ (KS)_j \right] = \dfrac{U}{2} \nonumber \\
-    & \quad \textrm{So } E \left[ 2 * \max_c \left( (KS)_c \right) \right] \geq U \label{eq:base_thresh} 
+    & \quad E \left[ \max_c \left( (KS)_c \right) \right] \geq E \left[ (KS)_j \right] = \dfrac{b_j}{2} \nonumber \\
+    & \quad E \left[ 2 * \max_c \left( (KS)_c \right) \right] \geq b_j \label{eq:geq_bound} 
 \end{align}
 
 Additionally, we make additional modifications to this basic threshold to address the following concerns:
@@ -182,19 +182,49 @@ layer of the global model. Our final threshold includes a warm-up period, global
 %
 \subsection{Warm-up Period}
 
+If we make the additional assumption of independence between classes distributions, we can show, see Equation \ref{eq:leq_bound} that alternative scaling of the maximum distance can instead produce a estimator that is conservative, on average. Furthermore, Equation \ref{eq:leq_bound} holds with equality instead when class distances share identical supports (ie. $\forall c \in \mathopen[ D \mathclose], b_c = b$). Note that the conservative scaling $(D + 1) / D \in \mathopen(1, \mathclose 1.5]$, and that larger classification problems require smaller initial scaling. This agrees with intuition that larger-way classification problems may require longer warm-up periods. 
+
+\begin{align}
+    & \textrm{Suppose } \forall c \in \mathopen[ D \mathclose], (KS)_c \overset{\indep}{\sim} Uniform(0, b_c) \nonumber \\
+    & \quad \dfrac{(KS)_c}{b_c} \overset{\mathrm{iid}}{\sim} Uniform(0, 1) \nonumber \\
+    & \quad \max_c \left( \dfrac{(KS)_c}{b_c} \right) \sim Beta(D, 1) \nonumber \\
+    & \textrm{Let } j = \argmax_c \left( b_c \right) \textrm{ such that } b_j = \max_c \left( b_c \right) \nonumber \\
+    & \quad \max_c \left( \dfrac{(KS)_c}{b_j} \right) \leq \max_c \left( \dfrac{(KS)_c}{b_c} \right) \nonumber \\
+    & \quad E \left[ \max_c \left( \dfrac{(KS)_c}{b_j} \right) \right] \leq E \left[ \max_c \left( \dfrac{(KS)_c}{b_c} \right) \right] = \dfrac{D}{D + 1} \nonumber \\
+    & \quad E \left[ \left( \dfrac{D + 1}{D} \right) \max_c \left( (KS)_c \right) \right] \leq b_j \label{eq:leq_bound}
+\end{align}
+
+We recommend traversing coefficients from $(D + 1) / D$ to 2 to assist in dampening the large opportunity for malicious users to impact the global model at the beginning of Federated Learning. It may be often more practical, additional training time permitting, to start with scaling by 1 to avoid fine-tuning this procedure for large classification problems. Additional, we believe that the length and intermediate values chosen, should be greatly influenced by the context of the application. Longer warm-up periods may be most useful when there is greater chance or consequence of attack.
+
 
 %
 \subsection{Global Min-Mean Smoothing}
 
-We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. By assuming that certain consecutive rounds have the same value of $b_c$, we can use instead the running average of the cutoff across rounds which would have the same expected value with reduced variability. Note that we can view this average as smoothing across all previous values with equal weight. Although smoothing solves our instability problem, smoothing methods exacerbate the second problem, where $b_c$ tends to decrease rapidly over the first few communication rounds. When $b_c$ decreases, we do not wish to use any previous communication rounds for our threshold. Our solution is to use as our cutoff the running mean since the lowest observed value (Global Min-Mean) of the maximum class distance for the validated user. Our solution quickly adapts to decreasing values of $b_c$. As $b_c$ shrinks, we observe new global minimums, and the start of the threshold is reset. In addition, when $b_c$ stabilizes, the averaging smooths our cutoff, keeping lucky malicious users from getting past a volatile threshold.
+We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We make use of averaging as a useful solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can instead use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. Although smoothing aids against the instability problem, smoothing methods tend to exacerbate that problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. When $b_c$ decreases rapidly, we do not wish to use any previous communication rounds for our threshold as this would result in a weaker cutoff for attacks to overcome. 
+
+Our solution is to use as our cutoff the running mean since the lowest observed value (Global Min-Mean) of the maximum class distance for the validated user. As a result, our solution quickly adapts to decreasing values of $U = max_c (b_c)$ over communication rounds. As $U$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. In addition, when our estimate for $U$ stabilizes, the averaging smooths our cutoff, which keeps lucky malicious users from getting past a volatile threshold. Figure \ref{fig:min-mean} compares our global min-mean smoothing with the base cutoff and various exponential smoothing techniques. We believe that our implementation choice best captures early behavior while providing the greatest improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds50.png}
+    \caption{Comparison of Various Smoothing Methods}
+    \label{fig:min-mean}
+\end{figure}
 
 %
 \subsection{Entropy-Based Class Scaling}
 
-In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. From information theory, Shannon Entropy \footnote{For a discrete random variable $\rvx$ with levels c, entropy is defined $H(x) = - \sum_c P(x_c) \log P(x_c)$} is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. Consider instead each class's contribution towards entropy, $H_c(x) = - P(x_c) \log P(x_c)$, and let D be the total number of classes. We propose scaling the distance between global and updated models for each class for multi-class classification problems by the following factor $S_c$, before computing the maximum and multiplying by two. Note that $S$, the collection of $S_c$, only needs to be computed once, as it depends on the local user's class label distribution and does not depend on the distance values each round.
+In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. From information theory, Shannon Entropy is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. 
+
+We propose scaling the KS distances between global and updated models for each class $(KS)_c$ by the following factor $S_c$, before computing the maximum and multiplying by two. Note that $S$, the collection of $S_c$, only needs to be computed once, as it depends on the local user's class label distribution and does not depend on the distance values each round.
+
+\begin{definition}[Shannon Entropy] For a discrete random variable Y, taking values $v$, with probability mass function $p(y)$, Shannon Entropy is defined as $H(Y) = - \sum_{v} p(v) \log p(v)$.
+    
+\end{definition}
 
 \begin{align}
-    y_c &= \min \left( x_c, \dfrac{1}{e} \right) \\
+    & H(x)
+    y_c &= \min \left( x_c, \dfrac{1}{e} \right) \nonumber \\
     z_c &= \min \left( \dfrac{P(y_c) \ln \left( P(y_c) \right)}{\dfrac{1}{D} \ln \left( \dfrac{1}{D} \right)}, 2 \right) \\
     S_c &= 1 - | 1 - z_c |    
 \end{align}
@@ -275,38 +305,6 @@ INSERT MULTIPLE ATTACKERS
 
 %
 \appendix
-
-%
-\section{Threshold Theory}
-
-\begin{align*}
-    & \textbf{Case 1: } \forall c \in \mathopen[ D \mathclose], X_c \overset{\mathrm{iid}}{\sim} Uniform(0, U) \\
-    \\
-    & \dfrac{X_c}{U} \overset{\mathrm{iid}}{\sim} Uniform(0, 1) \\
-    & \max_c \left( \dfrac{X_c}{U} \right) \sim Beta(D, 1) \\
-    \\
-    & E \left[ \max_c \left( \dfrac{X_c}{U} \right) \right] = \dfrac{D}{D + 1} \\
-    & E \left[ \dfrac{(D + 1) \max_c \left( X_c \right)}{D} \right] = U\\
-    \\
-    & \textbf{Case 2: } \forall c \in \mathopen[ D \mathclose], X_c \overset{\indep}{\sim} Uniform(0, b_c) \\
-    \\
-    & \dfrac{X_c}{b_c} \overset{\mathrm{iid}}{\sim} Uniform(0, 1) \\
-    & \max_c \left( \dfrac{X_c}{b_c} \right) \sim Beta(D, 1) \\
-    \\
-    & \textrm{Let } U = \max_c(b_c) \\
-    & \max_c \left( \dfrac{X_c}{U} \right) \leq \max_c \left( \dfrac{X_c}{b_c} \right) \\
-    & E \left[ \max_c \left( \dfrac{X_c}{U} \right) \right] \leq E \left[ \max_c \left( \dfrac{X_c}{b_c} \right) \right] = \dfrac{D}{D + 1} \\
-    & \dfrac{E \left[ \max_c \left( X_c \right) \right]}{U} \leq \dfrac{D}{D + 1} \\
-    & \left( \dfrac{D + 1}{D} \right) E \left[ \max_c \left( X_c \right) \right] \leq U \\
-    & E \left[ \dfrac{(D + 1) \max_c \left( X_c \right)}{D} \right] \leq U \\
-    \\
-    & \textrm{Let } L = \min(b_c) \\
-    & \max_c \left( \dfrac{X_c}{U} \right) \leq \max_c \left( \dfrac{X_c}{b_c} \right) \\
-    & E \left[ \max_c \left( \dfrac{X_c}{U} \right) \right] \leq E \left[ \max_c \left( \dfrac{X_c}{b_c} \right) \right] = \dfrac{D}{D + 1} \\
-    & \dfrac{E \left[ \max_c \left( X_c \right) \right]}{U} \leq \dfrac{D}{D + 1} \\
-    & \left( \dfrac{D + 1}{D} \right) E \left[ \max_c \left( X_c \right) \right] \leq U \\
-    & E \left[ \dfrac{(D + 1) \max_c \left( X_c \right)}{D} \right] \leq U \\
-\end{align*}
 
 %
 \section{Main Results Continued}
