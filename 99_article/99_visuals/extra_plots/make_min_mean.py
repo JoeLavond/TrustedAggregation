@@ -74,12 +74,12 @@ def get_quantiles(r, values, running=0, global_min=0):
 
 
 def plot_threshold(
-    data_val, data_user, d_rounds,  # ----- input data and rounds to display
-    suffix, path='.'  # ------------------- .png output location
+    data_val, d_rounds,  # ----- input data and rounds to display
+    suffix, path='.'  # -------- .png output location
     ):
 
     # validation user
-    data_val, data_user = np.array(data_val), np.array(data_user)
+    data_val = np.array(data_val)
     data_val = data_val[:-1]  # remove last validation check for next iteration never run
     data_val, scaling = data_val[1:], data_val[0, 1:]  # remove scaling row, remove round from scaling
     data_val_r, data_val_values = data_val[:, 0], data_val[:, 1:]  # seperate round from data
@@ -88,36 +88,19 @@ def plot_threshold(
     data_val_max_thresh = get_thresh(data_val_max)
     data_val_max_thresh = np.maximum(np.minimum(data_val_max_thresh, 1), 0)
 
-    # benign users
-    data_benign = data_user[data_user[:, 0] == 0, 1:]  # subset to benign users, remove malicious index column
-    data_benign_r, data_benign_values = data_benign[:, 0], data_benign[:, 1:]  # seperate round column from data
-    data_benign_max = data_benign_values.max(axis=1)
-
-    data_benign_max_q1, data_benign_max_q3 = get_quantiles(data_benign_r, data_benign_max)
-    benign_upper = data_benign_max_q3 + 1.5 * (data_benign_max_q3 - data_benign_max_q1)
-    benign_upper = np.maximum(np.minimum(benign_upper, 1), 0)
-    benign_lower = data_benign_max_q1 - 1.5 * (data_benign_max_q3 - data_benign_max_q1)
-    benign_lower = np.maximum(np.minimum(benign_lower, 1), 0)
-
     fig, [ax1, ax2] = plt.subplots(ncols=2, sharey=True, figsize=(8, 4))
-    plt.suptitle('Comparison of Various Thresholding Methods')
     ax1.set_title('Global-Min Smoothing')
 
     ax1.set_xlabel('Communication Round')
     ax1.set_xlim(0, d_rounds)
     ax1.set_ylim(-0.05, 1.1)
 
-    ax1.plot(data_val_r + 1, benign_upper, '--b')
-    ax1.plot(data_val_r + 1, benign_lower, '--b')
-
     ax1.plot(data_val_r + 1, 2*data_val_max, '-k')
     ax1.plot(data_val_r + 1, data_val_max_thresh, '-g')
 
     ax1.legend(labels=[
-        'benign round upper: q3 + 1.5 * IQR',
-        'benign round lower: q1 - 1.5 * IQR',
-        '2 * val round',
-        'min-mean val max ks'
+        'base threshold',
+        'global min-mean smoothing'
     ])
 
     # smoothing
@@ -130,16 +113,12 @@ def plot_threshold(
     ax2.set_xlim(0, d_rounds)
     ax2.set_ylim(-0.05, 1.1)
 
-    ax2.plot(data_val_r + 1, benign_upper, '--b')
-    ax2.plot(data_val_r + 1, benign_lower, '--b')
     ax2.plot(data_val_r + 1, 2 * data_val_max, '-k')
     ax2.plot(data_val_r + 1, simple_exp.fittedvalues, '-y')
     ax2.plot(data_val_r + 1, exp_smooth.fittedvalues, '-r')
 
     ax2.legend(labels=[
-        'benign round upper: q3 + 1.5 * IQR',
-        'benign round lower: q1 - 1.5 * IQR',
-        '2 * val round',
+        'base threshold',
         'simple exponential smoothing',
         'exponential smoothing',
     ])
@@ -177,9 +156,7 @@ def main():
     )
 
     temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
-    temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
-
-    plot_threshold(temp_val, temp_user, args.d_rounds, suffix)
+    plot_threshold(temp_val, args.d_rounds, suffix)
 
 
 if __name__ == "__main__":

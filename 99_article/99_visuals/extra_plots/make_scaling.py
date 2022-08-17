@@ -15,6 +15,22 @@ def abs_scaling(x, c):
     return out
 
 
+def new_scaling(x, num_classes):
+
+    out = []
+    for y in x:
+        if y <= 1 / np.exp(1):
+
+
+    x = np.minimum(x, 1 / np.exp(1))
+    temp = np.array([y * np.log(y) if y > 0 else 0 for y in x])
+    temp /= ((1/c) * np.log((1/c)))
+    temp[temp > 2] = 2
+    out = 1 - np.abs((1 - temp))
+
+    return out
+
+
 
 """ Main function HERE """
 def main():

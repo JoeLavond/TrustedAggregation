@@ -16,10 +16,10 @@ import seaborn as sns
 def get_args():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dba', default=0, type=int)
-    parser.add_argument('--n_rounds', default=250, type=int)
+    parser.add_argument('--dba', default=1, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
-    parser.add_argument('--n_malicious', default=1, type=int)
+    parser.add_argument('--n_malicious', default=4, type=int)
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -229,7 +229,7 @@ def main():
     suffix = '--n_malicious' + str(args.n_malicious) + '--m_start' + str(args.m_start)
 
     if not os.path.exists(os.path.join(path, 'visuals')):
-        os.mkdir(path, 'visuals')
+        os.makedirs(os.path.join(path, 'visuals'))
 
 
     # experiments
@@ -245,7 +245,11 @@ def main():
     """ Defense Plot - Entropy Scaling """
     # import no attack nor defense data
     (i, j) = values[0]
-    to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start251--m_start251', f.path)]
+    to_reads = [
+        f.path for f in os.scandir(path) if re.search(
+            f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}', f.path
+        )
+    ]
 
     temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
     temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)
@@ -291,10 +295,16 @@ def main():
         else:
 
             if i == args.n_rounds:
-                to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start251--m_start251', f.path)]
+                to_reads = [
+                    f.path for f in os.scandir(path) if re.search(
+                        f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}', f.path
+                    )
+                ]
 
             else:
-                to_reads = [f.path for f in os.scandir(path) if re.search('n_rounds250--d_start1--m_start251', f.path)]
+                to_reads = [
+                    f.path for f in os.scandir(path) if re.search(
+                        f'n_rounds{args.n_rounds}--d_start1--m_start{args.n_rounds + 1}', f.path)]
 
             temp_global = np.load(os.path.join(to_reads[0], 'data/output_global_acc.npy'), allow_pickle=True)
             temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
