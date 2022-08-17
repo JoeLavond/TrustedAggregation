@@ -46,7 +46,7 @@ def main():
     plt.title('D = 5')
 
     plt.sca(axarr[3])
-    plt.plot(x, trunc_linear(x, 10))
+    plt.plot(x, scaling(x, 10))
     plt.ylim(0, 1.1)
     plt.xlim(0, 1)
     plt.vlines((1 / 10), 0, 1, 'g', 'dashed')
