@@ -176,8 +176,7 @@ Additionally, we make additional modifications to this basic threshold to addres
     \item The class distributional differences are larger and more variable for users with imbalanced classes. Also, the threshold values depend heavily on the distribution of class labels for the validated user.
 \end{enumerate}
 
-Hence, we refocus our efforts more specifically to estimation of an upper bound for the most considerable change a non-malicious user with balanced data can make to the output
-layer of the global model. Our final threshold includes a warm-up period, global min-mean smoothing, and entropy-based class scaling to address the above concerns, respectively.
+Hence, we refocus our efforts more specifically to estimation of an upper bound for the most considerable change a non-malicious user with balanced data can make to the output layer of the global model. Our final threshold includes a warm-up period, global min-mean smoothing, and class frequency scaling to address the above concerns, respectively.
 
 %
 \subsection{Warm-up Period}
@@ -194,7 +193,7 @@ If we make the additional assumption of independence between classes distributio
     & \quad E \left[ \left( \dfrac{D + 1}{D} \right) \max_c \left( (KS)_c \right) \right] \leq b_j \label{eq:leq_bound}
 \end{align}
 
-We recommend traversing coefficients from $(D + 1) / D$ to 2 to assist in dampening the large opportunity for malicious users to impact the global model at the beginning of Federated Learning. It may be often more practical, additional training time permitting, to start with scaling by 1 to avoid fine-tuning this procedure for large classification problems. Additional, we believe that the length and intermediate values chosen, should be greatly influenced by the context of the application. Longer warm-up periods may be most useful when there is greater chance or consequence of attack.
+We recommend traversing coefficients from $(D + 1) / D$ to 2 to assist in dampening the large opportunity for malicious users to impact the global model at the beginning of Federated Learning. It may be often more practical, additional training time permitting, to start with scaling by 1 to avoid fine-tuning this procedure for large classification problems. Additionally, we believe that the length and intermediate values chosen, should be greatly influenced by the context of the application. Longer warm-up periods may be most useful when there is greater chance or consequence of attack.
 
 
 %
@@ -206,44 +205,22 @@ Our solution is to use as our cutoff the running mean since the lowest observed 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds50.png}
+    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
     \caption{Comparison of Various Smoothing Methods}
     \label{fig:min-mean}
 \end{figure}
 
 %
-\subsection{Entropy-Based Class Scaling}
+\subsection{Class Frequency Scaling}
 
-In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. From information theory, Shannon Entropy is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. 
-
-We propose scaling the KS distances between global and updated models for each class $(KS)_c$ by the following factor $S_c$, before computing the maximum and multiplying by two. Note that $S$, the collection of $S_c$, only needs to be computed once, as it depends on the local user's class label distribution and does not depend on the distance values each round.
-
-\begin{definition}[Shannon Entropy] For a discrete random variable Y, taking values $v$, with probability mass function $p(y)$, Shannon Entropy is defined as $H(Y) = - \sum_{v} p(v) \log p(v)$.
-    
-\end{definition}
-
-\begin{align}
-    & H(x)
-    y_c &= \min \left( x_c, \dfrac{1}{e} \right) \nonumber \\
-    z_c &= \min \left( \dfrac{P(y_c) \ln \left( P(y_c) \right)}{\dfrac{1}{D} \ln \left( \dfrac{1}{D} \right)}, 2 \right) \\
-    S_c &= 1 - | 1 - z_c |    
-\end{align}
+In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{99_article/99_visuals/scaling.png}
-    \caption{Entropy Based Scaling ($S_c$) for Several Size Classification Problems}
+    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/scaling.png}
+    \caption{Class Frequency Scaling for Several Size Classification Problems}
     \label{fig:scaling}
 \end{figure}
-
-See Figure \ref{fig:scaling} for $S_c(x)$ plotted as a function of the class proportions for several values of $D$, the total number of classes. Observe the following  properties:
-\begin{enumerate}
-    \item Scaling is between 0 and 1, and there is no scaling when a given class is balanced
-    \item Under-represented classes are scaled down to zero
-    \item For many-class classification problems, we are less trusting of an over-represented class as we have more potential classes for at least one to be approximately balanced.
-\end{enumerate}
-
-We believe further research is needed regarding extremely imbalanced edge cases. However, we propose this scaling as a remedy for reasonably imbalanced data, demonstrating its promising effectiveness in our experimentation.
 
 \section{EXPERIMENTS}
 
@@ -344,6 +321,35 @@ INSERT MULTIPLE ATTACKERS
     \caption{Global Model Performance For Imbalanced Users And Imbalanced Trusted User}
     \label{fig:centralized--alpha1--alpha_val1--accuracy--n_malicious1--m_start1}
 \end{figure} 
+
+
+% 
+\section{Retired Text (Saved If Needed Later)}
+
+\subsection{Entropy-Based Scaling}
+From information theory, Shannon Entropy is one such measure of diversity. Note that entropy is maximized when class labels are uniformly distributed. 
+
+We propose scaling the KS distances between global and updated models for each class $(KS)_c$ by the following factor $S_c$, before computing the maximum and multiplying by two. Note that $S$, the collection of $S_c$, only needs to be computed once, as it depends on the local user's class label distribution and does not depend on the distance values each round.
+
+\begin{definition}[Shannon Entropy] For a discrete random variable Y, taking values $v$, with probability mass function $p(y)$, Shannon Entropy is defined as $H(Y) = - \sum_{v} p(v) \log p(v)$.
+    
+\end{definition}
+
+\begin{align}
+    y_c &= \min \left( x_c, \dfrac{1}{e} \right) \\
+    z_c &= \min \left( \dfrac{P(y_c) \ln \left( P(y_c) \right)}{\dfrac{1}{D} \ln \left( \dfrac{1}{D} \right)}, 2 \right) \\
+    S_c &= 1 - | 1 - z_c |    
+\end{align}
+
+% figure omitted
+See Figure \ref{fig:scaling} for $S_c(x)$ plotted as a function of the class proportions for several values of $D$, the total number of classes. Observe the following  properties:
+\begin{enumerate}
+    \item Scaling is between 0 and 1, and there is no scaling when a given class is balanced
+    \item Under-represented classes are scaled down to zero
+    \item For many-class classification problems, we are less trusting of an over-represented class as we have more potential classes for at least one to be approximately balanced.
+\end{enumerate}
+
+We believe further research is needed regarding extremely imbalanced edge cases. However, we propose this scaling as a remedy for reasonably imbalanced data, demonstrating its promising effectiveness in our experimentation.
 
 
 \end{document}
