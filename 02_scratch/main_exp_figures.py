@@ -102,7 +102,7 @@ def plot_scaling(data_val, data_user, d_rounds, path, suffix):
     if path is not None:
         plt.savefig(os.path.join(path, 'visuals', f'scaling{suffix}--d_rounds{d_rounds}.png'), bbox_inches='tight')
 
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -133,8 +133,6 @@ def main():
             f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}', f.path
         )
     ]
-    print([f.path for f in os.scandir(path)])
-    print(to_reads)
 
     temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
     temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)
@@ -143,7 +141,13 @@ def main():
 
 
     """ Global Accuracy """
-    temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
+    temp_global = np.load(
+        os.path.join(
+            path,
+            f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}--n_malicious{args.n_malicious}',
+            'data/output_global_acc.npy'
+        ), allow_pickle=True
+    )
 
     plt.figure()
     plt.xlabel('Communication Rounds')
@@ -156,7 +160,7 @@ def main():
         os.path.join(path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
     )
 
-    plt.show()
+    #plt.show()
     plt.close()
 
 
