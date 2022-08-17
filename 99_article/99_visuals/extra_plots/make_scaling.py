@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 
 # helper
-def abs_scaling(x, c):
+"""
+def scaling(x, c):
 
     x = np.minimum(x, 1 / np.exp(1))
     temp = np.array([y * np.log(y) if y > 0 else 0 for y in x])
@@ -13,20 +14,25 @@ def abs_scaling(x, c):
     out = 1 - np.abs((1 - temp))
 
     return out
+"""
 
+def scaling(x, num_classes):
+    c = 1 / np.exp(1)
 
-def new_scaling(x, num_classes):
+    out = np.zeros_like(x)
+    for i, y in enumerate(x):
+        if y == 0:
+            pass
+        else:
 
-    out = []
-    for y in x:
-        if y <= 1 / np.exp(1):
+            if y <= c:
+                out[i] = y * np.log(y)
+            else:
+                out[i] = 2 * c * np.log(c) - y * np.log(y)
 
-
-    x = np.minimum(x, 1 / np.exp(1))
-    temp = np.array([y * np.log(y) if y > 0 else 0 for y in x])
-    temp /= ((1/c) * np.log((1/c)))
-    temp[temp > 2] = 2
-    out = 1 - np.abs((1 - temp))
+    out /= ((1 / num_classes) * np.log((1 / num_classes)))
+    #temp[temp > 2] = 2
+    out = 1 - np.abs((1 - out))
 
     return out
 
@@ -38,10 +44,10 @@ def main():
     x = np.linspace(start=0, stop=1, num=200)
 
     # scaling coefs
-    abs_c3 = abs_scaling(x, c=3)
-    abs_c5 = abs_scaling(x, c=5)
-    abs_c10 = abs_scaling(x, c=10)
-    abs_c15 = abs_scaling(x, c=15)
+    abs_c3 = scaling(x, 3)
+    abs_c5 = scaling(x, 5)
+    abs_c10 = scaling(x, 10)
+    abs_c15 = scaling(x, 15)
 
     fig, axarr = plt.subplots(ncols=4, sharey=True, figsize=(16, 4))
 
@@ -74,6 +80,7 @@ def main():
     plt.title('D = 15')
 
     plt.savefig('scaling.png')
+    plt.show()
 
 
 if __name__ == "__main__":
