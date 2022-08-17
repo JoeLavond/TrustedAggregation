@@ -148,8 +148,7 @@ def main():
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
 
-    val_data_scaling = val_data.entropy_scaling(c=args.n_classes)
-    val_data_scaling = 1 - np.abs(1 - val_data_scaling)
+    val_data_scaling = val_data.linear_scaling(args.n_classes, trunc=0)
 
     # store output
     output_val_ks = []

@@ -97,6 +97,26 @@ class CustomDataset(Dataset):
 
         return temp
 
+    def linear_scaling(self, c, trunc=1):
+
+        B = 1 / c  # balanced proportion of given class label
+
+        # setup
+        label_counts = torch.bincount(self.labels).cpu().numpy()
+        label_props = label_counts / sum(label_counts)
+
+        if not trunc:
+            index = (label_props > B)
+            label_props[index] = B * (label_props[index] - B) / (1 - B) + B
+        else:
+            print('dist', label_props)
+
+        index = (label_props <= 2 * B)
+        output = np.zeros_like(label_props)
+        output[index] = (B - np.abs(B - label_props[index])) / B
+
+        return output
+
 
     """ Class functions """
     def _sample_helper(self, n_local_data, alpha, n_classes, **kwargs):
