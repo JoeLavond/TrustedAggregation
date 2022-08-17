@@ -97,7 +97,9 @@ def main():
 
     # output
     args.out_path = (
-        ('distributed' if args.dba else 'centralized')
+        ('10_cifar' if args.n_classes == 10 else '')
+        + ('100_cifar' if args.n_classes == 100 else '')
+        + ('/distributed' if args.dba else '/centralized')
         + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
         + '/n_rounds' + str(args.n_rounds) + '--d_start' + str(args.d_start) + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
@@ -118,11 +120,18 @@ def main():
         T.RandomCrop(size=32)
     ])
 
-    train_data = datasets.CIFAR10(
-        root='/home/joe/data/',
-        train=True,
-        download=True
-    )
+    if args.n_classes == 10:
+        train_data = datasets.CIFAR10(
+            root='/home/joe/data/',
+            train=True,
+            download=True
+        )
+    elif args.n_classes == 100:
+        train_data = datasets.CIFAR100(
+            root='/home/joe/data/',
+            train=True,
+            download=True
+        )
 
     train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
     cifar_mean = train_data.mean()
@@ -137,8 +146,7 @@ def main():
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
 
-    val_data_scaling = val_data.entropy_scaling(c=args.n_classes)
-    val_data_scaling = 1 - np.abs(1 - val_data_scaling)
+    val_data_scaling = val_data.linear_scaling(args.n_classes)
 
     # store output
     output_val_ks = []
@@ -178,7 +186,7 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(pretrained=False)
+        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
@@ -192,12 +200,18 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
-        root='/home/joe/data/',
-        train=False,
-        download=True
-
-    )
+    if args.n_classes == 10:
+        test_data = datasets.CIFAR10(
+            root='/home/joe/data/',
+            train=False,
+            download=True
+        )
+    elif args.n_classes == 100:
+        test_data = datasets.CIFAR100(
+            root='/home/joe/data/',
+            train=False,
+            download=True
+        )
 
     clean_test_x, pois_test_x, clean_test_y, pois_test_y = train_test_split(
         np.array(test_data.data), np.array(test_data.targets),
@@ -305,11 +319,24 @@ def main():
 
 
     """ Federated learning communication rounds """
+    # warm-up period
     round_scaling = 2
+    if args.warmup > 0:
+        round_scalings = np.linspace(
+            start=(args.n_classes + 1) / args.n_classes,
+            end=2,
+            num=args.warmup
+        )
+
+        np.save(
+            os.path.join(args.out_path, 'data', 'output_scalings.npy'), round_scalings
+        )
+
+    # fed learn main loop
     for r in range(args.n_rounds):
 
         if args.warmup and r < args.n_classes:
-            pass  # can write function to specify scaling for threshold
+            round_scaling = round_scalings[r]
 
         # setup
         r += 1

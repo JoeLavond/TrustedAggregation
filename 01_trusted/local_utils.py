@@ -84,18 +84,20 @@ class CustomDataset(Dataset):
             self.transformations
         )
 
-    def entropy_scaling(self, c):
+
+    def linear_scaling(self, n_classes):
+
+        B = 1 / n_classes  # proportion of perfectly balanced class
 
         # setup
         label_counts = torch.bincount(self.labels).cpu().numpy()
         label_props = label_counts / sum(label_counts)
-        label_props = np.minimum(label_props, 1 / np.exp(1))
 
-        temp = [x * np.log(x) if x > 0 else 0 for x in label_props]
-        temp = np.array(temp) / ((1 / c) * np.log((1 / c)))
-        temp[temp > 2] = 2
+        index = (label_props <= 2 * B)
+        output = np.zeros_like(label_props)
+        output[index] = (B - np.abs(B - label_props[index])) / B
 
-        return temp
+        return output
 
 
     """ Class functions """
