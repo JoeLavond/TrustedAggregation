@@ -201,11 +201,11 @@ We recommend traversing coefficients from $(D + 1) / D$ to 2 to assist in dampen
 
 We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We make use of averaging as a useful solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can instead use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. Although smoothing aids against the instability problem, smoothing methods tend to exacerbate that problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. When $b_c$ decreases rapidly, we do not wish to use any previous communication rounds for our threshold as this would result in a weaker cutoff for attacks to overcome. 
 
-Our solution is to use as our cutoff the running mean since the lowest observed value (Global Min-Mean) of the maximum class distance for the validated user. As a result, our solution quickly adapts to decreasing values of $U = max_c (b_c)$ over communication rounds. As $U$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. In addition, when our estimate for $U$ stabilizes, the averaging smooths our cutoff, which keeps lucky malicious users from getting past a volatile threshold. Figure \ref{fig:min-mean} compares our global min-mean smoothing with the base cutoff and various exponential smoothing techniques. We believe that our implementation choice best captures early behavior while providing the greatest improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
+Our solution is to use as our cutoff the running mean since the lowest observed value (Global Min-Mean) of the maximum class distance for the validated user. As a result, our solution quickly adapts to decreasing values of $U = max_c (b_c)$ over communication rounds. As $U$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. In addition, when our estimate for $U$ stabilizes, the averaging smooths our cutoff, which keeps lucky malicious users from getting past a volatile threshold. Figure \ref{fig:min-mean} compares our global min-mean smoothing with the base cutoff and various  smoothing techniques. We believe that our implementation choice best captures early behavior while also providing the greatest improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
+    \includegraphics[width=.5\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
     \caption{Comparison of Various Smoothing Methods}
     \label{fig:min-mean}
 \end{figure}
@@ -215,12 +215,16 @@ Our solution is to use as our cutoff the running mean since the lowest observed 
 
 In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/scaling.png}
-    \caption{Class Frequency Scaling for Several Size Classification Problems}
-    \label{fig:scaling}
-\end{figure}
+We choose a simple function 
+
+\begin{align}
+    & \textrm{Let } \forall c \in \mathopen[ D \mathclose], p_c = \textrm{ the proportion of labels in each class and } \nonumber \\
+    & \textrm{Define } S_T \in \mathbb{R}^D \textrm{ as:} \nonumber \\
+    & (S_T)_c = \begin{cases}
+       1 - D \mid \dfrac{1}{D} - p_c \mid    & \text{if } p_c \leq 2b \\
+       0    & \text{otherwise}
+  \end{cases}
+\end{align}
 
 \section{EXPERIMENTS}
 
