@@ -20,7 +20,7 @@ def get_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--n_rounds', default=250, type=int)
-    parser.add_argument('--d_rounds', default=50, type=int)
+    parser.add_argument('--d_rounds', default=30, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
@@ -73,6 +73,25 @@ def get_quantiles(r, values, running=0, global_min=0):
     return np.array(q1), np.array(q3)
 
 
+def get_smoothing(x, w=3):
+
+    out_simple, out_exp = [], []
+    for i in range(len(x)):
+        temp = x[:(i + 1)]
+
+        if i == 0:
+            out_simple.append(x[0])
+            out_exp.append(x[0])
+
+        else:
+            out_simple.append(np.mean(x[max([0, i - (w - 1)]):(i + 1)]))
+
+            exp_smooth = ExponentialSmoothing(temp, trend='mul', initialization_method="estimated").fit()
+            out_exp.append(exp_smooth.fittedvalues[-1])
+
+    return (np.array(out_simple), np.array(out_exp))
+
+
 def plot_threshold(
     data_val, d_rounds,  # ----- input data and rounds to display
     suffix, path='.'  # -------- .png output location
@@ -87,40 +106,23 @@ def plot_threshold(
     data_val_max = data_val_values.max(axis=1)
     data_val_max_thresh = get_thresh(data_val_max)
     data_val_max_thresh = np.maximum(np.minimum(data_val_max_thresh, 1), 0)
+    (w_smooth, exp_smooth) = get_smoothing(2 * data_val_max)
 
-    fig, [ax1, ax2] = plt.subplots(ncols=2, sharey=True, figsize=(8, 4))
-    ax1.set_title('Global-Min Smoothing')
+    plt.figure()
+    plt.xlabel('Communication Round')
+    plt.xlim(0, d_rounds)
+    plt.ylim(-0.05, 1.1)
 
-    ax1.set_xlabel('Communication Round')
-    ax1.set_xlim(0, d_rounds)
-    ax1.set_ylim(-0.05, 1.1)
+    plt.plot(data_val_r + 1, np.minimum(2 * data_val_max, 1), '-k')
+    plt.plot(data_val_r + 1, np.minimum(w_smooth, 1), '--r')
+    plt.plot(data_val_r + 1, np.minimum(exp_smooth, 1), '--', color='orange')
+    plt.plot(data_val_r + 1, np.minimum(data_val_max_thresh, 1), '--b')
 
-    ax1.plot(data_val_r + 1, 2*data_val_max, '-k')
-    ax1.plot(data_val_r + 1, data_val_max_thresh, '-g')
-
-    ax1.legend(labels=[
+    plt.legend(labels=[
         'base threshold',
-        'global min-mean smoothing'
-    ])
-
-    # smoothing
-    simple_exp = SimpleExpSmoothing(2 * data_val_max, initialization_method="estimated").fit()
-    exp_smooth = ExponentialSmoothing(2 * data_val_max, trend='mul', initialization_method="estimated").fit()
-
-    ax2.set_title('Traditional Smoothing')
-
-    ax2.set_xlabel('Communication Round')
-    ax2.set_xlim(0, d_rounds)
-    ax2.set_ylim(-0.05, 1.1)
-
-    ax2.plot(data_val_r + 1, 2 * data_val_max, '-k')
-    ax2.plot(data_val_r + 1, simple_exp.fittedvalues, '-y')
-    ax2.plot(data_val_r + 1, exp_smooth.fittedvalues, '-r')
-
-    ax2.legend(labels=[
-        'base threshold',
-        'simple exponential smoothing',
+        'window=3 smoothing',
         'exponential smoothing',
+        'global min-mean smoothing'
     ])
 
     if path is not None:
