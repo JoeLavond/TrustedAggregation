@@ -25,6 +25,32 @@ def min_mean_smooth(
     return scale * np.array(output)
 
 
+def quadratic_scaling(
+    proportion,  # ----- proportion of class to compute scaling coef
+    num_classes  # ----- size of classification problem
+):
+
+    """
+    Function: Return simple scaling coef given class proportion
+        No observations -> 0
+        Balanced proportion -> 1
+        2 * Balanced proportion -> 0
+        Any value in between is scaled linearly based on location
+    Usage: Create visual to show scaling given different proportions
+    """
+
+    B = 1 / num_classes  # balanced proportion of labels
+
+    # scale all values further than double balanced to 0
+    index = (proportion <= 2 * B)
+    output = np.zeros_like(proportion)
+
+    # scale values based on how far they are from balanced
+    output[index] = -1 / (B ** 2) * proportion[index] * (proportion[index] - 2 * B)
+
+    return output
+
+
 """ Helper function """
 def get_quantiles(
     rounds,  # ------- vector of the communication rounds for the values
@@ -42,7 +68,7 @@ def get_quantiles(
     """
 
     # get increasing array of unique rounds
-    unique_rounds = np.unique(r)
+    unique_rounds = np.unique(rounds)
     unique_rounds.sort()
 
     # iterate unique rounds and store quantiles
@@ -50,8 +76,8 @@ def get_quantiles(
     for r in unique_rounds:
 
         # determine rounds to calculate quantiles over and subset values
-        rounds = (unique_rounds <= r) if running else (unique_rounds == r)
-        sub_values = values[rounds]
+        sub_rounds = (rounds <= r) if running else (rounds == r)
+        sub_values = values[sub_rounds]
 
         # compute quantiles for subsetted values
         q1.append(np.quantile(sub_values, 0.25))
