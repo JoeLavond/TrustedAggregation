@@ -24,7 +24,7 @@ def get_args():
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--warmup', default=0, type=int)
+    parser.add_argument('--warmup', default=25, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
 
     return parser.parse_args()
@@ -103,7 +103,7 @@ def plot_scaling(
 
         round_scalings = 2 * np.ones_like(data_val_max_thresh)
         temp = np.linspace(
-            start=(n_classes + 1) / n_classes,
+            start=(args.n_classes + 1) / args.n_classes,
             stop=2,
             num=warmup
         )
@@ -136,8 +136,7 @@ def plot_threshold(
     data_val, data_user,
     warmup, d_rounds,
     path, suffix,
-    n_malicious, m_start,
-    n_classes=10
+    n_malicious, m_start
     ):
 
     # validation user
@@ -185,7 +184,7 @@ def plot_threshold(
 
         round_scalings = 2 * np.ones_like(data_val_scaled_max_thresh)
         temp = np.linspace(
-            start=(n_classes + 1) / n_classes,
+            start=(args.n_classes + 1) / args.n_classes,
             stop=2,
             num=warmup
         )
@@ -233,7 +232,7 @@ def plot_threshold(
 
             round_scalings = 2 * np.ones_like(data_val_scaled_max_thresh)
             temp = np.linspace(
-                start=(n_classes + 1) / n_classes,
+                start=(args.n_classes + 1) / args.n_classes,
                 stop=2,
                 num=warmup
             )
@@ -264,7 +263,7 @@ def plot_threshold(
 
             round_scalings = 2 * np.ones_like(data_val_scaled_max_thresh)
             temp = np.linspace(
-                start=(n_classes + 1) / n_classes,
+                start=(args.n_classes + 1) / args.n_classes,
                 stop=2,
                 num=warmup
             )
@@ -303,8 +302,8 @@ def main():
 
     path = os.path.join(
         f'/home/joe/03_federated/{args.root}',
-        ('10_cifar' if args.n_classes == 10 else ''),
-        ('100_cifar' if args.n_classes == 100 else ''),
+        + ('10_cifar' if args.n_classes == 10 else ''),
+        + ('100_cifar' if args.n_classes == 100 else ''),
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
@@ -338,8 +337,7 @@ def main():
     plot_scaling(
         temp_val, temp_user,
         args.warmup, args.d_rounds,
-        path, suffix,
-        args.n_classes
+        path, suffix
     )
 
 
@@ -358,8 +356,7 @@ def main():
         temp_val, temp_user,
         args.warmup, args.d_rounds,
         path, suffix,
-        args.n_malicious, args.m_start,
-        args.n_classes
+        args.n_malicious, args.m_start
     )
 
 
