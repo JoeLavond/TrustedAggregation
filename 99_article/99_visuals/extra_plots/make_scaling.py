@@ -28,7 +28,7 @@ def main():
     plt.text((1 / 3), 1.05, 'balanced', c='g')
     plt.title('D = 3')
 
-    plt.savefig('scaling.png')
+    plt.savefig('visuals/scaling.png')
     plt.show()
 
 
