@@ -319,8 +319,24 @@ def main():
 
 
     """ Federated learning communication rounds """
+    # warm-up period
+    round_scaling = 2
+    if args.warmup > 0:
+        round_scalings = np.linspace(
+            start=(args.n_classes + 1) / args.n_classes,
+            stop=2,
+            num=args.warmup
+        )
+
+        np.save(
+            os.path.join(args.out_path, 'data', 'output_scalings.npy'), round_scalings
+        )
+
     # fed learn main loop
     for r in range(args.n_rounds):
+
+        if r < args.warmup:
+            round_scaling = round_scalings[r]
 
         # setup
         r += 1
@@ -420,7 +436,7 @@ def main():
 
             user_ks_max = max(user_ks)
             user_update = (
-                user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
+                user_ks_max < (round_scaling * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
             )
 
             # send updates to global
