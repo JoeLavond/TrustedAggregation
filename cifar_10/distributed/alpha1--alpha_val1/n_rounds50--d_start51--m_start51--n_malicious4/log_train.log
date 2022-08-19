@@ -1,0 +1,26 @@
+[2022/08/19 14:29:58] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=50, alpha=1, n_batch=64, mom=0.9, wd=0.0005, m_start=51, m_scale=1, p_malicious=None, n_malicious=4, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=1.0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=51, alpha_val=1, warmup=0, remove_val=1, out_path='distributed/alpha1--alpha_val1/n_rounds50--d_start51--m_start51--n_malicious4')
+[2022/08/19 14:30:06] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 50 ---
+[2022/08/19 14:30:18] - TESTING CLEAN - Time 0.9, Loss 2.4391, Acc 0.1000
+[2022/08/19 14:30:19] - TESTING POIS - Time 0.9, Loss 2.4559, Acc 0.0000
+[2022/08/19 14:31:15] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 50, Time: 56.2 ---
+[2022/08/19 14:31:22] - TESTING CLEAN - Time 0.9, Loss 2.1926, Acc 0.1752
+[2022/08/19 14:31:23] - TESTING POIS - Time 0.8, Loss 2.1465, Acc 0.1018
+[2022/08/19 14:32:19] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 50, Time: 56.0 ---
+[2022/08/19 14:32:25] - TESTING CLEAN - Time 0.9, Loss 2.0327, Acc 0.2424
+[2022/08/19 14:32:26] - TESTING POIS - Time 0.8, Loss 2.7603, Acc 0.1036
+[2022/08/19 14:33:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 50, Time: 55.4 ---
+[2022/08/19 14:33:28] - TESTING CLEAN - Time 1.0, Loss 1.9399, Acc 0.2786
+[2022/08/19 14:33:29] - TESTING POIS - Time 0.9, Loss 2.5965, Acc 0.1567
+[2022/08/19 14:34:25] - 
+
+--- GLOBAL EVALUATIONS - Round: 4 of 50, Time: 55.5 ---
+[2022/08/19 14:34:31] - TESTING CLEAN - Time 0.9, Loss 1.8069, Acc 0.3332
+[2022/08/19 14:34:32] - TESTING POIS - Time 0.9, Loss 3.1675, Acc 0.0611

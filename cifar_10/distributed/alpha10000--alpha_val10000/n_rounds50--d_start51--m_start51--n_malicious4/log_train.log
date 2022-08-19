@@ -1,0 +1,39 @@
+[2022/08/19 14:27:05] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=50, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=51, m_scale=1, p_malicious=None, n_malicious=4, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=1.0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, d_start=51, alpha_val=10000, warmup=0, remove_val=1, out_path='distributed/alpha10000--alpha_val10000/n_rounds50--d_start51--m_start51--n_malicious4')
+[2022/08/19 14:27:13] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 50 ---
+[2022/08/19 14:27:25] - TESTING CLEAN - Time 0.9, Loss 2.3452, Acc 0.1024
+[2022/08/19 14:27:26] - TESTING POIS - Time 0.9, Loss 2.6139, Acc 0.0000
+[2022/08/19 14:28:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 50, Time: 57.6 ---
+[2022/08/19 14:28:30] - TESTING CLEAN - Time 0.9, Loss 2.0075, Acc 0.2522
+[2022/08/19 14:28:31] - TESTING POIS - Time 0.9, Loss 2.4221, Acc 0.1727
+[2022/08/19 14:29:29] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 50, Time: 57.8 ---
+[2022/08/19 14:29:36] - TESTING CLEAN - Time 0.9, Loss 1.8169, Acc 0.3290
+[2022/08/19 14:29:37] - TESTING POIS - Time 0.9, Loss 2.7900, Acc 0.0758
+[2022/08/19 14:30:34] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 50, Time: 57.0 ---
+[2022/08/19 14:30:41] - TESTING CLEAN - Time 0.9, Loss 1.7010, Acc 0.3706
+[2022/08/19 14:30:42] - TESTING POIS - Time 0.8, Loss 2.9114, Acc 0.0864
+[2022/08/19 14:31:38] - 
+
+--- GLOBAL EVALUATIONS - Round: 4 of 50, Time: 56.9 ---
+[2022/08/19 14:31:45] - TESTING CLEAN - Time 0.9, Loss 1.6192, Acc 0.4028
+[2022/08/19 14:31:46] - TESTING POIS - Time 0.9, Loss 3.0799, Acc 0.0669
+[2022/08/19 14:32:44] - 
+
+--- GLOBAL EVALUATIONS - Round: 5 of 50, Time: 58.2 ---
+[2022/08/19 14:32:51] - TESTING CLEAN - Time 0.9, Loss 1.5421, Acc 0.4282
+[2022/08/19 14:32:52] - TESTING POIS - Time 0.8, Loss 3.1492, Acc 0.0758
+[2022/08/19 14:33:51] - 
+
+--- GLOBAL EVALUATIONS - Round: 6 of 50, Time: 58.7 ---
+[2022/08/19 14:33:58] - TESTING CLEAN - Time 0.9, Loss 1.5156, Acc 0.4464
+[2022/08/19 14:33:59] - TESTING POIS - Time 0.8, Loss 3.1663, Acc 0.0831
+[2022/08/19 14:34:56] - 
+
+--- GLOBAL EVALUATIONS - Round: 7 of 50, Time: 57.5 ---
