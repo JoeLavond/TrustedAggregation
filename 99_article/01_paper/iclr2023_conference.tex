@@ -26,7 +26,7 @@
 \newcommand{\yli}[1]{{\color{cyan}#1}}
 
 \title{
-    Trusted Aggregation (TAG): Federated Learning Backdoor Defense
+    Trusted Aggregation (TAG): Model Filtering Backdoor Defense In Federated Learning
 }
 
 % Authors must not appear in the submitted version. They should be hidden
@@ -86,7 +86,7 @@ Our contribution to federated learning is establishing defense criteria for fede
 
 \paragraph{Federated Learning.} At a high level, federated learning is an iterative procedure of rounds until it meets some termination criteria. These rounds consist of sending the global model to users and selecting a subset of users to update the global model. Those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated in some manner to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure privacy or keep the necessary resources minimal. 
 
-\paragraph{Backdoor Attack and Defense.} \cite{dba} shows that the multiple-user nature of federated learning is exploitable to make more potent and lasting backdoor attacks. By geometrically distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper.
+\paragraph{Backdoor Attack \& Defense.} \cite{dba} shows that the multiple-user nature of federated learning is exploitable to make more potent and lasting backdoor attacks. By geometrically distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper.
 
 \cite{trim-mean} proposed the current state-of-the-ark defense method for federated learning. Their paper theoretically explores two robust aggregation methods of user-returned model weights. In our experiments, we will compare our proposed method to both their coordinate-wise median and trimmed-mean procedures.
 
@@ -108,17 +108,17 @@ Currently, many defense methods are based on modifications to the aggregation me
 %
 \section{Method}
 
-\yli{In this section, we describe our proposed method, NAME OF THE METHOD, which ADVANTAGE OF THE METHOD. The motivation behind the method will be shown in the first part of this section. Then, we introduce the framework of our proposed method.}
+In this section, we describe the motivation and framework for our proposed method, Trusted Aggregation (TAG), which ADVANTAGE OF THE METHOD. 
 
 \paragraph{Motivation}
 
-We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks.
+We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure \ref{fig:scaling} shows \cdots.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{99_article/new}
-    \caption{Caption}
-    \label{fig:my_label}
+    \includegraphics[.33\textwidth]{99_article/new_visuals/visuals/scaling.png}
+    \caption{Kernel Density Estimation from Predicted Scores}
+    \label{fig:scaling}
 \end{figure}
 
 \paragraph{Detection Framework}
