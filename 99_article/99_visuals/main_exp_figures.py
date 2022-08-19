@@ -115,8 +115,8 @@ def plot_scaling(
     else:
 
         round_scalings=2
-        plt.plot(data_val_r + 1, data_val_max_thresh, '-r')
-        plt.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
+        plt.plot(data_val_r + 1, round_scalings * data_val_max_thresh, '-r')
+        plt.plot(data_val_r + 1, round_scalings * data_val_scaled_max_thresh, '-g')
 
     plt.legend(labels=[
         'benign max ks: q3 + 1.5 * IQR',
@@ -371,32 +371,26 @@ def main():
         # import files
         i, j = values[index]
 
+        # attack plot
         if j == args.m_start:
 
             subdir = os.path.join(
                 path,
-                'n_rounds' + str(args.n_rounds) + '--d_start' + str(i) + (
-                    '--m_start' + str(j) + '--n_malicious' + str(args.n_malicious) if j == args.m_start else '--m_start' + str(j) + '--n_malicious' + str(1)
-                )
+                f'n_rounds{args.n_rounds}--d_start{i}--m_start{j}--n_malicious{args.n_malicious}'
             )
 
             temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
             temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
             temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
 
+        # no attack plot
         else:
 
-            if i == args.n_rounds:
-                to_reads = [
-                    f.path for f in os.scandir(path) if re.search(
-                        f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}', f.path
-                    )
-                ]
-
-            else:
-                to_reads = [
-                    f.path for f in os.scandir(path) if re.search(
-                        f'n_rounds{args.n_rounds}--d_start1--m_start{args.n_rounds + 1}', f.path)]
+            to_reads = [
+                f.path for f in os.scandir(path) if re.search(
+                    f'n_rounds{args.n_rounds}--d_start{i}--m_start{args.n_rounds + 1}--n_malicious1', f.path
+                )
+            ]
 
             temp_global = np.load(os.path.join(to_reads[0], 'data/output_global_acc.npy'), allow_pickle=True)
             temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
