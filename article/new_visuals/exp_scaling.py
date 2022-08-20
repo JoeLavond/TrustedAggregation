@@ -122,7 +122,7 @@ def main():
         args.d_rounds = args.n_rounds
 
     path = os.path.join(
-        f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        f'/home/joe/03_federated/{args.data}_{args.n_classes}/tag',
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )

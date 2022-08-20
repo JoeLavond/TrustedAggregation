@@ -93,7 +93,7 @@ def main():
 
     path = os.path.join(
         '/home/joe/03_federated',
-        f'{args.data}-{args.n_classes}/our/centralized',
+        f'{args.data}-{args.n_classes}/tag/centralized',
         'alpha10000--alpha_val10000'
     )
 
