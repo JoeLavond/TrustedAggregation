@@ -30,15 +30,17 @@ def get_args():
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
+    parser.add_argument('--show', default=1, type=int)
 
     return parser.parse_args()
 
 
 def plot_threshold(
-    data_val, data_user,  # ------ class distances for all users
-    d_rounds,  # ----------------- output plot zoom
-    m_start, n_malicious,  # ----- attack setting control
-    path, suffix=''  # ----------- input and output location
+    data_val, data_user,  # ------- class distances for all users
+    d_rounds,  # ------------------ output plot zoom
+    m_start, n_malicious,  # ------ attack setting control
+    path, suffix='',  # ----------- input and output location
+    show=1  # --------------------- display plots?
     ):
 
     """ Documentation
@@ -164,7 +166,10 @@ def plot_threshold(
             bbox_inches='tight'
         )
 
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.close()
 
 
 """ Main function HERE """
@@ -199,7 +204,8 @@ def main():
         temp_val, temp_user,
         args.d_rounds,
         args.m_start, args.n_malicious,
-        path, suffix
+        path, suffix,
+        args.show
     )
 
 

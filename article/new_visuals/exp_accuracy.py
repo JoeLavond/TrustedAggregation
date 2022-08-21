@@ -8,6 +8,7 @@ import re
 # visual
 import matplotlib
 import matplotlib.pyplot as plt
+from  matplotlib.lines import Line2D
 import seaborn as sns
 
 
@@ -20,13 +21,14 @@ def get_args():
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
-    parser.add_argument('--n_rounds', default=100, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
 
     parser.add_argument('--d_rounds', default=None, type=int)
+    parser.add_argument('--show', default=1, type=int)
 
     return parser.parse_args()
 
@@ -39,9 +41,24 @@ def main():
     if args.d_rounds is None:
         args.d_rounds = args.n_rounds
 
-    methods = ['our', 'base/median', 'base/mean']
+    # source paths for our method
+    tag_path = os.path.join(
+        f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        'tag',
+        ('distributed' if args.dba else 'centralized'),
+        'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
+    )
+    alt_path = os.path.join(
+        f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        'tag',
+        ('distributed' if not args.dba else 'centralized'),
+        'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
+    )
+    suffix = f'--m_start{args.m_start}---dba{args.dba}'
 
-    paths = [
+    # control varibles for baseline methods
+    methods = ['base/median', 'base/mean']
+    base_paths = [
         os.path.join(
             f'/home/joe/03_federated/{args.data}_{args.n_classes}',
             method,
@@ -49,10 +66,16 @@ def main():
             'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
         ) for method in methods
     ]
-    suffix = f'--m_start{args.m_start}---dba{args.dba}'
+    line_types = ['dotted', 'dashed']
 
-    if not os.path.exists(os.path.join(path, 'visuals')):
-        os.makedirs(os.path.join(path, 'visuals'))
+    custom_lines = [
+        Line2D([0], [0], linestyle='-', label='Tag'),
+        Line2D([0], [0], linestyle='dotted', label='Median'),
+        Line2D([0], [0], linestyle='dashed', label='Trim Mean')
+    ]
+
+    if not os.path.exists(os.path.join(tag_path, 'visuals')):
+        os.makedirs(os.path.join(tag_path, 'visuals'))
 
     # experiments
     titles = ['No Attack or Defense', 'Attack Only', 'Defense Only', 'Attack and Defense']
@@ -68,34 +91,48 @@ def main():
     fig, axarr = plt.subplots(ncols=4, sharey=True, sharex=True, figsize=(16, 4))
 
     for index in range(len(titles)):
-
-        # import files
         i, j = values[index]
 
+        """ Experiment data """
+        # get data to plot
         if j == args.m_start:  # attack is present
-
             subdir = os.path.join(
-                path,
+                tag_path,
                 f'n_rounds{args.n_rounds}--d_start{i}--m_start{j}--n_malicious{args.n_malicious}'
             )
-
         else:  # no attack is present
-
             subdir = os.path.join(
-                path,
+                alt_path,
                 f'n_rounds{args.n_rounds}--d_start{i}--m_start{args.n_rounds + 1}--n_malicious1'
             )
 
         temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
 
-        # global acc
+        # plot data from experiments
         plt.sca(axarr[index])
         plt.title(titles[index])
-        plt.xlabel('Communication Rounds')
-        plt.plot(range(1, len(temp_global) + 1), temp_global[:, 1], '-b')
-        plt.plot(range(1, len(temp_global) + 1), temp_global[:, 2], '-r')
+        plt.xlabel('Communication Round')
+        plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], '-b')
+        plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], '-r')
         plt.ylim(-0.05, 1.1)
 
+
+        """ Baseline data """
+        if i == 1 and j == args.m_start:  # only compare base under attacka and defense
+            for p, lt in zip(base_paths, line_types):  # iterate baseline defenses
+
+                # import baseline data
+                subdir = [
+                    f.path for f in os.scandir(p) if re.search(f'm_start{args.m_start}', f.path)
+                ]
+                temp_global = np.load(os.path.join(subdir[0], 'data/output_global_acc.npy'), allow_pickle=True)
+
+                plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], 'b', linestyle=lt)
+                plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], 'r', linestyle=lt)
+
+            plt.legend(handles=custom_lines, loc=0)
+
+        # plot axis info
         if j == args.m_start:
             plt.vlines(args.m_start, 0, 1, colors='r')
             plt.text(args.m_start, 1.033, 'attack start', c='r')
@@ -111,9 +148,12 @@ def main():
             copy.set_ylabel('Attack Success Rate', c='r')
 
     plt.savefig(
-        os.path.join(path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
+        os.path.join(tag_path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
     )
-    plt.show()
+    if args.show:
+        plt.show()
+    else:
+        plt.close()
 
 
 if __name__ == "__main__":

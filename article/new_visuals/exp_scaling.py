@@ -21,6 +21,7 @@ def get_args():
     parser.add_argument('--data', default='cifar', type=str)
     parser.add_argument('--n_classes', default=10, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
+    parser.add_argument('--show', default=1, type=int)
 
     parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--n_malicious', default=1, type=int)
@@ -35,9 +36,10 @@ def get_args():
 
 """ Scaling figure """
 def plot_scaling(
-    data_val, data_user,  # ----- class distances for all users
-    d_rounds,  # ---------------- output plot zoom
-    path, suffix=''  # ---------- input and output location
+    data_val, data_user,  # ------ class distances for all users
+    d_rounds,  # ----------------- output plot zoom
+    path, suffix='',  # ---------- input and output location
+    show=1  # -------------------- display plots?
     ):
 
     """ Documentation
@@ -110,7 +112,10 @@ def plot_scaling(
             bbox_inches='tight'
         )
 
-    plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.close()
 
 
 """ Main function HERE """
@@ -148,7 +153,8 @@ def main():
         temp_val,
         temp_user,
         args.d_rounds,
-        path
+        path,
+        show=args.show
     )
 
 
