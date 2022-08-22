@@ -52,6 +52,36 @@ def quadratic_scaling(
 
 
 """ Helper function """
+def threshold_diagnostics(
+    rounds,  # -------- vector of the communication rounds for the values
+    values,  # -------- vector of values to compute defense diagnostics
+    thresholds, # ----- trusted user cutoffs for user submissions
+    ):
+
+    # create vector to indicate whether model is accepted
+    accepted = np.array(
+        [v < thresholds[int(r - 1)] for r, v in zip(rounds, values)]  # need to subtract one as using cutoff from previous round
+    )
+
+    # get increasing array of unique rounds
+    unique_rounds = np.unique(rounds)
+    unique_rounds.sort()
+
+    # iterate unique rounds and store quantiles
+    round_output, running_output = [], []
+    for index, r in enumerate(unique_rounds):
+
+        # compute proportion of values below threshold
+        round_output.append(
+            np.mean(accepted[rounds == r])
+        )
+        running_output.append(
+            np.mean(accepted[rounds <= r])
+        )
+
+    return np.array(round_output), np.array(running_output)
+
+
 def get_quantiles(
     rounds,  # ------- vector of the communication rounds for the values
     values,  # ------- vector of values to get quantiles for

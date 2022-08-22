@@ -21,7 +21,7 @@ def get_args():
     # path
     parser.add_argument('--data', default='cifar', type=str)
     parser.add_argument('--n_classes', default=10, type=int)
-    parser.add_argument('--n_rounds', default=100, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
@@ -89,7 +89,7 @@ def plot_threshold(
     data_malicious_r, data_malicious_values = data_malicious[:, 0], data_malicious[:, 1:]  # seperate round column from data
     data_malicious_max = data_malicious_values.max(axis=1)
 
-    fig1, (ax1, ax2) = plt.subplots(ncols=2, sharey=True, figsize=(8, 4))
+    fig1, (ax1, ax2, ax3) = plt.subplots(ncols=3, sharey=True, figsize=(12, 4))
 
     # visual - benign
     ax1.set_title('Threshold vs. Benign')
@@ -158,6 +158,42 @@ def plot_threshold(
     ax2.vlines(m_start, 0, 1, colors='r')
     ax2.text(m_start, 1.033, 'attack start', c='r')
 
+
+    """ Threshold diagnostics
+    View running rates of acceptance for benign and malicious users
+    """
+    # diagnostic computation
+    (_, benign_diag_run) = lu.threshold_diagnostics(
+        data_benign_r,
+        data_benign_max,
+        data_val_scaled_max_thresh
+    )
+
+    (_, malicious_diag_run) = lu.threshold_diagnostics(
+        data_malicious_r,
+        data_malicious_max,
+        data_val_scaled_max_thresh
+    )
+
+    # visual
+    ax3.set_title('Model Filtering')
+    ax3.plot(
+        range(1, len(data_val_scaled_max_thresh) + 1),
+        benign_diag_run, color='b'
+    )
+    ax3.plot(
+        range(m_start, len(data_val_scaled_max_thresh) + 1),
+        malicious_diag_run, color='r'
+    )
+    ax3.legend(labels=['benign users', 'malicious users'])
+    ax3.vlines(m_start, 0, 1, colors='r')
+    ax3.text(m_start, 1.033, 'attack start', c='r')
+    ax3.set_xlim(0, 50)
+    ax3.set_xlabel('Communication Round')
+    ax3.set_ylim(-0.05, 1.1)
+    ax3.set_ylabel('Acceptance Rate')
+
+
     if path is not None:
         plt.savefig(
             os.path.join(
@@ -185,7 +221,7 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         f'alpha{args.alpha}--alpha_val{args.alpha_val}'
     )
-    suffix = f'--dba{args.dba}'
+    suffix = ''
 
     if not os.path.exists(os.path.join(path, 'visuals')):
         os.makedirs(os.path.join(path, 'visuals'))
