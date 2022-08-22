@@ -1,0 +1,10 @@
+[2022/08/22 09:53:34] - Namespace(seed=0, n_classes=100, gpu_start=0, print_all=0, model_name='resnet', n_users=100, n_local_data=500, p_report=0.1, n_rounds=250, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, dba=0, p_pois=0.1, target=0, size_x=4, size_y=1, gap=1, alpha_val=10000, remove_val=1, trim_mean=0, beta=0.1, out_path='median/centralized/alpha10000--alpha_val10000/n_rounds250--m_start1--n_malicious1')
+[2022/08/22 09:53:43] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 250 ---
+[2022/08/22 09:53:44] - TESTING CLEAN - Time 1.7, Loss 4.7278, Acc 0.0096
+[2022/08/22 09:53:45] - TESTING POIS - Time 0.7, Loss 4.8989, Acc 0.0000
+[2022/08/22 09:53:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/08/22 09:53:56] - TRAINING - Epoch: 15, Time 0.4, Loss 4.1889, Acc 0.1064
