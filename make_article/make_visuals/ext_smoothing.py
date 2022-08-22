@@ -21,7 +21,7 @@ def get_args():
     # find root dir
     parser.add_argument('--data', default='cifar', type=str)
     parser.add_argument('--n_classes', default=10, type=int)
-    parser.add_argument('--n_rounds', default=100, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     # control output
     parser.add_argument('--d_rounds', default=30, type=int)
 
@@ -29,11 +29,11 @@ def get_args():
 
 
 def plot_threshold(
-    data_val,  # ------ input threshold object
-    d_rounds,  # ------ input data and rounds to display
-    path='.',  # ------ specify plot location
-    suffix='',  # ----- modify output name
-    window=3  # ------- window to compute moving average over
+    data_val,  # -------------- input threshold object
+    d_rounds,  # -------------- input data and rounds to display
+    path='./visuals',  # ------ specify plot location
+    suffix='',  # ------------- modify output name
+    window=3  # --------------- window to compute moving average over
     ):
 
     """
@@ -93,7 +93,7 @@ def main():
 
     path = os.path.join(
         '/home/joe/03_federated',
-        f'{args.data}-{args.n_classes}/tag/centralized',
+        f'{args.data}_{args.n_classes}/tag/centralized',
         'alpha10000--alpha_val10000'
     )
 

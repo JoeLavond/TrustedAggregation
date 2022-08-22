@@ -18,7 +18,7 @@ def min_mean_smooth(
     for i in range(len(values)):
         sub_values = values[:(i + 1)]  # subset to history
         output.append(
-            np.mean(sub_values[np.argmin(sub_values)])  # avg since min
+            np.mean(sub_values[np.argmin(sub_values):])  # avg since min
         )
 
     # return scaled sequence
@@ -108,13 +108,14 @@ def get_smoothing(
         # compute moving average of size window
         moving_avg.append(
             np.mean(
-                x[max([0, i - window + 1]):(i + 1)]  # stop at beginning
+                sub_values[max([0, i - window + 1]):]  # stop at beginning
             )
         )
 
         # if multiple values fit exponential smoothing
         if len(sub_values) < 2:
             exp_smooth.append(values[0])
+
         else:
 
             # fit smoothing and return prediction for most recent value
