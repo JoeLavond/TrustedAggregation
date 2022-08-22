@@ -100,6 +100,31 @@ class CustomDataset(Dataset):
         return output
 
 
+    def quadratic_scaling(self, n_classes):
+
+        """
+        Function: Return fitted parabola and output given class prop as input
+            Parabola passes through (0, 0), (2B, 0), and (B, 1)
+            y = a * x * (x - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * -1 * B ** 2
+            a = -1 / (B ** 2)
+        """
+
+        B = 1 / n_classes  # proportion of perfectly balanced class
+
+        # setup
+        label_counts = torch.bincount(self.labels).cpu().numpy()
+        label_props = label_counts / sum(label_counts)
+
+        index = (label_props <= 2 * B)
+        output = np.zeros_like(label_props)
+        output[index] = -1 / (B ** 2) * label_props[index] * (label_props[index] - 2 * B)
+
+        return output
+
+
     """ Class functions """
     def _sample_helper(self, n_local_data, alpha, n_classes, **kwargs):
 

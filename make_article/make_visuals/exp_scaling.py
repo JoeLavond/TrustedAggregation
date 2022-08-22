@@ -131,7 +131,6 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
-    print(path)
 
     if not os.path.exists(os.path.join(path, 'visuals')):
         os.makedirs(os.path.join(path, 'visuals'))
@@ -144,7 +143,6 @@ def main():
             f'n_rounds{args.n_rounds}--d_start{args.n_rounds + 1}--m_start{args.n_rounds + 1}', f.path
         )
     ]
-    print([f.path for f in os.scandir(path)])
 
     temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
     temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)

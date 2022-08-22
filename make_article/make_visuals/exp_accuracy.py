@@ -48,10 +48,9 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
-    alt_path = os.path.join(
+    centralized_path = os.path.join(
         f'/home/joe/03_federated/{args.data}_{args.n_classes}',
-        'tag',
-        ('distributed' if not args.dba else 'centralized'),
+        'tag/centralized',
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
     suffix = f'--m_start{args.m_start}---dba{args.dba}'
@@ -102,7 +101,7 @@ def main():
             )
         else:  # no attack is present
             subdir = os.path.join(
-                alt_path,
+                centralized_path,
                 f'n_rounds{args.n_rounds}--d_start{i}--m_start{args.n_rounds + 1}--n_malicious1'
             )
 
