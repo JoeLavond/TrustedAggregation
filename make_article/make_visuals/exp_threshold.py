@@ -169,7 +169,7 @@ def plot_threshold(
         data_val_scaled_max_thresh
     )
 
-    (_, malicious_diag_run) = lu.threshold_diagnostics(
+    (temp, malicious_diag_run) = lu.threshold_diagnostics(
         data_malicious_r,
         data_malicious_max,
         data_val_scaled_max_thresh
@@ -188,7 +188,7 @@ def plot_threshold(
     ax3.legend(labels=['benign users', 'malicious users'])
     ax3.vlines(m_start, 0, 1, colors='r')
     ax3.text(m_start, 1.033, 'attack start', c='r')
-    ax3.set_xlim(0, 50)
+    ax3.set_xlim(0, d_rounds)
     ax3.set_xlabel('Communication Round')
     ax3.set_ylim(-0.05, 1.1)
     ax3.set_ylabel('Acceptance Rate')
