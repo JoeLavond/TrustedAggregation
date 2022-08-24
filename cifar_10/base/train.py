@@ -84,7 +84,7 @@ def get_args():
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
     parser.add_argument('--trim_mean', default=0, type=int)
-    parser.add_argument('--beta', default=0.1, type=int)
+    parser.add_argument('--beta', default=0.1, type=float)
 
     return parser.parse_args()
 
@@ -103,6 +103,7 @@ def main():
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
+    args.suffix = (f'--beta{args.beta}' if args.trim_mean else '')
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -337,7 +338,7 @@ def main():
     """ Save output """
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{args.suffix}.npy'), output_global_acc
     )
 
 
