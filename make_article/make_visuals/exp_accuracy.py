@@ -27,6 +27,8 @@ def get_args():
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
 
+    parser.add_argument('--beta', default=0.1, type=float)
+
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--show', default=1, type=int)
 
@@ -53,7 +55,7 @@ def main():
         'tag/centralized',
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
-    suffix = ''  # f'--m_start{args.m_start}''
+    suffix = f'--beta{args.beta}'  # f'--m_start{args.m_start}''
 
     # control varibles for baseline methods
     methods = ['base/median', 'base/mean']
@@ -70,7 +72,7 @@ def main():
     custom_lines = [
         Line2D([0], [0], linestyle='-', label='Tag'),
         Line2D([0], [0], linestyle='dotted', label='Median'),
-        Line2D([0], [0], linestyle='dashed', label='Trim Mean')
+        Line2D([0], [0], linestyle='dashed', label=f'Trim Mean (Beta={args.beta})')
     ]
 
     if not os.path.exists(os.path.join(tag_path, 'visuals')):
@@ -119,12 +121,23 @@ def main():
         """ Baseline data """
         if i == 1 and j == args.m_start:  # only compare base under attacka and defense
             for p, lt in zip(base_paths, line_types):  # iterate baseline defenses
+                print(p, re.search('mean', p))
 
                 # import baseline data
                 subdir = [
                     f.path for f in os.scandir(p) if re.search(f'm_start{args.m_start}', f.path)
                 ]
-                temp_global = np.load(os.path.join(subdir[0], 'data/output_global_acc.npy'), allow_pickle=True)
+                temp_global = np.load(
+                    os.path.join(
+                        subdir[0],
+                        (
+                            'data/output_global_acc'
+                            + (f'--beta{args.beta}' if re.search('mean', p) else '')
+                            + '.npy'
+                        )
+                    ),
+                    allow_pickle=True
+                )
 
                 plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], 'b', linestyle=lt)
                 plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], 'r', linestyle=lt)
