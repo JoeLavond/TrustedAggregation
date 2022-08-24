@@ -121,7 +121,6 @@ def main():
         """ Baseline data """
         if i == 1 and j == args.m_start:  # only compare base under attacka and defense
             for p, lt in zip(base_paths, line_types):  # iterate baseline defenses
-                print(p, re.search('mean', p))
 
                 # import baseline data
                 subdir = [
