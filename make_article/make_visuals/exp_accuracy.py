@@ -16,15 +16,16 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--data', default='cifar', type=str)
-    parser.add_argument('--n_classes', default=10, type=int)
+    parser.add_argument('--n_classes', default=100, type=int)
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
-    parser.add_argument('--n_rounds', default=50, type=int)
+    parser.add_argument('--n_rounds', default=100, type=int)
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)
+    parser.add_argument('--neuro', default=0, type=int)
     parser.add_argument('--dba', default=0, type=int)
 
     parser.add_argument('--beta', default=0.1, type=float)
@@ -46,12 +47,14 @@ def main():
     # source paths for our method
     tag_path = os.path.join(
         f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        ('neuro' if args.neuro else 'classic'),
         'tag',
         ('distributed' if args.dba else 'centralized'),
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
     centralized_path = os.path.join(
         f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        ('neuro' if args.neuro else 'classic'),
         'tag/centralized',
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
@@ -62,6 +65,7 @@ def main():
     base_paths = [
         os.path.join(
             f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+            ('neuro' if args.neuro else 'classic'),
             method,
             ('distributed' if args.dba else 'centralized'),
             'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
