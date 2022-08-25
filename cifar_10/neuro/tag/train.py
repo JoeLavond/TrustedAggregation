@@ -74,6 +74,7 @@ def get_args():
 
     """ Data poisoning """
     # attack
+    parser.add_argument('--neuro_p', default=0.1, type=float)
     parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
@@ -181,6 +182,12 @@ def main():
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
+    # initialize neurotoxin masking
+    NT = lu.Neurotoxin(
+        model=global_model,
+        p=args.neuro_p
+    )
+
     # global
     output_global_acc = []
 
@@ -258,11 +265,19 @@ def main():
     )
 
     # train local model
-    (user_train_loss, user_train_acc) = gu.training(
-        user_loader, user_model, cost, user_opt,
-        args.n_epochs, args.gpu_start + 1,
-        logger=(logger if args.print_all else None), print_all=args.print_all
-    )
+    if m_user:
+        (user_train_loss, user_train_acc) = lu.nt_training(
+            user_loader, user_model, cost, user_opt,
+            args.n_epochs, args.gpu_start + 1,
+            logger=(logger if args.print_all else None), print_all=args.print_all,
+            nt_obj=NT
+        )
+    else:
+        (user_train_loss, user_train_acc) = gu.training(
+            user_loader, user_model, cost, user_opt,
+            args.n_epochs, args.gpu_start + 1,
+            logger=(logger if args.print_all else None), print_all=args.print_all
+        )
 
     # validation
     (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
@@ -432,6 +447,10 @@ def main():
 
                     global_weights += update_weights.cuda(args.gpu_start)
 
+                # update neurotoxin mask
+                NT.update_mask_(global_model)
+
+
         round_end = time.time()
         logger.info(
             '\n\n--- GLOBAL EVALUATIONS - Round: %d of %d, Time: %.1f ---',
@@ -509,19 +528,21 @@ def main():
 
 
     """ Save output """
+    suffix = f'--neuro_p{args.neuro_p}'
+
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{suffix}.npy'), output_global_acc
     )
 
     output_val_ks = np.array(output_val_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_val_ks.npy'), output_val_ks
+        os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
     )
 
     output_user_ks = np.array(output_user_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_user_ks.npy'), output_user_ks
+        os.path.join(args.out_path, 'data', f'output_user_ks{suffix}.npy'), output_user_ks
     )
 
 
