@@ -25,7 +25,7 @@ def get_args():
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--neuro', default=0, type=int)
+    parser.add_argument('--neuro', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
 
     parser.add_argument('--beta', default=0.1, type=float)
