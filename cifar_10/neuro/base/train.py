@@ -74,6 +74,7 @@ def get_args():
 
     """ Data poisoning """
     # attack
+    parser.add_argument('--neuro_p', default=0.1, type=float)
     parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
@@ -161,6 +162,12 @@ def main():
         resnet.resnet18(pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
+
+    # initialize neurotoxin masking
+    NT = lu.Neurotoxin(
+        model=copy.deepcopy(global_model),
+        p=args.neuro_p
+    )
 
     # global
     output_global_acc = []
@@ -284,11 +291,19 @@ def main():
             )
 
             # train local model
-            (user_train_loss, user_train_acc) = gu.training(
-                user_loader, user_model, cost, user_opt,
-                args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
-                logger=(logger if (m_user or args.print_all) else None), print_all=args.print_all
-            )
+            if m_user:
+                (user_train_loss, user_train_acc) = lu.nt_training(
+                    user_loader, user_model, cost, user_opt,
+                    args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if args.print_all else None), print_all=args.print_all,
+                    nt_obj=NT
+                )
+            else:
+                (user_train_loss, user_train_acc) = gu.training(
+                    user_loader, user_model, cost, user_opt,
+                    args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if args.print_all else None), print_all=args.print_all
+                )
 
             # malicious scaling of model weights
             if (m_user and (args.m_scale != 1)):
@@ -307,11 +322,16 @@ def main():
 
 
         """ Global model training """
-        # update global weights
-        if args.trim_mean:
-            lu.global_mean_(global_model, global_updates, args.beta)
-        else:
-            lu.global_median_(global_model, global_updates)
+        with torch.no_grad():
+
+            # update global weights
+            if args.trim_mean:
+                lu.global_mean_(global_model, global_updates, args.beta)
+            else:
+                lu.global_median_(global_model, global_updates)
+
+            # update neurotoxin mask
+            NT.update_mask_(copy.deepcopy(global_model))
 
         round_end = time.time()
         logger.info(

@@ -334,6 +334,9 @@ class Neurotoxin:
         Given update, replace largest locations with orignal values
     Usage:
         Modification of Neurotoxin attack based on weights
+    Remarks:
+        NEED TO COPY.DEEPCOPY(MODEL) AS INPUT TO MODEL
+        EXCEPT WHEN APPLYING THE MASK WITH MASK_()
     """
 
     def __init__(self,
@@ -343,9 +346,9 @@ class Neurotoxin:
         # initializations
         self.p = p
 
-        self.old_model = copy.deepcopy(model).cpu()
+        self.old_model = model.cpu()
         with torch.no_grad():
-            for (_, weight) in old_model.state_dict().items():
+            for (_, weight) in self.old_model.state_dict().items():
                 weight.zero_()
 
         # create mask from random initialized model
@@ -400,7 +403,7 @@ class Neurotoxin:
             (_, top_indices) = torch.topk(weight_diffs, k)
 
             # create mask from top k indices
-            self.mask = torch.zeros_like(weight_diffs)
+            self.mask = torch.zeros_like(weight_diffs, dtype=torch.int64)
             self.mask[top_indices] = 1  # replace top changes
 
             # move new model to old model
@@ -427,10 +430,11 @@ class Neurotoxin:
 
                 # store dimensions to unflatten
                 input_size = new_weight.size()
+                input_device = new_weight.get_device()
 
                 # flatten model weights
-                new_weight_flat = torch.flatten(new_weight)
-                flat_size = length(new_weight_flat)
+                new_weight_flat = torch.flatten(new_weight).cpu()
+                flat_size = len(new_weight_flat)
 
                 # if no weights need to be replaced, skip iter
                 temp_mask = self.mask[start_index:flat_size]
@@ -443,10 +447,12 @@ class Neurotoxin:
 
                 # unflatten masked weights and reassign in-place
                 new_weight_unflat = new_weight_flat.view(input_size)
-                print(new_weight, new_weight_unflat)
                 new_weight.copy_(
-                    new_weight_unflat
+                    new_weight_unflat.cuda(input_device)
                 )
+
+                # update start_index
+                start_index += flat_size
 
 
 # visible stamp
@@ -534,7 +540,7 @@ def nt_training(
             opt.step()
             if scheduler is not None:
                 scheduler.step()
-            if nt_obj is not None
+            if nt_obj is not None:
                 nt_obj.mask_(model)
 
             # results

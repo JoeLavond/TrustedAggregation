@@ -42,7 +42,7 @@ def get_args():
     """ File setup """
     # control
     parser.add_argument('--seed', default=0, type=int)
-    parser.add_argument('--n_classes', default=10, type=int)
+    parser.add_argument('--n_classes', default=100, type=int)
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
@@ -119,7 +119,7 @@ def main():
         T.RandomCrop(size=32)
     ])
 
-    train_data = datasets.CIFAR10(
+    train_data = datasets.CIFAR100(
         root='/home/joe/data/',
         train=True,
         download=True
@@ -198,7 +198,7 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
+    test_data = datasets.CIFAR100(
         root='/home/joe/data/',
         train=False,
         download=True
