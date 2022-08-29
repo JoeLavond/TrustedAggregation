@@ -74,11 +74,12 @@ def main():
         ) for method in methods
     ]
     line_types = ['dotted', 'dashed']
+    line_colors = ['blue', 'green']
 
     custom_lines = [
-        Line2D([0], [0], linestyle='-', label='Tag'),
-        Line2D([0], [0], linestyle='dotted', label='Median'),
-        Line2D([0], [0], linestyle='dashed', label=f'Trim Mean (Beta={args.beta})')
+        Line2D([0], [0], linestyle='-', color='black', label='Tag'),
+        Line2D([0], [0], linestyle='dotted', color='blue', label='Median'),
+        Line2D([0], [0], linestyle='dashed', color='green', label=f'Trim Mean (Beta={args.beta})')
     ]
 
     if not os.path.exists(os.path.join(tag_path, 'visuals')):
@@ -128,14 +129,12 @@ def main():
         plt.sca(axarr[index])
         plt.title(titles[index])
         plt.xlabel('Communication Round')
-        plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], '-b')
-        plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], '-r')
-        plt.ylim(-0.05, 1.1)
+        plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], '-k')
 
 
         """ Baseline data """
-        if i == 1 and j == args.m_start:  # only compare base under attacka and defense
-            for p, lt in zip(base_paths, line_types):  # iterate baseline defenses
+        if i == 1 and j == args.m_start:  # only compare base under attack and defense
+            for p, lt, col in zip(base_paths, line_types, line_colors):  # iterate baseline defenses
 
                 # import baseline data
                 subdir = [
@@ -154,28 +153,16 @@ def main():
                     allow_pickle=True
                 )
 
-                plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], 'b', linestyle=lt)
-                plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], 'r', linestyle=lt)
+                plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=col, linestyle=lt)
 
             plt.legend(handles=custom_lines, loc=0)
 
         # plot axis info
-        if j == args.m_start:
-            plt.vlines(args.m_start, 0, 1, colors='r')
-            plt.text(args.m_start, 1.033, 'attack start', c='r')
-
-        copy = axarr[index].twinx()
-        copy.set_ylim(-0.05, 1.1)
-        copy.set_yticklabels([])
-
         if index == 0:
-            axarr[0].set_ylabel('Classification Accuracy', c='b')
-
-        if (index + 1) == len(titles):
-            copy.set_ylabel('Attack Success Rate', c='r')
+            axarr[0].set_ylabel('Classification Accuracy')
 
     plt.savefig(
-        os.path.join(tag_path, 'visuals', f'accuracy{suffix}.png'), bbox_inches='tight'
+        os.path.join(tag_path, 'visuals', f'clean_accuracy{suffix}.png'), bbox_inches='tight'
     )
     if args.show:
         plt.show()
