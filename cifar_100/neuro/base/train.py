@@ -161,7 +161,7 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(pretrained=False)
+        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 

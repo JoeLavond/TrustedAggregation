@@ -16,17 +16,19 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--data', default='cifar', type=str)
-    parser.add_argument('--n_classes', default=100, type=int)
+    parser.add_argument('--n_classes', default=10, type=int)
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
-    parser.add_argument('--n_rounds', default=100, type=int)
+    parser.add_argument('--n_rounds', default=50, type=int)
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--neuro', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
+
+    parser.add_argument('--neuro', default=1, type=int)
+    parser.add_argument('--neuro_p', default=0.1, type=float)
 
     parser.add_argument('--beta', default=0.1, type=float)
 
@@ -111,7 +113,16 @@ def main():
                 f'n_rounds{args.n_rounds}--d_start{i}--m_start{args.n_rounds + 1}--n_malicious1'
             )
 
-        temp_global = np.load(os.path.join(subdir, 'data/output_global_acc.npy'), allow_pickle=True)
+        temp_global = np.load(
+            os.path.join(
+                subdir,
+                (
+                    'data/output_global_acc'
+                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                    + '.npy'
+                )
+            ), allow_pickle=True
+        )
 
         # plot data from experiments
         plt.sca(axarr[index])
@@ -135,6 +146,7 @@ def main():
                         subdir[0],
                         (
                             'data/output_global_acc'
+                            + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
                             + (f'--beta{args.beta}' if re.search('mean', p) else '')
                             + '.npy'
                         )

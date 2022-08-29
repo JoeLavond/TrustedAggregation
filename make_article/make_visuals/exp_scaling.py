@@ -27,7 +27,9 @@ def get_args():
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
+
     parser.add_argument('--neuro', default=0, type=int)
+    parser.add_argument('--neuro_p', default=0.1, type=float)
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -147,8 +149,26 @@ def main():
         )
     ]
 
-    temp_val = np.load(os.path.join(to_reads[0], 'data/output_val_ks.npy'), allow_pickle=True)
-    temp_user = np.load(os.path.join(to_reads[0], 'data/output_user_ks.npy'), allow_pickle=True)
+    temp_val = np.load(
+        os.path.join(
+            to_reads[0],
+            (
+                'data/output_global_acc'
+                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + '.npy'
+            )
+        ), allow_pickle=True
+    )
+    temp_user = np.load(
+        os.path.join(
+            to_reads[0],
+            (
+                'data/output_user_ks'
+                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + '.npy'
+            )
+        ), allow_pickle=True
+    )
 
     plot_scaling(
         temp_val,

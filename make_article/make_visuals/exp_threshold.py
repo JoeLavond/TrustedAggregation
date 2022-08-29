@@ -21,15 +21,20 @@ def get_args():
     # path
     parser.add_argument('--data', default='cifar', type=str)
     parser.add_argument('--n_classes', default=100, type=int)
+
     parser.add_argument('--n_rounds', default=100, type=int)
     parser.add_argument('--m_start', default=1, type=int)
+
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
+
     parser.add_argument('--neuro', default=0, type=int)
+    parser.add_argument('--neuro_p', default=0.1, type=float)
 
     # not intended to be modified
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
+
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--show', default=1, type=int)
 
@@ -236,8 +241,26 @@ def main():
         f'n_rounds{args.n_rounds}--d_start1--m_start1--n_malicious{args.n_malicious}'
     )
 
-    temp_val = np.load(os.path.join(subdir, 'data/output_val_ks.npy'), allow_pickle=True)
-    temp_user = np.load(os.path.join(subdir, 'data/output_user_ks.npy'), allow_pickle=True)
+    temp_val = np.load(
+        os.path.join(
+            subdir,
+            (
+                'data/output_global_acc'
+                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + '.npy'
+            )
+        ), allow_pickle=True
+    )
+    temp_user = np.load(
+        os.path.join(
+            subdir,
+            (
+                'data/output_user_ks'
+                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + '.npy'
+            )
+        ), allow_pickle=True
+    )
 
     plot_threshold(
         temp_val, temp_user,
