@@ -112,8 +112,6 @@ def plot_threshold(
         'benign: q1 - 1.5 * IQR',
         'scaled threshold'
     ])
-    ax1.vlines(m_start, 0, 1, colors='r')
-    ax1.text(m_start, 1.033, 'attack start', c='r')
 
     # visual - malicious
     ax2.set_title('Threshold vs. Malicious')
@@ -161,9 +159,6 @@ def plot_threshold(
         ]
         ax2.legend(labels=c_labels)
 
-    ax2.vlines(m_start, 0, 1, colors='r')
-    ax2.text(m_start, 1.033, 'attack start', c='r')
-
 
     """ Threshold diagnostics
     View running rates of acceptance for benign and malicious users
@@ -192,8 +187,6 @@ def plot_threshold(
         malicious_diag_run, color='r'
     )
     ax3.legend(labels=['benign users', 'malicious users'])
-    ax3.vlines(m_start, 0, 1, colors='r')
-    ax3.text(m_start, 1.033, 'attack start', c='r')
     ax3.set_xlim(0, d_rounds)
     ax3.set_xlabel('Communication Round')
     ax3.set_ylim(-0.05, 1.1)
@@ -245,7 +238,7 @@ def main():
         os.path.join(
             subdir,
             (
-                'data/output_global_acc'
+                'data/output_val_ks'
                 + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
                 + '.npy'
             )

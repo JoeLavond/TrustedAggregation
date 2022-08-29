@@ -106,7 +106,8 @@ def main():
     )
     args.suffix = (
         f'--neuro_p{args.neuro_p}'
-        + f'--beta{args.beta}' if args.trim_mean else '')
+        + (f'--beta{args.beta}' if args.trim_mean else '')
+    )
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)

@@ -153,7 +153,7 @@ def main():
         os.path.join(
             to_reads[0],
             (
-                'data/output_global_acc'
+                'data/output_val_ks'
                 + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
                 + '.npy'
             )
