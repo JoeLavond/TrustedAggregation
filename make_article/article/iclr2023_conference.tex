@@ -11,6 +11,7 @@
 % images
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{wrapfig}
 
 % psudeocode
 \usepackage{algorithm}
@@ -74,21 +75,21 @@ Abstract text here.
 % ----- Content -----
 \section{Introduction}
 
-Federated learning is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. These restrictions are essential in areas where data privacy or security is critical such as healthcare and defense. However, federated learning is also valuable to companies that can shift much of the computing workload to local devices instead. Furthermore, the local datasets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning. \yli{need citations for this paragraph}
+Federated learning is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in \cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare and defense. Additionally, federated learning is valuable for companies wishing to shift computing workload to local devices. Furthermore, these local datasets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning. \yli{need citations for this paragraph}
 
 
-Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all future users. An example of such harm is a backdoor attack, where training attempt to get a model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. Recent work, such as by \cite{stamp-invisible}., creates backdoor triggers that are not detectable in the data by human or computer vision. However, in federated learning, only the resulting model gradients or weights are communicated, so there is potentially no need to hide the trigger in the data. Furthermore, without access to leverage user input data, there is less information available to help detect and prevent such malicious intent. 
+Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all future users. An example of such harm is a backdoor attack, where training attempt to get a model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. Recent work, such as by \cite{stamp-invisible}., creates backdoor triggers that are not detectable in the data by either human or computer vision when included within the data. However, in federated learning, only the resulting model gradients or weights are communicated back, so there is potentially no need to hide the trigger in the data. Furthermore, without access to leverage user input data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in federated learning.
 
 Our contribution to federated learning is establishing defense criteria for federated learning, which is effective against multiple attackers, model scaling, and attacks before global model convergence. Furthermore, our threshold still allows many regular users to update the global model, resulting in little to no performance degradation and requiring only a minimal increase in computational resources or time.
 
 %
 \section{Related Work}
 
-\paragraph{Federated Learning.} At a high level, federated learning is an iterative procedure of rounds until it meets some termination criteria. These rounds consist of sending the global model to users and selecting a subset of users to update the global model. Those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated in some manner to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure privacy or keep the necessary resources minimal. 
+\paragraph{Federated Learning.} At a high level, federated learning is an iterative procedure involving rounds of model improvement until it meets some criteria. These rounds first send the global model to users and select a subset of users to update the global model. Then those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure data privacy.
 
-\paragraph{Backdoor Attack \& Defense.} \cite{dba} shows that the multiple-user nature of federated learning is exploitable to make more potent and lasting backdoor attacks. By geometrically distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper.
+\paragraph{Backdoor Attack \& Defense.} \cite{dba} shows that the multiple-user nature of federated learning is exploitable to make more potent and lasting backdoor attacks. By distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper.
 
-\cite{trim-mean} proposed the current state-of-the-ark defense method for federated learning. Their paper theoretically explores two robust aggregation methods of user-returned model weights. In our experiments, we will compare our proposed method to both their coordinate-wise median and trimmed-mean procedures.
+Next, \cite{trim-mean} proposed the current state-of-the-ark defense method for federated learning. Their paper theoretically explores two robust aggregation methods of user-returned model weights. In our experiments, we will compare our proposed method to both their coordinate-wise median and trimmed-mean procedures.
 
 \begin{definition}[Coordinate-wise median] 
 For vectors $x_i \in \mathbb{R}^{d}$ for $i \in \mathopen[N\mathclose]$, the coordinate-wise median g has element k defined as follows $g^{(k)} = median(\{x_i^{(k)} \mid i \in N\})$.
@@ -112,13 +113,13 @@ In this section, we describe the motivation and framework for our proposed metho
 
 \paragraph{Motivation}
 
-We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure \ref{fig:scaling} shows \cdots.
+We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure \ref{fig:motivation} shows a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[.33\textwidth]{99_article/new_visuals/visuals/scaling.png}
+    \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/ext_motivation.png}
     \caption{Kernel Density Estimation from Predicted Scores}
-    \label{fig:scaling}
+    \label{fig:motivation}
 \end{figure}
 
 \paragraph{Detection Framework}
@@ -138,10 +139,10 @@ Notation: Let $S$ represent the random subset of users that will submit locally 
             \State calculate empirical CDFs for each predicted score above 
             \State \quad and compute the distributional distances between each user and global models 
             \State \quad $v_T = D(o_G, o_T)$ and $v_{j} = D(o_G, o_{j})$, $\forall j \in S$
-            \State $v_T \gets \Call{Class Frequency Scaling}{v_T}$  \Comment{(see Algorithm \ref{alg:scaling})}
+            \State $v_T \gets \Call{Class Frequency Scaling}{v_T}$  \Comment{(Algorithm \ref{alg:scaling})}
         \EndFor
         \State compute round threshold $c_r = 2 * \max ( \{v_T\} )$
-        \State  $c_r \gets \Call{Global-Min Mean Smoothing}{c_r}$  \Comment{(see Algorithm \ref{alg:smoothing})}
+        \State  $c_r \gets \Call{Global-Min Mean Smoothing}{c_r}$  \Comment{(Algorithm \ref{alg:smoothing})}
         \State define $S_r = \{j \in S | \max (\{v_{j}\}) < c_r \} \subseteq S$
         \State \Return FedAvg$(\{U_j \mid j \in S_T \})$ 
     \EndProcedure
@@ -150,7 +151,7 @@ Notation: Let $S$ represent the random subset of users that will submit locally 
 
 
 %
-\paragraph{Threshold Construction.} i Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. Hence, we want to estimate the most prominent possible KS distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. Therefore, we aim to estimate and use a representation for the maximum of $b_c$ ($U$), the maximal benign change to any class, as a cutoff for returning user models. Letting $D$ represent the total number of classes, equation \ref{eq:geq_bound} shows under our distributional assumptions that twice the maximum of the class conditional differences is typically a useful upper bound for benign submissions.
+\paragraph{Threshold Construction.} Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. Hence, we want to estimate the most prominent possible KS distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. Therefore, we aim to estimate and use a representation for the maximum of $b_c$ ($U$), the maximal benign change to any class, as a cutoff for returning user models. Letting $D$ represent the total number of classes, equation \ref{eq:geq_bound} shows under our distributional assumptions that twice the maximum of the class conditional differences is, on average, a practical upper bound for accepting benign submissions.
 
 \begin{align}
     & \textrm{Suppose } \forall c \in \mathopen[ D \mathclose], (KS)_c \sim \textrm{ Uniform}(0, b_c) \nonumber \\
@@ -162,49 +163,48 @@ Notation: Let $S$ represent the random subset of users that will submit locally 
 
 Additionally, we make additional modifications to this basic threshold to address the following concerns:
 \begin{enumerate}
-    \item In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have a large opportunity to impact the model at the beginning of Federated Learning.
+    \item In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have ample opportunity to impact the model at the beginning of Federated Learning.
     \item There is extreme instability round-to-round in our threshold. A lucky malicious user can get past a large cutoff for that round due to instability.
-    \item The class distributional differences are larger and more variable for users with imbalanced classes. Also, the threshold values depend heavily on the distribution of class labels for the validated user.
+    \item The class distributional differences are more considerable and variable for users with imbalanced classes. Hence, the threshold values depend heavily on the distribution of class labels for the validated user.
 \end{enumerate}
 
-Hence, we refocus our efforts more specifically on estimating an upper bound for the most considerable change a non-malicious user with balanced data can make to the output layer of the global model. Our final threshold includes global min-mean smoothing and class frequency scaling to address the above concerns.
+Hence, we refocus our efforts on estimating an upper bound for the most considerable change a non-malicious user with balanced data can make to the output layer of the global model. Our final threshold includes global min-mean smoothing and class frequency scaling to address the above concerns.
 
 %
-\paragraph{Class Frequency Scaling.} In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values than benign users with a balanced distribution of class labels. 
+%%% WORKING
+
+\begin{wrapfigure}{r}
+    \centering
+    \includegraphics[width=.4\textwidth]{make_article/make_visuals/visuals/scaling.png}
+    \caption{Class Frequency Scaling}
+    \label{fig:scaling}
+\end{wrapfigure}
+
+\paragraph{Class Frequency Scaling.} In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels, or distribution thereof, with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values for that class than benign users with a balanced distribution of class labels. Hence, we propose a simple quadratic-based scaling, see Figure \ref{fig:scaling} to scale down both over and under-represented class labels. We fit a polynomial that does not scale a balanced class and scales a class with either no representation or greater than twice the balanced frequency to zero.
 
 \begin{algorithm}[H]
 \caption{ (Class Frequency Scaling) \\ 
 Notation: Let $x$ denote the vector we wish to scale and $y$ be the vector of class labels where $D$ represents the total number of unique classes for the classification problem. 
 }
-\label{alg:smoothing}
+\label{alg:scaling}
 \begin{algorithmic}[1]
     \Procedure{Class Frequency Scaling}{$\{x_c \mid c \in \mathopen[ D \mathclose] \} \mid y$}
+    \State define balanced proportion for classes, $B = 1/D$
         \For{each class $c \in \mathopen[ D \mathclose]$}
+            \If{class $c$ is over-represented, $x_c > 2B$}
+                \State $s_c = 0$
+            \Else
+                \State $s_c = \dfrac{-1}{B^2}(x_c)(x_c - 2B)$
+            \EndIf
         \EndFor
+    \State \Return $\{s_c * x_c \mid c \in \mathopen[ D \mathclose] \}$
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 
-%%% WORKING
-\begin{minipage}{.4\linewidth}
-    \centering
-    \includegraphics[width=\textwidth]{99_article/99_visuals/extra_plots/scaling.png}
-    \caption{Simple Scaling}
-    \label{fig:my_label}
-\end{minipage}%
-\begin{minipage}{.6\textwidth}
-    \begin{align}
-        & \textrm{Let } \forall c \in \mathopen[ D \mathclose], p_c = \textrm{ the proportion of labels in each class and } \nonumber \\
-        & \textrm{Define } S_T \in \mathbb{R}^D \textrm{ as:} \nonumber \\
-        & \quad (S_T)_c = \begin{cases}
-           1 - D \mid \dfrac{1}{D} - p_c \mid    & \text{if } p_c \leq 2b \\
-           0    & \text{otherwise}
-      \end{cases}
-    \end{align}
-\end{minipage}
 
 %
-\paragraph{Global-Min Mean Smoothing. } We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We make use of averaging as a useful solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can instead use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. Although smoothing aids against the instability problem, smoothing methods tend to exacerbate that problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. When $b_c$ decreases rapidly, we do not wish to use any previous communication rounds for our threshold as this would result in a weaker cutoff for attacks to overcome. 
+\paragraph{Global-Min Mean Smoothing. } We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We use averaging as a valuable solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. Although smoothing aids stability, smoothing methods tend to exacerbate the problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. When $b_c$ decreases rapidly, we do not wish to use any previous communication rounds for our threshold as this would result in a weaker cutoff for attacks to overcome. 
 
 Our solution is to use as our cutoff the running mean since the lowest observed value (Global-Min Mean) of the maximum class distance for the validated user. As a result, our solution quickly adapts to decreasing values of $U = max_c (b_c)$ over communication rounds. As $U$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. In addition, when our estimate for $U$ stabilizes, the averaging smooths our cutoff, which keeps lucky malicious users from getting past a volatile threshold. 
 
@@ -223,65 +223,65 @@ Notation: Let $x$ denote the vector of values that we wish to smooth.
 \end{algorithmic}
 \end{algorithm}
 
-We provide Figure \ref{fig:min-mean} to compare our global min-mean smoothing with the base cutoff and various smoothing techniques. We believe that our implementation choice best captures early behavior while also providing the greatest improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
+We provide Figure \ref{fig:smoothing-mean} to compare our global min-mean smoothing with the base cutoff and various smoothing techniques. We believe our implementation choice best captures early behavior while providing the most remarkable improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
 
 \begin{figure}[H]
     \centering
     
-    \includegraphics[width=.5\textwidth]{99_article/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
+    \includegraphics[width=.5\textwidth]{make/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
     \caption{Comparison of Various Smoothing Methods}
-    \label{fig:min-mean}
+    \label{fig:smoothing}
 \end{figure}
 
 \section{EXPERIMENTS}
 
-\textcolor{red}{Expand results to CIFAR 100 and work on developing comparisons to state-of-the-ark attack and defense.}
-
 %
 \subsection{Setting}
 
-We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over M communication rounds with N users. Each iteration randomly selects K users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returning model weights by the FedAvg procedure. 
+\paragraph{Federated Learning.} We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over M communication rounds with N users. Each iteration randomly selects K users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returned model weights by the FedAvg procedure. We focus  our experiments on the ResNet18 model architecture, a standard object recognition classifier initially proposed in \cite{resnet}. 
 
-To produce local datasets that do not have to be independent and identically distributed, we sample from any training data set using a Dirichlet distribution with specified parameter alpha. The Dirichlet sample determines the proportion of each class included in that user's dataset. Larger values of alpha produce more balanced class distributions. We separately control alpha for benign, malicious, and validation users. Our experiments use the CIFAR-10 dataset, which consists of 60000 32x32 color images in 10 classes, with 6000 images per class. We use the test set of 10000 images, with 500 images per class, for model evaluation. Our experiments use the ResNet18 model architecture, a state-of-the-ark off-the-shelf classifier for object recognition, initially proposed in \cite{resnet}. 
+We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. For simplicity, we select two main sets of training hyperparameters for benign and malicious users. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to that of the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. 
 
-We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to that of the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. For simplicity, we select two main sets of training hyperparameters for benign and malicious users. 
+\paragraph{Attack.} To further show the effectiveness of our method, we choose an unrealistic and unreasonable strong attack setting. We force all malicious users to be included in the subset of users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold to prevent even strong backdoor attacks against the global model. 
 
-To further show the effectiveness of our method, we choose an unrealistic and unreasonable strong attack setting. We force all malicious users to be included in the subset of users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold to prevent even strong backdoor attacks against the global model. 
 
-For global model evaluation, we split the test set, added the backdoor trigger to half, and removed any target class observations from that half's data. We use classification accuracy from the first half to measure model success, and the proportion of the poisoned half predicted as the target class, known as attack success rate, to measure the backdoor's extent.
+\paragraph{Data.} To produce local datasets that do not have to be independent and identically distributed, we sample from the training data set using a Dirichlet distribution with specified parameter alpha. The Dirichlet sample determines the proportion of each class included in that user's dataset. Larger values of alpha produce more balanced class distributions. We separately control alpha for benign, malicious, and validation users. Our experiments use the CIFAR-10 dataset, which consists of 60000 32x32 color images in 10 classes, with 6000 images per class. We use the test set of 10000 images, with 500 images per class, for model evaluation. 
+
+For global model evaluation, we split the test set into two parts. We add the backdoor trigger to images in the second half and remove any target class observations. We measure model performance with classification accuracy using the first half as model success and the proportion of the poisoned half predicted as the target class, known as attack success rate, to measure the extent that the backdoor attack has compromised the model.
 
 
 %
 \subsection{Main Results}
 
-NEED TO INCLUDE COMPARISON TO SOTA DEFENSE.
+\paragraph{Balanced Data.}
+Accuracy, compare, threshold
+\paragraph{Imbalanced Trusted User.}
+\paragraph{Imbalanced Users.}
+\paragraph{Stronger Attacks.}
+
+
+%
+\subsection{Main Results (OLD)}
+
+We first demonstrate the performance of our threshold when both the trusted and other users have balanced data in Figure \ref{fig:centralized--balanced--accuracy}. This figure shows the classification accuracy and the attack success rate of the global model over 250 communication rounds. For this experiment, malicious users make up 10\% of the selected users for updating the global model each round. The two leftmost figures show, without defense, that the global model can be effectively attacked where the model's classification accuracy does not change. However, the right images show that the use of our defense cutoff prevents backdoor attacks and does not decrease model performance, regardless of whether a backdoor attack is present. Furthermore, we see that the alternative aggregation methods coordinate-wise median and trimmed mean are insufficient to prevent backdoor attacks.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.75\textwidth]{01_trusted/centralized/alpha10000--alpha_val10000/visuals/baseline--n_malicious1.png}
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure}
-
-We first demonstrate the performance of our threshold when both the trusted and other users have balanced data in Figure \ref{fig:centralized--alpha10000--alpha_val10000--accuracy--n_malicious1--m_start1}. This figure shows the classification accuracy and the attack success rate of the global model over 250 communication rounds. For this experiment, a single malicious user is included in the subset of users to potentially update the global model every single communication round. The two leftmost figures show, without defense, that the global model can be effectively attacked where the model's classification accuracy does not change. However, the right images show that the use of our defense cutoff prevents backdoor attacks and does not decrease model performance, regardless of whether a backdoor attack is present. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{01_trusted/centralized/alpha10000--alpha_val10000/visuals/accuracy--n_malicious1--m_start1.png}
+    \includegraphics[width=\textwidth]{cifar_10/tag/distributed/alpha10000--alpha_val10000/visuals/accuracy--m_start1---dba1.png}
     \caption{Global Model Performance For Balanced Users And Balanced Trusted User}
-    \label{fig:centralized--alpha10000--alpha_val10000--accuracy--n_malicious1--m_start1}
+    \label{fig:centralized--balanced--accuracy}
 \end{figure}
 
 Figure \ref{fig:centralized--alpha10000--alpha_val10000--threshold--n_malicious1--m_start1--d_rounds50} shows the ability of our threshold to differentiate between benign and malicious user submission. The Threshold vs. Benign figure shows the upper and lower bounds on values considered outliers for each round. We can see our threshold closely follows what we would expect to be the largest possible value a benign user contributes. Additionally, the threshold can clearly distinguish malicious users with at least one larger class output layer distributional difference. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=.75\textwidth]{01_trusted/centralized/alpha10000--alpha_val10000/visuals/threshold--n_malicious1--m_start1--d_rounds50.png}
+    \includegraphics[width=.75\textwidth]{cifar_10/tag/centralized/alpha10000--alpha_val10000/visuals/threshold--n_malicious1--m_start1--d_rounds50.png}
     \caption{Threshold Performance For Balanced Users And Balanced Trusted User}
-    \label{fig:centralized--alpha10000--alpha_val10000--threshold--n_malicious1--m_start1--d_rounds50}
+    \label{fig:centralized--balanced--threshold}
 \end{figure}
 
-\subsection{Defense Comparison}
-
+%
 \subsection{Imbalanced Data}
 
 Next, we highlight the ability of our threshold to estimate these benign users' upper bound even when the validation user has imbalanced data. As shown in Figure \ref{fig:centralized--alpha10000--alpha_val1--scaling--d_rounds50.png}, the scaled threshold corrects for the large Kolmogorov Smirnov values of imbalanced classes and gives a reasonable representation for the most considerable value that a benign user with balanced data. The model and threshold performance remain similar to the balanced validation user case; see Appendix \ref{sec.imbal_val} for actual plots. Scaling is necessary to reduce the enormous opportunity of malicious users to backdoor the global model in the early communication rounds.
