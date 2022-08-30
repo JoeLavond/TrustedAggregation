@@ -206,7 +206,6 @@ def main():
                 shuffle=False,
                 num_workers=1,
                 pin_memory=True
-
     )
 
     """ Initial validation """

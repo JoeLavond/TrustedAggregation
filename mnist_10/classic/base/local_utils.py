@@ -1,4 +1,5 @@
 # packages
+import copy
 import math
 import numpy as np
 import sys
@@ -19,27 +20,27 @@ import global_utils as gu
 
 
 """ Data """
-class CustomDataset(Dataset):
+class Custom2dDataset(Dataset):
 
     """ Initial Setup """
-    def __init__(self, images, labels, transformations=None):
+    def __init__(self, images, labels, transformations=None, init=0):
 
         # load data
-        if isinstance(images, torch.Tensor):
-            self.images = images.clone().detach().float()
-            self.labels = labels.clone().detach()
+        self.transformations = transformations
 
+        if not isinstance(images, torch.Tensor):
+            self.images = torch.from_numpy(images).float()
+            self.labels = torch.from_numpy(labels)
         else:
+            self.labels = labels.clone().detach()
+            self.images = images.clone().detach().float()
 
-            # restructure (channel, height, width)
-            self.images = torch.tensor(images).float().permute(dims=(0, 3, 1, 2))
-            self.labels = torch.tensor(labels)
-
-            # normalize data
+        # normalize data
+        if init:
             self.images = self.images / 255
 
-        # transforms
-        self.transformations = transformations
+        if len(self.images.size()) == 3:
+            self.images = torch.unsqueeze(self.images, dim=1)  # add channel dimension
 
 
     def __getitem__(self, index):
@@ -53,36 +54,26 @@ class CustomDataset(Dataset):
 
         return x, y
 
+
     def __len__(self):
-        return len(self.images)
+        return len(self.labels)
 
 
     """ Helper functions """
-    # Channel is last dimension
     def mean(self):
         return self.images.mean(dim=(0, 2, 3))
+
 
     def std(self):
         return self.images.std(dim=(0, 2, 3))
 
+
     def view_imgs(self, n=2):
 
         for i in range(n):
-            temp = self.images[i].squeeze().permute(1, 2, 0)
+            temp = self.images[i].squeeze()
             plt.imshow(temp)
             plt.show()
-
-        return None
-
-    def get_class(self, class_i):
-
-        class_index = (self.labels == class_i)
-
-        return CustomDataset(
-            self.images[class_index],
-            self.labels[class_index],
-            self.transformations
-        )
 
 
     def linear_scaling(self, n_classes):
@@ -153,6 +144,7 @@ class CustomDataset(Dataset):
 
         return out_ind
 
+
     def sample(self, n_users, n_local_data, alpha, n_classes, **kwargs):
         return [self._sample_helper(n_local_data, alpha, n_classes) for i in range(n_users)]
 
@@ -212,7 +204,7 @@ class CustomDataset(Dataset):
             shuffle = torch.randperm(len(user_labels))
             user_images, user_labels = user_images[shuffle], user_labels[shuffle]
 
-            to_pois = CustomDataset(user_images[:n_pois], user_labels[:n_pois], transformations=None)
+            to_pois = Custom2dDataset(user_images[:n_pois], user_labels[:n_pois], transformations=None)
             to_pois.poison_(
                 model, target, n_batch, gpu_start,
                 user_id=user_id
@@ -222,46 +214,7 @@ class CustomDataset(Dataset):
             user_images[:n_pois] = to_pois.images
             user_labels[:n_pois] = to_pois.labels
 
-        return CustomDataset(user_images, user_labels, self.transformations)
-
-
-    def view_classes(
-        self,
-        users_indices, m_users, model,
-        p_pois, target, n_batch, gpu_start,
-        n_classes, n_local_data,
-        n=10, backwards=1, **kwargs
-        ):
-
-        for i in range(n):
-
-            if backwards:
-                users_indices = users_indices[-n:]
-                m_users = m_users[-n:]
-            else:
-                users_indices = users_indices[:n]
-                m_users = m_users[:n]
-
-            users_data = [
-                self.get_user_data(
-                    u_indices, m_user, model,
-                    p_pois, target, n_batch, gpu_start
-                ) for (u_indices, m_user) in zip(users_indices, m_users)
-            ]
-
-            users_data = torch.stack(
-                [torch.bincount(data.labels) for data in users_data]
-            ).cpu().numpy()
-
-            plt.figure()
-            sns.heatmap(
-                users_data,
-                vmin=0, vmax=n_local_data, linewidths=.5,
-                annot=True, fmt='d'
-            )
-            plt.show()
-
-            return None
+        return Custom2dDataset(user_images, user_labels, self.transformations)
 
 
 """ Model """
@@ -320,6 +273,173 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
         global_weights.copy_(trimmed_mean)
 
     return None
+
+
+# implement Neurotoxin attack using model weights instead of gradients
+class Neurotoxin:
+
+    """
+    Function:
+        Compute model weight changes
+        Find locations of p*100% of the largest values
+        Create mask to identify largest locations
+        Given update, replace largest locations with orignal values
+    Usage:
+        Modification of Neurotoxin attack based on weights
+    """
+
+    def __init__(self,
+        model, p
+     ):
+
+        # initializations
+        self.p = p
+
+        self.old_model = copy.deepcopy(model).cpu()
+        for (_, weight) in old_model.state_dict().items():
+            weight.zero_()
+
+        # create mask from random initialized model
+        self.update_mask_(model)
+
+
+    def update_mask_(self, new_model):
+
+        """
+        Function: Create a flattened mask of model weights
+            Omit positions of largest changes in model weights
+        Usage: Perform Neurotoxin attack
+            Project attack onto weights not regularly updated
+            Intended to produce lasting attacks
+        """
+
+        # initializations
+        weight_diffs = []
+        weight_count = 0
+
+        for (_, new_weight), (_, old_weight) in zip(
+            new_model.state_dict().items(),
+            self.old_model.state_dict().items()
+        ):
+
+            ## skip non-float type weights (ex. batch-norm)
+            # store zero tensor instead
+            if not torch.is_floating_point(old_weight):
+                diff = torch.flatten(
+                    torch.zeros_like(old_weight)
+                )
+
+            # otherwise compute change in weights
+            else:
+                diff = torch.flatten(
+                    new_weight.cpu() - old_weight
+                )
+                diff = diff.abs()  # absolute change
+
+                # keep track of total number of float model weights
+                weight_count += len(diff)
+
+            # append flattened weights
+            weight_diffs.append(diff)
+
+        ## find k weights to mask from p
+        k = int(self.p * weight_count)
+
+        # concatenate weights to find top k
+        weight_diffs = torch.cat(weight_diffs)
+        (_, top_indices) = torch.topk(weight_diffs, k)
+
+        # create mask from top k indices
+        self.mask = torch.zeros_like(weight_diffs)
+        self.mask[top_indices] = 1  # replace top changes
+
+        # move new model to old model
+        self.old_model = new_model.cpu()
+
+
+    def mask_(self, model):
+
+        """
+        Function: Use mask on proposed model update
+            Replace locations of largest change
+            Use instead values from original model
+        Usage: Apply after every model update when using Neurotoxin
+        """
+
+        # initializations
+        start_index = 0
+
+        for (_, new_weight), (_, old_weight) in zip(
+            model.state_dict().items(),
+            self.old_model.state_dict().items()
+        ):
+
+            # store dimensions to unflatten
+            input_size = new_weight.size()
+
+            # flatten model weights
+            new_weight_flat = torch.flatten(new_weight)
+            flat_size = length(new_weight_flat)
+
+            # if no weights need to be replaced, skip iter
+            temp_mask = self.mask[start_index:flat_size]
+            if temp_mask.sum().item() == 0:
+                continue
+
+            # reset new weights back to global values where masked
+            old_weight_flat = torch.flatten(old_weight)
+            new_weight_flat[temp_mask] = old_weight_flat[temp_mask]
+
+            # unflatten masked weights and reassign in-place
+            new_weight_unflat = new_weight_flat.view(input_size)
+            new_weight.copy_(
+                new_weight_unflat
+            )
+
+
+# standardizing layer
+class Std2d(nn.Module):
+
+    def __init__(self, mu, sd):
+        super(Std2d, self).__init__()
+        self.mu, self.sd = mu, sd
+
+    def forward(self, x):
+        return (x - self.mu) / self.sd
+
+
+# mnist model
+class LeNet5(nn.Module):
+    def __init__(self):
+        super(LeNet5, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.relu1 = nn.ReLU()
+        self.pool1 = nn.MaxPool2d(2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.relu2 = nn.ReLU()
+        self.pool2 = nn.MaxPool2d(2)
+        self.fc1 = nn.Linear(256, 120)
+        self.relu3 = nn.ReLU()
+        self.fc2 = nn.Linear(120, 84)
+        self.relu4 = nn.ReLU()
+        self.fc3 = nn.Linear(84, 10)
+        self.relu5 = nn.ReLU()
+
+    def forward(self, x):
+        y = self.conv1(x)
+        y = self.relu1(y)
+        y = self.pool1(y)
+        y = self.conv2(y)
+        y = self.relu2(y)
+        y = self.pool2(y)
+        y = y.view(y.size(0), -1)
+        y = self.fc1(y)
+        y = self.relu3(y)
+        y = self.fc2(y)
+        y = self.relu4(y)
+        y = self.fc3(y)
+        y = self.relu5(y)
+        return y
 
 
 # visible stamp
@@ -432,77 +552,6 @@ def evaluate_output(
     return (eval_loss, eval_acc, output_layers, output_labels)
 
 
-def _evaluate_conditional_helper(model, cost, gpu, data):
-
-    # initializations
-    n_eval = len(data)
-    loader = DataLoader(
-        data,
-        batch_size=n_batch,
-        shuffle=True,
-        num_workers=1,
-        pin_memory=True
-    )
-
-    # evaluate
-    (eval_loss, eval_acc) = gu.evaluate(
-        loader, model, cost, gpu
-    )
-
-    return (n_eval, eval_loss, eval_acc)
-
-
-def evaluate_conditional(
-    data, model, cost,
-    n_classes=10, gpu_start=0,  # evaluate
-    logger=None, title=''  # logging
-    ):
-
-    """
-    return the number of images, average loss, and accuracy for each class
-    """
-
-    # initializations
-    model = model.eval()
-    frozen_helper = partial(
-        _evaluate_conditional_helper,
-        model, cost, gpu
-    )
-
-    # evaluation
-    eval_start = time.time()
-    helper_output = [
-        _evaluate_conditional_helper(
-            data.get_class(i)
-        ) for i in range(args.n_classes)
-    ]
-    eval_end = time.time()
-
-    # conditional summary
-    full_output = [
-        [helper_output[i][j] for i in range(args.n_classes)]
-        for j in range(3)
-    ]
-
-    # traditional summary
-    (n_total, total_loss, total_acc) = [
-        sum(full_output[0]),
-        sum([a*b for a,b in zip(full_output[0], full_output[1])]),
-        sum([a*b for a,b in zip(full_output[0], full_output[2])])
-    ]
-
-    total_loss /= n_total
-    total_acc /= n_total
-
-    if logger is not None:
-        logger.info(
-            title.upper() + ' - Time %.1f, Loss %.4f, Acc %.4f',
-            eval_end - eval_start, eval_loss, eval_acc
-        )
-
-    return full_output
-
-
 """ Divergence """
 def empirical_cdfs(x, y):
 
@@ -521,5 +570,4 @@ def empirical_cdfs(x, y):
 def ks_div(x, y):
     (x_cdf, y_cdf, _) = empirical_cdfs(x, y)
     return np.max(np.abs(y_cdf - x_cdf))
-
 

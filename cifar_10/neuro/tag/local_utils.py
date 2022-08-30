@@ -2,6 +2,7 @@
 import copy
 import math
 import numpy as np
+import re
 import sys
 import time
 from functools import partial
@@ -377,7 +378,7 @@ class Neurotoxin:
 
                 ## skip non-float type weights (ex. batch-norm)
                 # store zero tensor instead
-                if not torch.is_floating_point(old_weight):
+                if bool(re.search('^0.', name)) or not torch.is_floating_point(old_weight):
                     diff = torch.flatten(
                         torch.zeros_like(old_weight)
                     )

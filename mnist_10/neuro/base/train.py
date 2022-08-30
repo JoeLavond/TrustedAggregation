@@ -11,13 +11,6 @@ import time
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-# visual
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-matplotlib.pyplot.switch_backend('agg')
-import seaborn as sns
-
 # torch
 import torch
 import torch.nn as nn
@@ -29,9 +22,6 @@ from torch.utils.data import Dataset, DataLoader
 sys.path.insert(2, '/home/joe/')
 import global_utils as gu
 import local_utils as lu
-
-sys.path.insert(2, '/home/joe/models/')
-import resnet
 
 
 """ Setup """
@@ -46,9 +36,6 @@ def get_args():
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
-
-    # modeling
-    parser.add_argument('--model_name', default='resnet', type=str)
 
     """ Federated learning """
     # basic fl
@@ -104,10 +91,7 @@ def main():
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
-    args.suffix = (
-        f'--neuro_p{args.neuro_p}'
-        + f'--beta{args.beta}' if args.trim_mean else ''
-    )
+    args.suffix = (f'--beta{args.beta}' if args.trim_mean else '')
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -119,21 +103,20 @@ def main():
     logger.info(args)
 
     """ Training data """
-    cifar_trans = T.Compose([
+    mnist_trans = T.Compose([
         T.Pad(padding=4),
-        T.RandomHorizontalFlip(),
-        T.RandomCrop(size=32)
+        T.RandomCrop(size=28)
     ])
 
-    train_data = datasets.CIFAR10(
+    train_data = datasets.MNIST(
         root='/home/joe/data/',
         train=True,
         download=True
     )
 
-    train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
-    cifar_mean = train_data.mean()
-    cifar_std = train_data.std()
+    train_data = lu.Custom2dDataset(train_data.data, train_data.targets, mnist_trans, init=1)
+    mnist_mean = train_data.mean()
+    mnist_std = train_data.std()
 
     # get user data
     users_data_indices = train_data.sample(args.n_users - 1, args.n_local_data, args.alpha, args.n_classes)
@@ -161,8 +144,8 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(pretrained=False)
+        gu.StdChannels(mnist_mean, mnist_std),
+        lu.LeNet5()
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
@@ -178,7 +161,7 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
+    test_data = datasets.MNIST(
         root='/home/joe/data/',
         train=False,
         download=True
@@ -190,7 +173,7 @@ def main():
 
     )
 
-    clean_test_data = lu.CustomDataset(clean_test_x, clean_test_y)
+    clean_test_data = lu.Custom2dDataset(clean_test_x, clean_test_y, init=1)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -201,15 +184,15 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
+    pois_test_data = lu.Custom2dDataset(pois_test_x, pois_test_y, init=1)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
-                pois_test_data,
-                batch_size=args.n_batch,
-                shuffle=False,
-                num_workers=1,
-                pin_memory=True
+        pois_test_data,
+        batch_size=args.n_batch,
+        shuffle=False,
+        num_workers=1,
+        pin_memory=True
 
     )
 
@@ -325,16 +308,16 @@ def main():
 
 
         """ Global model training """
+        # update global weights
+        if args.trim_mean:
+            lu.global_mean_(global_model, global_updates, args.beta)
+        else:
+            lu.global_median_(global_model, global_updates)
+
+        # update neurotoxin mask
         with torch.no_grad():
-
-            # update global weights
-            if args.trim_mean:
-                lu.global_mean_(global_model, global_updates, args.beta)
-            else:
-                lu.global_median_(global_model, global_updates)
-
-            # update neurotoxin mask
             NT.update_mask_(copy.deepcopy(global_model))
+
 
         round_end = time.time()
         logger.info(

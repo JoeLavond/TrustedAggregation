@@ -11,13 +11,6 @@ import time
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-# visual
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-matplotlib.pyplot.switch_backend('agg')
-import seaborn as sns
-
 # torch
 import torch
 import torch.nn as nn
@@ -47,9 +40,6 @@ def get_args():
     # output
     parser.add_argument('--print_all', default=0, type=int)
 
-    # modeling
-    parser.add_argument('--model_name', default='resnet', type=str)
-
     """ Federated learning """
     # basic fl
     parser.add_argument('--n_users', default=100, type=int)
@@ -58,7 +48,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
-    parser.add_argument('--n_batch', default=64, type=int)
+    parser.add_argument('--n_batch', default=128, type=int)
     parser.add_argument('--mom', default=0.9, type=float)
     parser.add_argument('--wd', default=5e-4, type=float)
     # malicious users
@@ -67,10 +57,10 @@ def get_args():
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--n_epochs_pois', default=15, type=int)
-    parser.add_argument('--lr_pois', default=0.01, type=float)
+    parser.add_argument('--lr_pois', default=0.1, type=float)
     # benign users
-    parser.add_argument('--n_epochs', default=10, type=int)
-    parser.add_argument('--lr', default=0.01, type=float)
+    parser.add_argument('--n_epochs', default=12, type=int)
+    parser.add_argument('--lr', default=0.1, type=float)
 
     """ Data poisoning """
     # attack
@@ -84,7 +74,6 @@ def get_args():
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--warmup', default=0, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
@@ -113,21 +102,20 @@ def main():
     logger.info(args)
 
     """ Training data """
-    cifar_trans = T.Compose([
+    mnist_trans = T.Compose([
         T.Pad(padding=4),
-        T.RandomHorizontalFlip(),
-        T.RandomCrop(size=32)
+        T.RandomCrop(size=28)
     ])
 
-    train_data = datasets.CIFAR10(
+    train_data = datasets.MNIST(
         root='/home/joe/data/',
         train=True,
         download=True
     )
 
-    train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
-    cifar_mean = train_data.mean()
-    cifar_std = train_data.std()
+    train_data = lu.Custom2dDataset(train_data.data, train_data.targets, mnist_trans, init=1)
+    mnist_mean = train_data.mean()
+    mnist_std = train_data.std()
 
     # get user data
     users_data_indices = train_data.sample(args.n_users - 1, args.n_local_data, args.alpha, args.n_classes)
@@ -177,8 +165,8 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
+        gu.StdChannels(mnist_mean, mnist_std),
+        lu.LeNet5()
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
@@ -198,7 +186,7 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
+    test_data = datasets.MNIST(
         root='/home/joe/data/',
         train=False,
         download=True
@@ -209,7 +197,7 @@ def main():
         test_size=0.5, stratify=np.array(test_data.targets)
     )
 
-    clean_test_data = lu.CustomDataset(clean_test_x, clean_test_y)
+    clean_test_data = lu.Custom2dDataset(clean_test_x, clean_test_y, init=1)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -219,7 +207,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
+    pois_test_data = lu.Custom2dDataset(pois_test_x, pois_test_y, init=1)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
