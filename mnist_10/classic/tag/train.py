@@ -54,7 +54,7 @@ def get_args():
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--n_epochs_pois', default=15, type=int)
-    parser.add_argument('--lr_pois', default=0.1, type=float)
+    parser.add_argument('--lr_pois', default=0.5, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=12, type=int)
     parser.add_argument('--lr', default=0.1, type=float)

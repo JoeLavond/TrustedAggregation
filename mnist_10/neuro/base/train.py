@@ -54,10 +54,10 @@ def get_args():
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--n_epochs_pois', default=15, type=int)
-    parser.add_argument('--lr_pois', default=0.01, type=float)
+    parser.add_argument('--lr_pois', default=0.5, type=float)
     # benign users
-    parser.add_argument('--n_epochs', default=10, type=int)
-    parser.add_argument('--lr', default=0.01, type=float)
+    parser.add_argument('--n_epochs', default=12, type=int)
+    parser.add_argument('--lr', default=0.1, type=float)
 
     """ Data poisoning """
     # attack
@@ -92,7 +92,7 @@ def main():
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
     args.suffix = (
-        f'--beta{args.neuro_p}'
+        f'--neuro_p{args.neuro_p}'
         + (f'--beta{args.beta}' if args.trim_mean else '')
     )
 
