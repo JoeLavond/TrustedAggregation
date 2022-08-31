@@ -91,7 +91,10 @@ def main():
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
-    args.suffix = (f'--beta{args.beta}' if args.trim_mean else '')
+    args.suffix = (
+        f'--beta{args.neuro_p}'
+        + (f'--beta{args.beta}' if args.trim_mean else '')
+    )
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)

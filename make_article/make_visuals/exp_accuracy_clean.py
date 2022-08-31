@@ -30,7 +30,7 @@ def get_args():
     parser.add_argument('--neuro', default=0, type=int)
     parser.add_argument('--neuro_p', default=0.1, type=float)
 
-    parser.add_argument('--beta', default=0.1, type=float)
+    parser.add_argument('--beta', default=0.2, type=float)
 
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--show', default=1, type=int)
