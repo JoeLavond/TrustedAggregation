@@ -690,10 +690,18 @@ class BasicStamp(nn.Module):
             self.user_rows, self.user_cols = 1, 1
 
         # generate stamp
-        self.stamp = torch.ones(
+        self.stamp = torch.zeros(
             (self.user_rows * row_size, self.user_cols * col_size)
         )
-        self.stamp = self.stamp.uniform_()  # get randomized stamp
+
+        # create stamp pattern
+        i, j = self.stamp.shape
+        i = i // 4
+        j = j // 4
+        self.stamp[i:(3 * i), :] = 1
+        self.stamp[:, j:(3 * j)] = 1
+
+        # self.stamp = self.stamp.uniform_()  # get randomized stamp
 
         # objects for stamp distribution
         self.stamp_row_starts = row_size * np.arange(self.user_rows)

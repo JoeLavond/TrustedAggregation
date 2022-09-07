@@ -94,6 +94,7 @@ def main():
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
+    args.suffix = (f'--beta{args.beta}' if args.trim_mean else '')
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -327,7 +328,7 @@ def main():
     """ Save output """
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{args.suffix}.npy'), output_global_acc
     )
 
 

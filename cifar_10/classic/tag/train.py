@@ -65,7 +65,7 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=15, type=int)
+    parser.add_argument('--n_epochs_pois', default=20, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=10, type=int)
@@ -257,7 +257,7 @@ def main():
     (user_train_loss, user_train_acc) = gu.training(
         user_loader, user_model, cost, user_opt,
         args.n_epochs, args.gpu_start + 1,
-        logger=(logger if args.print_all else None), print_all=args.print_all
+        logger=None, print_all=args.print_all
     )
 
     # validation
@@ -362,7 +362,7 @@ def main():
             (user_train_loss, user_train_acc) = gu.training(
                 user_loader, user_model, cost, user_opt,
                 args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
-                logger=(logger if (m_user or args.print_all) else None), print_all=args.print_all
+                logger=(logger if m_user else None), print_all=args.print_all
             )
 
             # malicious scaling of model weights
@@ -465,7 +465,7 @@ def main():
         (user_train_loss, user_train_acc) = gu.training(
             user_loader, user_model, cost, user_opt,
             args.n_epochs, args.gpu_start + 1,
-            logger=(logger if args.print_all else None), print_all=args.print_all
+            logger=None, print_all=args.print_all
         )
 
         # validation
