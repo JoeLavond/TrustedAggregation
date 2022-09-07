@@ -21,9 +21,11 @@ from torch.utils.data import Dataset, DataLoader
 # source
 sys.path.insert(2, '/home/joe/')
 import global_utils as gu
-import local_utils as lu
 
-sys.path.insert(2, '/home/joe/models/')
+sys.path.insert(3, '/home/joe/03_federated/')
+import proj_utils as pu
+
+sys.path.insert(4, '/home/joe/models/')
 import resnet
 
 
@@ -39,9 +41,6 @@ def get_args():
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
-
-    # modeling
-    parser.add_argument('--model_name', default='resnet', type=str)
 
     """ Federated learning """
     # basic fl
@@ -70,14 +69,13 @@ def get_args():
     parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--size_x', default=4, type=int)
-    parser.add_argument('--size_y', default=1, type=int)
-    parser.add_argument('--gap', default=1, type=int)
+    parser.add_argument('--row_size', default=4, type=int)
+    parser.add_argument('--col_size', default=4, type=int)
     # defense
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
     parser.add_argument('--trim_mean', default=0, type=int)
-    parser.add_argument('--beta', default=0.1, type=int)
+    parser.add_argument('--beta', default=0.1, type=float)
 
     return parser.parse_args()
 
@@ -119,7 +117,7 @@ def main():
         download=True
     )
 
-    train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
+    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
     cifar_mean = train_data.mean()
     cifar_std = train_data.std()
 
@@ -137,10 +135,9 @@ def main():
     m_users[0:args.n_malicious] = 1
 
     # define trigger model
-    stamp_model = lu.BasicStamp(
+    stamp_model = pu.BasicStamp(
         args.n_malicious, args.dba,
-        args.size_x, args.size_y,
-        args.gap, args.gap
+        row_size=args.row_size, col_size=args.col_size
     ).cuda(args.gpu_start)
     stamp_model = stamp_model.eval()
 
@@ -172,7 +169,7 @@ def main():
 
     )
 
-    clean_test_data = lu.CustomDataset(clean_test_x, clean_test_y)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -183,7 +180,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -301,9 +298,9 @@ def main():
         """ Global model training """
         # update global weights
         if args.trim_mean:
-            lu.global_mean_(global_model, global_updates, args.beta)
+            pu.global_mean_(global_model, global_updates, args.beta)
         else:
-            lu.global_median_(global_model, global_updates)
+            pu.global_median_(global_model, global_updates)
 
         round_end = time.time()
         logger.info(

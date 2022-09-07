@@ -19,11 +19,13 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import Dataset, DataLoader
 
 # source
-sys.path.insert(1, '/home/joe/')
+sys.path.insert(2, '/home/joe/')
 import global_utils as gu
-import local_utils as lu
 
-sys.path.insert(2, '/home/joe/models/')
+sys.path.insert(3, '/home/joe/03_federated/')
+import proj_utils as pu
+
+sys.path.insert(4, '/home/joe/models/')
 import resnet
 
 
@@ -39,9 +41,6 @@ def get_args():
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
-
-    # modeling
-    parser.add_argument('--model_name', default='resnet', type=str)
 
     """ Federated learning """
     # basic fl
@@ -70,9 +69,8 @@ def get_args():
     parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--size_x', default=4, type=int)
-    parser.add_argument('--size_y', default=1, type=int)
-    parser.add_argument('--gap', default=1, type=int)
+    parser.add_argument('--row_size', default=4, type=int)
+    parser.add_argument('--col_size', default=4, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -116,7 +114,7 @@ def main():
         download=True
     )
 
-    train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
+    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
     cifar_mean = train_data.mean()
     cifar_std = train_data.std()
 
@@ -156,10 +154,9 @@ def main():
     m_users[0:args.n_malicious] = 1
 
     # define trigger model
-    stamp_model = lu.BasicStamp(
+    stamp_model = pu.BasicStamp(
         args.n_malicious, args.dba,
-        args.size_x, args.size_y,
-        args.gap, args.gap
+        row_size=args.row_size, col_size=args.col_size
     ).cuda(args.gpu_start)
     stamp_model = stamp_model.eval()
 
@@ -194,7 +191,7 @@ def main():
         test_size=0.5, stratify=np.array(test_data.targets)
     )
 
-    clean_test_data = lu.CustomDataset(clean_test_x, clean_test_y)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -204,7 +201,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -223,7 +220,7 @@ def main():
     )
 
     # validation
-    (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
+    (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = pu.evaluate_output(
         clean_val_loader, global_model, cost, args.gpu_start,
         logger=None, title='validation clean',
         output=1
@@ -257,7 +254,7 @@ def main():
     )
 
     # validation
-    (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
+    (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
         clean_val_loader, user_model, cost, args.gpu_start + 1,
         logger=None, title='validation clean',
         output=1
@@ -265,7 +262,7 @@ def main():
 
     val_ks = [
         round(
-            lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+            pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
     output_val_ks.append(
@@ -376,7 +373,7 @@ def main():
 
             """ External validation """
             # validation
-            (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
+            (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
                 clean_val_loader, user_model, cost, args.gpu_start + 1,
                 logger=None, title='validation clean',
                 output=1
@@ -385,7 +382,7 @@ def main():
             # execute ks cutoff if defending
             user_ks = [
                 round(
-                    lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+                    pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
             output_user_ks.append(
@@ -433,7 +430,7 @@ def main():
         )
 
         # validation
-        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = lu.evaluate_output(
+        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = pu.evaluate_output(
             clean_val_loader, global_model, cost, args.gpu_start,
             logger=None, title='validation clean',
             output=1
@@ -467,7 +464,7 @@ def main():
         )
 
         # validation
-        (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = lu.evaluate_output(
+        (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
             clean_val_loader, user_model, cost, args.gpu_start + 1,
             logger=None, title='validation clean',
             output=1
@@ -475,7 +472,7 @@ def main():
 
         val_ks = [
             round(
-                lu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+                pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
         ]
         output_val_ks.append(
