@@ -222,7 +222,7 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         f'alpha{args.alpha}--alpha_val{args.alpha_val}'
     )
-    suffix = ''
+    suffix = f'n_malicious{args.n_malicious}'
 
     if not os.path.exists(os.path.join(path, 'visuals')):
         os.makedirs(os.path.join(path, 'visuals'))

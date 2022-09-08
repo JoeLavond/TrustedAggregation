@@ -73,7 +73,7 @@ def get_args():
 
     """ Data poisoning """
     # attack
-    parser.add_argument('--dba', default=0, type=float)
+    parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
     parser.add_argument('--row_size', default=12, type=int)
@@ -122,6 +122,7 @@ def main():
     train_data = datasets.STL10(
         root='/home/joe/data/',
         split='test',
+        transform=stl_trans,
         download=True
     )
 
@@ -155,7 +156,7 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(stl_mean, stl_std),
-        resnet.resnet18(pretrained=False)
+        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 

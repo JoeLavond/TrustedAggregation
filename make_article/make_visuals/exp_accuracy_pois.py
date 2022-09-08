@@ -60,7 +60,7 @@ def main():
         'tag/centralized',
         'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
     )
-    suffix = f'--beta{args.beta}'  # f'--m_start{args.m_start}''
+    suffix = f'n_malicious{args.n_malicious}--beta{args.beta}'
 
     # control varibles for baseline methods
     methods = ['base/median', 'base/mean']

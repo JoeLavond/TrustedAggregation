@@ -1,4 +1,4 @@
-""" Packages """
+
 # base
 import argparse
 import copy
@@ -11,13 +11,6 @@ import time
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-# visual
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-matplotlib.pyplot.switch_backend('agg')
-import seaborn as sns
-
 # torch
 import torch
 import torch.nn as nn
@@ -28,7 +21,9 @@ from torch.utils.data import Dataset, DataLoader
 # source
 sys.path.insert(2, '/home/joe/')
 import global_utils as gu
-import local_utils as lu
+
+sys.path.insert(2, '/home/joe/03_federated')
+import proj_utils as pu
 
 sys.path.insert(2, '/home/joe/models/')
 import resnet
@@ -78,9 +73,8 @@ def get_args():
     parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--size_x', default=4, type=int)
-    parser.add_argument('--size_y', default=1, type=int)
-    parser.add_argument('--gap', default=1, type=int)
+    parser.add_argument('--row_size', default=4, type=int)
+    parser.add_argument('--col_size', default=1, type=int)
     # defense
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
@@ -106,7 +100,7 @@ def main():
     )
     args.suffix = (
         f'--neuro_p{args.neuro_p}'
-        + f'--beta{args.beta}' if args.trim_mean else ''
+        + (f'--beta{args.beta}' if args.trim_mean else '')
     )
 
     if not os.path.exists(args.out_path):
@@ -131,7 +125,7 @@ def main():
         download=True
     )
 
-    train_data = lu.CustomDataset(train_data.data, train_data.targets, cifar_trans)
+    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
     cifar_mean = train_data.mean()
     cifar_std = train_data.std()
 
@@ -149,10 +143,9 @@ def main():
     m_users[0:args.n_malicious] = 1
 
     # define trigger model
-    stamp_model = lu.BasicStamp(
+    stamp_model = pu.BasicStamp(
         args.n_malicious, args.dba,
-        args.size_x, args.size_y,
-        args.gap, args.gap
+        row_size=args.row_size, col_size=args.col_size
     ).cuda(args.gpu_start)
     stamp_model = stamp_model.eval()
 
@@ -162,12 +155,12 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(pretrained=False)
+        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
     # initialize neurotoxin masking
-    NT = lu.Neurotoxin(
+    NT = pu.Neurotoxin(
         model=copy.deepcopy(global_model),
         p=args.neuro_p
     )
@@ -190,7 +183,7 @@ def main():
 
     )
 
-    clean_test_data = lu.CustomDataset(clean_test_x, clean_test_y)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -201,7 +194,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = lu.CustomDataset(pois_test_x, pois_test_y)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -295,17 +288,17 @@ def main():
 
             # train local model
             if m_user:
-                (user_train_loss, user_train_acc) = lu.nt_training(
+                (user_train_loss, user_train_acc) = pu.nt_training(
                     user_loader, user_model, cost, user_opt,
                     args.n_epochs, args.gpu_start + 1,
-                    logger=(logger if args.print_all else None), print_all=args.print_all,
+                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all,
                     nt_obj=NT
                 )
             else:
                 (user_train_loss, user_train_acc) = gu.training(
                     user_loader, user_model, cost, user_opt,
                     args.n_epochs, args.gpu_start + 1,
-                    logger=(logger if args.print_all else None), print_all=args.print_all
+                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all
                 )
 
             # malicious scaling of model weights
@@ -329,9 +322,9 @@ def main():
 
             # update global weights
             if args.trim_mean:
-                lu.global_mean_(global_model, global_updates, args.beta)
+                pu.global_mean_(global_model, global_updates, args.beta)
             else:
-                lu.global_median_(global_model, global_updates)
+                pu.global_median_(global_model, global_updates)
 
             # update neurotoxin mask
             NT.update_mask_(copy.deepcopy(global_model))

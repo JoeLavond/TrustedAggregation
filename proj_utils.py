@@ -2,6 +2,7 @@
 import copy
 import math
 import numpy as np
+import re
 import sys
 import time
 from functools import partial
@@ -560,7 +561,7 @@ class Neurotoxin:
         weight_count = 0
 
         with torch.no_grad():
-            for (_, new_weight), (_, old_weight) in zip(
+            for (name, new_weight), (_, old_weight) in zip(
                 new_model.state_dict().items(),
                 self.old_model.state_dict().items()
             ):
