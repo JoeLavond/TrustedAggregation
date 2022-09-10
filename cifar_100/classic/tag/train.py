@@ -67,7 +67,7 @@ def get_args():
 
     """ Data poisoning """
     # attack
-    parser.add_argument('--dba', default=0, type=float)
+    parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
     parser.add_argument('--row_size', default=4, type=int)
