@@ -3,6 +3,7 @@
 import argparse
 import numpy as np
 import os
+from pathlib import Path
 import re
 
 # visual
@@ -130,7 +131,7 @@ def main():
         args.d_rounds = args.n_rounds
 
     path = os.path.join(
-        f'/home/joe/03_federated/{args.data}_{args.n_classes}',
+        f'{Path.home()}/fed-learn-dba/{args.data}_{args.n_classes}',
         ('neuro' if args.neuro else 'classic'),
         'tag',
         ('distributed' if args.dba else 'centralized'),
