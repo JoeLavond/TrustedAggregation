@@ -76,7 +76,6 @@ def get_args():
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--warmup', default=0, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
