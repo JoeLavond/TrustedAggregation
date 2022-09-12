@@ -4,6 +4,7 @@ import argparse
 import copy
 import logging
 import os
+from pathlib import Path
 import sys
 import time
 
@@ -26,13 +27,13 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import Dataset, DataLoader
 
 # source
-sys.path.insert(2, '/home/joe/')
+sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(3, '/home/joe/03_federated/')
+sys.path.insert(3, f'{Path.home()}/fed-learn-dba/')
 import proj_utils as pu
 
-sys.path.insert(4, '/home/joe/models/')
+sys.path.insert(4, f'{Path.home()}/models/')
 import resnet
 
 
@@ -57,7 +58,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
-    parser.add_argument('--n_batch', default=64, type=int)
+    parser.add_argument('--n_batch', default=128, type=int)
     parser.add_argument('--mom', default=0.9, type=float)
     parser.add_argument('--wd', default=5e-4, type=float)
     # malicious users
@@ -65,7 +66,7 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=20, type=int)
+    parser.add_argument('--n_epochs_pois', default=25, type=int)
     parser.add_argument('--lr_pois', default=0.005, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=10, type=int)
@@ -76,8 +77,8 @@ def get_args():
     parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--row_size', default=12, type=int)
-    parser.add_argument('--col_size', default=12, type=int)
+    parser.add_argument('--row_size', default=24, type=int)
+    parser.add_argument('--col_size', default=24, type=int)
     # defense
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
@@ -120,7 +121,7 @@ def main():
     ])
 
     train_data = datasets.STL10(
-        root='/home/joe/data/',
+        root=f'{Path.home()}/data/',
         split='test',
         transform=stl_trans,
         download=True
@@ -167,7 +168,7 @@ def main():
     """ Import testing data """
     # testing data
     test_data = datasets.STL10(
-        root='/home/joe/data/',
+        root=f'{Path.home()}/data/',
         split='train',
         download=True
     )

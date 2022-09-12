@@ -1,0 +1,28 @@
+[2022/09/11 20:26:44] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, n_users=100, n_local_data=500, p_report=0.1, n_rounds=100, alpha=10000, n_batch=128, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=25, lr_pois=0.005, n_epochs=10, lr=0.01, dba=0, p_pois=0.1, target=0, row_size=24, col_size=24, alpha_val=10000, remove_val=1, trim_mean=0, beta=0.2, out_path='median/centralized/alpha10000--alpha_val10000/n_rounds100--m_start1--n_malicious1', suffix='')
+[2022/09/11 20:27:01] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 100 ---
+[2022/09/11 20:27:02] - TESTING CLEAN - Time 1.6, Loss 2.4231, Acc 0.0832
+[2022/09/11 20:27:03] - TESTING POIS - Time 0.6, Loss 1.8138, Acc 0.3182
+[2022/09/11 20:27:03] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/11 20:27:26] - TRAINING - Epoch: 25, Time 0.8, Loss 2.0108, Acc 0.3043
+[2022/09/11 20:28:33] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 100, Time: 89.8 ---
+[2022/09/11 20:28:33] - TESTING CLEAN - Time 0.8, Loss 2.1052, Acc 0.2388
+[2022/09/11 20:28:34] - TESTING POIS - Time 0.9, Loss 2.2025, Acc 0.1573
+[2022/09/11 20:28:34] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/11 20:28:54] - TRAINING - Epoch: 25, Time 0.8, Loss 1.8176, Acc 0.3306
+[2022/09/11 20:30:05] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 100, Time: 90.7 ---
+[2022/09/11 20:30:06] - TESTING CLEAN - Time 0.8, Loss 1.8850, Acc 0.2956
+[2022/09/11 20:30:06] - TESTING POIS - Time 0.7, Loss 2.6157, Acc 0.0564
+[2022/09/11 20:30:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/11 20:30:25] - TRAINING - Epoch: 25, Time 0.8, Loss 1.6749, Acc 0.3895
