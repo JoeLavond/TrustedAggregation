@@ -51,7 +51,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
-    parser.add_argument('--n_batch', default=128, type=int)
+    parser.add_argument('--n_batch', default=64, type=int)
     parser.add_argument('--mom', default=0.9, type=float)
     parser.add_argument('--wd', default=5e-4, type=float)
     # malicious users
@@ -59,14 +59,15 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=25, type=int)
-    parser.add_argument('--lr_pois', default=0.005, type=float)
+    parser.add_argument('--n_epochs_pois', default=15, type=int)
+    parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=10, type=int)
     parser.add_argument('--lr', default=0.01, type=float)
 
     """ Data poisoning """
     # attack
+    parser.add_argument('--neuro_p', default=0.1, type=float)
     parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
@@ -170,6 +171,12 @@ def main():
         resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
+
+    # initialize neurotoxin masking
+    NT = pu.Neurotoxin(
+        model=copy.deepcopy(global_model),
+        p=args.neuro_p
+    )
 
     # global
     output_global_acc = []
@@ -353,11 +360,19 @@ def main():
             )
 
             # train local model
-            (user_train_loss, user_train_acc) = gu.training(
-                user_loader, user_model, cost, user_opt,
-                args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
-                logger=(logger if (m_user or args.print_all) else None), print_all=args.print_all
-            )
+            if m_user:
+                (user_train_loss, user_train_acc) = pu.nt_training(
+                    user_loader, user_model, cost, user_opt,
+                    args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all,
+                    nt_obj=NT
+                )
+            else:
+                (user_train_loss, user_train_acc) = gu.training(
+                    user_loader, user_model, cost, user_opt,
+                    args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all
+                )
 
             # malicious scaling of model weights
             if (m_user and (args.m_scale != 1)):
@@ -421,6 +436,10 @@ def main():
                         update_weights.copy_((update_weights / user_update_count).long())
 
                     global_weights += update_weights.cuda(args.gpu_start)
+
+                # update neurotoxin mask
+                NT.update_mask_(copy.deepcopy(global_model))
+
 
         round_end = time.time()
         logger.info(
@@ -499,19 +518,21 @@ def main():
 
 
     """ Save output """
+    suffix = f'--neuro_p{args.neuro_p}'
+
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{suffix}.npy'), output_global_acc
     )
 
     output_val_ks = np.array(output_val_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_val_ks.npy'), output_val_ks
+        os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
     )
 
     output_user_ks = np.array(output_user_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_user_ks.npy'), output_user_ks
+        os.path.join(args.out_path, 'data', f'output_user_ks{suffix}.npy'), output_user_ks
     )
 
 
