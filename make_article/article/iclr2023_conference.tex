@@ -228,7 +228,7 @@ We provide Figure \ref{fig:smoothing-mean} to compare our global min-mean smooth
 \begin{figure}[H]
     \centering
     
-    \includegraphics[width=.5\textwidth]{make/99_visuals/extra_plots/min_mean--alpha10000--alpha_val10000--d_rounds30.png}
+    \includegraphics[width=.5\textwidth]{make_article/make_visuals/visuals/smoothing--d_rounds30.png}
     \caption{Comparison of Various Smoothing Methods}
     \label{fig:smoothing}
 \end{figure}
@@ -251,35 +251,26 @@ For global model evaluation, we split the test set into two parts. We add the ba
 
 
 %
-\subsection{Main Results}
+\subsection{Results}
 
-\paragraph{Balanced Data.} 
+\subsubsection{10\% Malicious}
+
+%
+\paragraph{CIFAR 10}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{cifar_10/classic/tag/centralized/alpha10000--alpha_val10000/visuals/clean_accuracy--beta0.1.png}
+    \includegraphics[width=\textwidth]{cifar_10/classic/tag/centralized/alpha10000--alpha_val10000/visuals/clean_accuracy--n_malicious1--beta0.2.png}
     \caption{Caption}
     \label{fig:my_label}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{cifar_10/classic/tag/centralized/alpha10000--alpha_val10000/visuals/pois_accuracy--beta0.1.png}
+    \includegraphics[width=\textwidth]{cifar_10/classic/tag/centralized/alpha10000--alpha_val10000/visuals/pois_accuracy--n_malicious1--beta0.2.png}
     \caption{Caption}
     \label{fig:my_label}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=.75\textwidth]{cifar_10/classic/tag/centralized/alpha10000--alpha_val10000/visuals/threshold--d_rounds50.png}
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure}
-
-
-\paragraph{Imbalanced Trusted User.}
-\paragraph{Imbalanced Users.}
-\paragraph{Stronger Attacks.}
 
 
 %
