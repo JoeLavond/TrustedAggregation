@@ -4,6 +4,7 @@ import argparse
 import copy
 import logging
 import os
+from pathlib import Path
 import sys
 import time
 
@@ -19,13 +20,13 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import Dataset, DataLoader
 
 # source
-sys.path.insert(2, '/home/joe/')
+sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(3, '/home/joe/03_federated/')
+sys.path.insert(3, f'{Path.home()}/fed-learn-dba/')
 import proj_utils as pu
 
-sys.path.insert(2, '/home/joe/models/')
+sys.path.insert(2, f'{Path.home()}/models/')
 import resnet
 
 
@@ -110,7 +111,7 @@ def main():
     ])
 
     train_data = datasets.CIFAR10(
-        root='/home/joe/data/',
+        root=f'{Path.home()}/data/',
         train=True,
         download=True
     )
@@ -188,7 +189,7 @@ def main():
     """ Import testing data """
     # testing data
     test_data = datasets.CIFAR10(
-        root='/home/joe/data/',
+        root=f'{Path.home()}/data/',
         train=False,
         download=True
     )
