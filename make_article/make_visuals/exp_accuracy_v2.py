@@ -41,12 +41,16 @@ def main():
     out_suffix = (
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-        + '--d_rounds{d_rounds}'
     )
 
     # hyper-parameters
     datasets = ('cifar_10', 'cifar_100', 'stl_10')
-    n_rounds = (50, 50, 100)
+    if args.neuro:
+        n_rounds = (50, 100, 100)
+    else:
+        n_rounds = (50, 50, 100)
+
+    d_rounds = n_rounds
     subdirs = [
         f'--d_start1--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
@@ -56,41 +60,33 @@ def main():
     methods = ('tag', 'base/mean', 'base/median')
     file_suffices = ('', f'--beta{args.beta}', '')
 
-    line_types = ['solid', 'dotted', 'dashed']
-    warm_colors = ['yellow', 'orange', 'red']
-    cool_colors = ['green', 'blue', 'purple']
-
-    # setup
-    if args.d_rounds is None:
-        args.d_rounds = min(n_rounds)
+    line_styles = ['solid', 'dotted', 'dashed']
+    warm_colors = [
+        (238 / 255, 51 / 255, 119 / 255),
+        (238 / 255, 119 / 255, 51 / 255),
+        (204 / 255, 51 / 255, 17 / 255)
+    ]
+    cool_colors = [
+        (0 / 255, 153 / 255, 136 / 255),
+        (0 / 255, 119 / 255, 187 / 255),
+        (51 / 255, 187 / 255, 238 / 255)
+    ]
 
     out_path = './visuals'
     if not os.path.exists('./visuals'):
         os.makedirs('./visuals')
 
-    custom_lines = (
-        [
-            Line2D([0], [0], linestyle=ls, color=lc, label=method)
-            for ls, lc, method in zip(line_types, cool_colors, methods)
-        ] + [
-            Line2D([0], [0], linestyle=ls, color=lc, label=method)
-            for ls, lc, method in zip(line_types, warm_colors, methods)
-        ]
-    )
-
 
     """ Global Accuracy """
-    fig, axarr = plt.subplots(ncols=3, sharey=True, sharex=True, figsize=(12, 4))
+    fig, axarr = plt.subplots(ncols=3, figsize=(12, 4))
 
     for i, data in enumerate(datasets):
         plt.sca(axarr[i])
         plt.title(data)
         plt.xlabel('Communication Round')
 
-        if i == 0:
-            plt.ylabel('Classification Rate', c=cool_colors[i])
-        elif i == len(datasets):
-            plt.ylabel('Attack Success Rate', c=warm_colors[i])
+        clean_lines = []
+        pois_lines = []
 
         for j, method in enumerate(methods):
 
@@ -113,22 +109,46 @@ def main():
                     'data',
                     (
                         'output_global_acc'
-                        + ('--neuro_p{args.neuro_p}' if args.neuro else '')
+                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
                         + file_suffices[j]
                         + '.npy'
                     )
                 ), allow_pickle=True
             )
 
-            plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=cool_colors[j])  # need to specify line type
-            plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], c=warm_colors[j])
+            clean_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
+            clean_lines.append(clean_line)
+            pois_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 2], c=warm_colors[j], linestyle=line_styles[j], label=method)
+            pois_lines.append(pois_line)
 
+    # create legend
+    l1 = plt.legend(
+        clean_lines,
+        title='classification accuracy',
+        bbox_to_anchor=(1.04, 1),
+        loc='upper left'
+    )
+    ax = plt.gca().add_artist(l1)
+
+    for i, c in enumerate(cool_colors):
+        l1.legendHandles[i].set_color(c)
+
+    l2 = plt.legend(
+        pois_lines,
+        title='attack success rate',
+        bbox_to_anchor=(1.04, 0),
+        loc='lower left'
+    )
+
+    for i, c in enumerate(warm_colors):
+        l2.legendHandles[i].set_color(c)
 
     plt.savefig(
-        os.path.join('./visuals', f'pois_accuracy{out_suffix}.png'),
+        os.path.join('./visuals', f'accuracy{out_suffix}.png'),
         bbox_inches='tight'
     )
     if args.show:
+        plt.tight_layout()
         plt.show()
     else:
         plt.close()
