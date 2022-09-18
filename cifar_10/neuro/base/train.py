@@ -74,7 +74,7 @@ def get_args():
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
     parser.add_argument('--row_size', default=4, type=int)
-    parser.add_argument('--col_size', default=1, type=int)
+    parser.add_argument('--col_size', default=4, type=int)
     # defense
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)

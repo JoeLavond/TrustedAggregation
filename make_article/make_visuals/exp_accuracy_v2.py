@@ -46,9 +46,9 @@ def main():
     # hyper-parameters
     datasets = ('cifar_10', 'cifar_100', 'stl_10')
     if args.neuro:
-        n_rounds = (50, 100, 100)
+        n_rounds = (250, 250, 100)
     else:
-        n_rounds = (50, 50, 100)
+        n_rounds = (250, 250, 100)
 
     d_rounds = n_rounds
     subdirs = [
