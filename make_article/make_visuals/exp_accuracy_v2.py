@@ -78,11 +78,12 @@ def main():
 
 
     """ Global Accuracy """
+    out_datasets = ['CIFAR-10', 'CIFAR-100', 'STL-10']
     fig, axarr = plt.subplots(ncols=3, figsize=(12, 4))
 
     for i, data in enumerate(datasets):
         plt.sca(axarr[i])
-        plt.title(data)
+        plt.title(out_datasets[i])
         plt.xlabel('Communication Round')
 
         clean_lines = []
@@ -122,9 +123,11 @@ def main():
             pois_lines.append(pois_line)
 
     # create legend
+    out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean']
     l1 = plt.legend(
         clean_lines,
-        title='classification accuracy',
+        out_methods,
+        title='Classification Accuracy',
         bbox_to_anchor=(1.04, 1),
         loc='upper left'
     )
@@ -132,16 +135,19 @@ def main():
 
     for i, c in enumerate(cool_colors):
         l1.legendHandles[i].set_color(c)
+        l1.legendHandles[i].set_linestyle(line_styles[i])
 
     l2 = plt.legend(
         pois_lines,
-        title='attack success rate',
+        out_methods,
+        title='Attack Success Rate',
         bbox_to_anchor=(1.04, 0),
         loc='lower left'
     )
 
     for i, c in enumerate(warm_colors):
         l2.legendHandles[i].set_color(c)
+        l2.legendHandles[i].set_linestyle(line_styles[i])
 
     plt.savefig(
         os.path.join('./visuals', f'accuracy{out_suffix}.png'),
