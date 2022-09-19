@@ -21,9 +21,9 @@ def get_args():
 
     # path
     parser.add_argument('--data', default='cifar', type=str)
-    parser.add_argument('--n_classes', default=100, type=int)
+    parser.add_argument('--n_classes', default=10, type=int)
 
-    parser.add_argument('--n_rounds', default=100, type=int)
+    parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)

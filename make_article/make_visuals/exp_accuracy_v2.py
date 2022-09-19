@@ -61,6 +61,15 @@ def main():
     file_suffices = ('', f'--beta{args.beta}', '')
 
     line_styles = ['solid', 'dotted', 'dashed']
+    warm_colors = ['pink', 'red', 'orange']
+    cool_colors = ['blue', 'cyan', 'green']
+
+    """
+    # scale RGB between 0-1
+    for i, (wc, cc) in enumerate(zip(warm_colors, cool_colors)):
+        warm_colors[i] = [x / 255 for x in wc]
+        cool_colors[i] = [x / 255 for x in cc]
+
     warm_colors = [
         (238 / 255, 51 / 255, 119 / 255),
         (238 / 255, 119 / 255, 51 / 255),
@@ -71,6 +80,7 @@ def main():
         (0 / 255, 119 / 255, 187 / 255),
         (51 / 255, 187 / 255, 238 / 255)
     ]
+    """
 
     out_path = './visuals'
     if not os.path.exists('./visuals'):
