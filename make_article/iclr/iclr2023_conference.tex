@@ -227,22 +227,20 @@ We begin by considering an initial attack where 10\% of the user subset is malic
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2.png}
-    \caption{Model Performance }
+    \caption{Model Performance Under Backdoor Attack With 10\% Malicious}
     \label{fig: accuracy--n_malicious1}
 \end{figure}
 
-Regarding the existing aggregation methods, coordinate-wise median and trim-mean, neither prevent even the most straightforward backdoor attack we consider on any of our data sets. We conclude that our method is a clear improvement to the existing defense methods for Federated Learning.
+Regarding the existing aggregation methods, coordinate-wise median and trim-mean, neither prevent even the most straightforward backdoor attack we consider on any of our data sets. We conclude that our method is a clear improvement to the existing defense methods for Federated Learning. 
 
 However, we continue to show that our method handles even stronger attack settings and can prevent backdoor attacks from current state-of-the-art attacks in settings that are well beyond reason. Next, we consider defending against Distributed Backdoor Attacks (DBA), where the backdoor trigger is geometrically distributed between the malicious users. This attack's authors, \cite{dba}, proposed this attack to take advantage of the Federated Learning setting to create more stealthy attacks from each user using only a partial representation of the backdoor trigger. 
 
-Figure \ref{fig: accuracy--dba1--n_malicious2} shows model performance against DBA attack where 20\% of the user subset in malicious each round.
-
-WORKING
+Figure \ref{fig: accuracy--dba1--n_malicious2} shows model performance against DBA attack where 20\% of the user subset is malicious each round. These attacks are much stronger than those in the previous figure, Figure \ref{fig: accuracy--n_malicious1}, as the baseline robust aggregation methods, coordinate-wise median and trim-mean, succumb entirely to the backdoor attack and in fewer communication rounds. However, TAG continues to completely prevent the backdoor attack on all our data sets.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious2--dba1--beta0.2.png}
-    \caption{Caption}
+    \caption{Model Performance Under Distributed Backdoor Attack With 20\% Malicious}
     \label{fig: accuracy--dba1--n_malicious2}
 \end{figure}
 
@@ -253,7 +251,7 @@ These attacks are catastrophically successful against the current robust aggrega
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--neuro_p0.1.png}
-    \caption{Caption}
+    \caption{Model Performance Under Neurotoxin Distributed Backdoor Attack With 40\% Malicious}
     \label{fig: accuracy--dba1--n_malicious4--neuro1}
 \end{figure}
 
