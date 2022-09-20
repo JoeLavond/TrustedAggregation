@@ -26,7 +26,7 @@ import global_utils as gu
 sys.path.insert(3, f'{Path.home()}/fed-learn-dba/')
 import proj_utils as pu
 
-sys.path.insert(2, f'{Path.home()}/models/')
+sys.path.insert(4, f'{Path.home()}/models/')
 import resnet
 
 
@@ -93,8 +93,10 @@ def main():
         f'alpha{args.alpha}--alpha_val{args.alpha_val}',
         f'n_rounds{args.n_rounds}--d_start{args.d_start}--m_start{args.m_start}--n_malicious{args.n_malicious}'
     )
+
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
+    if not os.path.exists(os.path.join(args.out_path, 'data')):
         os.makedirs(
             os.path.join(args.out_path, 'data')
         )

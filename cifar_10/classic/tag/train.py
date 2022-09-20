@@ -94,6 +94,7 @@ def main():
     )
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
+    if not os.path.exists(os.path.join(args.out_path, 'data')):
         os.makedirs(
             os.path.join(args.out_path, 'data')
         )

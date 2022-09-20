@@ -92,8 +92,10 @@ def main():
         f'alpha{args.alpha}--alpha_val{args.alpha_val}',
         f'n_rounds{args.n_rounds}--d_start{args.d_start}--m_start{args.m_start}--n_malicious{args.n_malicious}'
     )
+
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
+    if not os.path.exists(os.path.join(args.out_path, 'data')):
         os.makedirs(
             os.path.join(args.out_path, 'data')
         )

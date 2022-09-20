@@ -1,0 +1,37 @@
+[2022/09/20 09:43:58] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, n_users=100, n_local_data=500, p_report=0.1, n_rounds=250, alpha=1, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=20, lr_pois=0.01, n_epochs=10, lr=0.01, dba=0, p_pois=0.1, target=0, row_size=4, col_size=4, d_start=1, alpha_val=10000, remove_val=1, out_path='centralized/alpha1--alpha_val10000/n_rounds250--d_start1--m_start1--n_malicious1')
+[2022/09/20 09:44:06] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 250 ---
+[2022/09/20 09:44:19] - TESTING CLEAN - Time 0.9, Loss 2.4044, Acc 0.1000
+[2022/09/20 09:44:20] - TESTING POIS - Time 0.8, Loss 2.8903, Acc 0.0000
+[2022/09/20 09:44:20] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/20 09:44:31] - TRAINING - Epoch: 20, Time 0.5, Loss 1.2322, Acc 0.5879
+[2022/09/20 09:45:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 250, Time: 66.0 ---
+[2022/09/20 09:45:34] - TESTING CLEAN - Time 0.9, Loss 2.2041, Acc 0.1626
+[2022/09/20 09:45:35] - TESTING POIS - Time 0.9, Loss 2.3108, Acc 0.1282
+[2022/09/20 09:45:35] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/20 09:45:46] - TRAINING - Epoch: 20, Time 0.5, Loss 1.0446, Acc 0.6364
+[2022/09/20 09:46:40] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 250, Time: 65.8 ---
+[2022/09/20 09:46:47] - TESTING CLEAN - Time 0.9, Loss 1.9500, Acc 0.2594
+[2022/09/20 09:46:48] - TESTING POIS - Time 0.9, Loss 2.6982, Acc 0.1893
+[2022/09/20 09:46:48] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/20 09:46:59] - TRAINING - Epoch: 20, Time 0.5, Loss 0.9669, Acc 0.6747
+[2022/09/20 09:47:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 250, Time: 66.1 ---
+[2022/09/20 09:48:02] - TESTING CLEAN - Time 0.9, Loss 1.9446, Acc 0.3048
+[2022/09/20 09:48:03] - TESTING POIS - Time 0.9, Loss 3.7818, Acc 0.0153
+[2022/09/20 09:48:03] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/20 09:48:14] - TRAINING - Epoch: 20, Time 0.6, Loss 0.8935, Acc 0.7152

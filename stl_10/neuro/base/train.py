@@ -23,10 +23,10 @@ from torch.utils.data import Dataset, DataLoader
 sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(2, f'{Path.home()}/fed-learn-dba')
+sys.path.insert(3, f'{Path.home()}/fed-learn-dba')
 import proj_utils as pu
 
-sys.path.insert(2, f'{Path.home()}/models/')
+sys.path.insert(4, f'{Path.home()}/models/')
 import resnet
 
 
@@ -74,8 +74,8 @@ def get_args():
     parser.add_argument('--dba', default=0, type=float)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--row_size', default=4, type=int)
-    parser.add_argument('--col_size', default=4, type=int)
+    parser.add_argument('--row_size', default=24, type=int)
+    parser.add_argument('--col_size', default=24, type=int)
     # defense
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
@@ -106,9 +106,11 @@ def main():
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
+    if not os.path.exists(os.path.join(args.out_path, 'data')):
         os.makedirs(
             os.path.join(args.out_path, 'data')
         )
+
     gu.set_seeds(args.seed)
     logger = gu.get_log(args.out_path)
     logger.info(args)
