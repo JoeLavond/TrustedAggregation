@@ -52,9 +52,9 @@ def get_args():
 
     """ Federated learning """
     # basic fl
-    parser.add_argument('--n_users', default=100, type=int)
-    parser.add_argument('--n_local_data', default=500, type=int)
-    parser.add_argument('--p_report', default=0.1, type=float)
+    parser.add_argument('--n_users', default=20, type=int)
+    parser.add_argument('--n_local_data', default=400, type=int)
+    parser.add_argument('--p_report', default=0.5, type=float)
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users

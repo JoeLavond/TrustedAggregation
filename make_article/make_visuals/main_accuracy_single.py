@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 
 # visual
-import matplotlib
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from  matplotlib.lines import Line2D
 import seaborn as sns
@@ -15,6 +15,9 @@ import seaborn as sns
 
 def get_args():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('--data', default='cifar', type=str)
+    parser.add_argument('--n_classes', default=10, type=int)
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -28,7 +31,10 @@ def get_args():
 
     parser.add_argument('--beta', default=0.2, type=float)
 
+    parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
+
+    parser.add_argument('--font_size', default=14, type=int)
     parser.add_argument('--show', default=1, type=int)
 
     return parser.parse_args()
@@ -41,16 +47,21 @@ def main():
     out_suffix = (
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+        + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
     )
 
     # hyper-parameters
-    datasets = ('cifar_10', 'cifar_100', 'stl_10')
-    if args.neuro:
-        n_rounds = (250, 250, 100)
-    else:
-        n_rounds = (250, 250, 100)
+    font = {
+        'size': args.font_size
+    }
+    mpl.rc('font', **font)
 
-    d_rounds = n_rounds
+    data = f'{args.data}_{args.n_classes}'
+    out_data = f'{args.data.upper()}-{args.n_classes}'
+
+    if args.d_rounds is None:
+        args.d_rounds = args.n_rounds
+
     subdirs = [
         f'--d_start1--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
@@ -64,73 +75,52 @@ def main():
     warm_colors = ['pink', 'red', 'orange']
     cool_colors = ['blue', 'cyan', 'green']
 
-    """
-    # scale RGB between 0-1
-    for i, (wc, cc) in enumerate(zip(warm_colors, cool_colors)):
-        warm_colors[i] = [x / 255 for x in wc]
-        cool_colors[i] = [x / 255 for x in cc]
-
-    warm_colors = [
-        (238 / 255, 51 / 255, 119 / 255),
-        (238 / 255, 119 / 255, 51 / 255),
-        (204 / 255, 51 / 255, 17 / 255)
-    ]
-    cool_colors = [
-        (0 / 255, 153 / 255, 136 / 255),
-        (0 / 255, 119 / 255, 187 / 255),
-        (51 / 255, 187 / 255, 238 / 255)
-    ]
-    """
-
     out_path = './visuals'
     if not os.path.exists('./visuals'):
         os.makedirs('./visuals')
 
 
     """ Global Accuracy """
-    out_datasets = ['CIFAR-10', 'CIFAR-100', 'STL-10']
-    fig, axarr = plt.subplots(ncols=3, figsize=(12, 4))
+    plt.figure(figsize=(4, 4))
 
-    for i, data in enumerate(datasets):
-        plt.sca(axarr[i])
-        plt.title(out_datasets[i])
-        plt.xlabel('Communication Round')
+    plt.title(out_data, fontsize=1.5*args.font_size)
+    plt.xlabel('Communication Round')
 
-        clean_lines = []
-        pois_lines = []
+    clean_lines = []
+    pois_lines = []
 
-        for j, method in enumerate(methods):
+    for j, method in enumerate(methods):
 
-            path = os.path.join(
-                f'{Path.home()}/fed-learn-dba',
-                data,
-                ('neuro' if args.neuro else 'classic'),
-                method,
-                ('distributed' if args.dba else 'centralized'),
-                'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-            )
+        path = os.path.join(
+            f'{Path.home()}/fed-learn-dba',
+            data,
+            ('neuro' if args.neuro else 'classic'),
+            method,
+            ('distributed' if args.dba else 'centralized'),
+            'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
+        )
 
-            temp_global = np.load(
-                os.path.join(
-                    path,
-                    (
-                        f'n_rounds{n_rounds[i]}'
-                        + subdirs[j]
-                    ),
-                    'data',
-                    (
-                        'output_global_acc'
-                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                        + file_suffices[j]
-                        + '.npy'
-                    )
-                ), allow_pickle=True
-            )
+        temp_global = np.load(
+            os.path.join(
+                path,
+                (
+                    f'n_rounds{args.n_rounds}'
+                    + subdirs[j]
+                ),
+                'data',
+                (
+                    'output_global_acc'
+                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                    + file_suffices[j]
+                    + '.npy'
+                )
+            ), allow_pickle=True
+        )
 
-            clean_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
-            clean_lines.append(clean_line)
-            pois_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 2], c=warm_colors[j], linestyle=line_styles[j], label=method)
-            pois_lines.append(pois_line)
+        clean_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
+        clean_lines.append(clean_line)
+        pois_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], c=warm_colors[j], linestyle=line_styles[j], label=method)
+        pois_lines.append(pois_line)
 
     # create legend
     out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean']
@@ -160,7 +150,7 @@ def main():
         l2.legendHandles[i].set_linestyle(line_styles[i])
 
     plt.savefig(
-        os.path.join('./visuals', f'accuracy{out_suffix}.png'),
+        os.path.join('./visuals', f'accuracy--{data}{out_suffix}.png'),
         bbox_inches='tight'
     )
     if args.show:

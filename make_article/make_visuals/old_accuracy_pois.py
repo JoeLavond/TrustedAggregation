@@ -22,7 +22,7 @@ def get_args():
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
 
-    parser.add_argument('--n_rounds', default=50, type=int)
+    parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--m_start', default=1, type=int)
 
     parser.add_argument('--n_malicious', default=1, type=int)
