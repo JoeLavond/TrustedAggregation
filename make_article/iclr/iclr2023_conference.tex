@@ -24,6 +24,7 @@
 \newtheorem{lemma}{Lemma}
 
 \newcommand{\yli}[1]{{\color{cyan}#1}}
+\newcommand{\mh}[1]{{\color{red}#1}}
 
 \title{
     Trusted Aggregation (TAG): Model Filtering Backdoor Defense In Federated Learning
@@ -72,35 +73,33 @@
     %Several state-of-the-art backdoor attacks have recently been created to take advantage of the FL setting to get the shared model to learn a specific behavior for inputs given a particular manipulation. (\yli{this is very long. How about: Recently, several backdoor attacks have been proposed to attack the FL system and achieve high attack success rates.})
     %Motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose the first meaningful defense (\yli{we need to double check whether it's the first}) specific to FL that can prevent stronger backdoor attacks and improve accuracy for the original classification task compared to the current aggregation or model filtering methods.
     
-    \yli{Federated Learning is a framework for training robust machine learning models from multiple local data sets without access to the data. A robust shared model is learned through an interactive process that combines locally learned model gradients or weights. However, the lack of data transparency naturally raises concerns about model security. Recently, several state-of-the-art backdoor attacks have been proposed to attack the federated learning system and achieve high attack success rates. Motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose a defense method that can prevent backdoor attacks from influencing the model and maintain the accuracy for the original classification task.}
+    Federated Learning is a framework for training machine learning models from multiple local data sets without access to the data. A shared model is jointly learned through an interactive process between server and clients that combines locally learned model gradients or weights. However, the lack of data transparency naturally raises concerns about model security. Recently, several state-of-the-art backdoor attacks have been proposed, which achieve high attack success rates while simultaneously being difficult to detect, leading to compromised federated learning models. In this paper, motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose a defense method that can prevent backdoor attacks from influencing the model while maintaining the accuracy of the original classification task.
 \end{abstract}
 
 
 % ----- Content -----
 \vspace{-0.5cm}
 \section{Introduction}
-\vspace{-5pt}
-
-Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in \cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare. 
-Additionally, FL is valuable for companies wishing to shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning. 
-Under the FL setting, local entities submit their locally learned model gradients and weights to be intelligently combined by some centralized entity to create a shared and robust machine learning model.
 
 
-Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all future users. An example of such harm is a backdoor attack, 
+Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in \cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare.  Also, FL is valuable for companies that shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning.  Under the FL setting, local entities (clients) submit their locally learned model gradients and weights to be intelligently combined by some centralized entity (server) to create a shared and robust machine learning model.
+
+Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all participating clients. An example of such harm is a backdoor attack, 
 %where training attempts to get a model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. 
 \yli{where the malicious users try to get the global model to associate a given manipulation of the input data, known as a trigger, with a particular outcome.}
 %Recent work, such as by \cite{stamp-invisible}., creates backdoor triggers that are not detectable in the data by either human or computer vision when included within the data. 
-\yli{Some methods~\citep{kurita2020weight,qi2020onion,li2021backdoor} have been proposed to detect the triggers in the training data to defend against backdoor attacks.}
-However, in FL, only the resulting model gradients or weights are communicated back, 
-%so there is potentially no need to hide the trigger in the data. 
-\yli{so such methods cannot be applied to defend against backdoor attacks.}
-Furthermore, without access to the user data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in FL.
+\yli{Some methods~\cite{kurita2020weight,qi2020onion,li2021backdoor} have been proposed to detect the triggers in the training data to defend against backdoor attacks.}
+However, in FL, as only the resulting model gradients or weights are communicated back, \yli{such methods cannot be applied to defend against backdoor attacks.}
+Furthermore, since the model update in FL assumes no access to all clients' data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in FL. 
+Furthermore, current robust aggregation methods~\cite{trim-mean} fail to prevent even mild backdoor attacks.
+%\mh{At the same time, robust aggregation methods~\cite{trim-mean} fail to prevent even mild backdoor attacks.}
 
-We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure \ref{fig: motivation} shows a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
+In this paper, we first find that the output layer distributions of malicious users are very different from that of benign users. Specifically, there exists a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure~\ref{fig: motivation} shows a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
 
-\yli{Based on the finding that the output layer distributions of a model with and without a backdoor are different, we propose to detect updates from malicious users using this finding. The proposed method is effective against multiple state-of-the-art backdoor attacks at different strength levels.}
+Motivated by the finding that the output layer distributions of a model with and without a backdoor are different, we propose distributional differences between the output layers of returning user models and a known clean model to identify malicious updates. The proposed method is effective against multiple state-of-the-art backdoor attacks at different strength levels. Even in the unreasonable setting where 40\% of the clients are malicious for each update, we greatly delay the success of the backdoor attack, outperforming current robust aggregation methods. 
+%\yli{Based on the finding that the output layer distributions of a model with and without a backdoor are different\mh{Motiviated by the findings}, we propose to \mh{use xx to} detect updates from malicious users. \mh{add more details on methods?}  The proposed method is effective against multiple state-of-the-art backdoor attacks at different strength levels.} \mh{Even in the extreme setting where 40\% of the clients is compromised, we could still achieve xx\% }. 
 %Our contribution to federated learning is establishing defense criteria effective against state-of-the-art backdoor attacks.
-We demonstrate that our method's ability on several data sets to prevent backdoor attacks. 
+In the experiment section, we demonstrate our method's ability on several data sets to prevent backdoor attacks. 
 %regardless of whether the attacks occur even in every update to the shared model or starting at the beginning of the federated learning process. 
 \yli{The method performs well even when the attack happens every round starting at the beginning of the process.}
 %Furthermore, our threshold allows many regular users to update the global model, resulting in no decrease and several increases in the accuracy of the original classification task.
@@ -147,30 +146,25 @@ We propose a method that can be implemented in addition to other aggregation met
 \section{Method}
 \vspace{-10pt}
 
-This section describes the motivation and framework for our proposed method, Trusted Aggregation (TAG), which effectively defends against state-of-the-art backdoor attacks. The current defense aggregation methods~\citep[e.g.,][]{fedavg,trim-mean} are insufficient for preventing attacks of even mild strength. In addition to better model security, our method can even improve accuracy for the original classification task compared to the current robust aggregation methods.
+This section describes the motivation and framework for our proposed method, Trusted Aggregation (TAG), which effectively defends against state-of-the-art backdoor attacks. The current defense aggregation methods~\citep{fedavg,trim-mean} are insufficient for preventing attacks of even mild strength. In addition to better model security, our method can improve accuracy for the original classification task compared to the current robust aggregation methods.
 
-\begin{figure}[H]
-\vspace{-10pt}
+\begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/ext_motivation.png}
-    \vspace{-10pt}
+    \includegraphics[width=\textwidth]{pics/ext_motivation.png}
     \caption{\footnotesize Final hidden layer output distributions (kernel density estimation based) for a {\color{red}\bf backdoor} model (red) and a {\bf clean} model (black). There is an obvious difference between the distributions of the backdoor and clean models for the target label class.}
     \label{fig: motivation}
-    \vspace{-10pt}
 \end{figure}
 
-\vspace{-10pt}
-\paragraph{Motivation.}
-We find that the output layer distributions of malicious users are very different from that of benign users. Figure~\ref{fig: motivation} shows the output distributions of a backdoor model and a clean model on clean input data. For the last hidden layer, each neuron in the layer corresponds to one class. For a backdoor model, there is a target class that associates with backdoor triggers.
-%a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
-Note that we can observe a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks.
+\vspace{-.25cm}
+\paragraph{Motivation.} We find that the output layer distributions of models returned by malicious users are very different from that of benign users. Figure~\ref{fig: motivation} shows the output distributions of a backdoor model and a clean model on clean input data.  Each neuron in the output layer corresponds to one class, and the backdoor model has a learned association between the backdoor trigger and the target class. We observe that the learned associated comes with a distributional change in the output distribution for the target class. Therefore it implies that with a guaranteed clean model, we should be able to identify whether another candidate model has a backdoor attack by comparing their output distributions on some clean data.
+Note that we can observe a discernible difference between malicious and benign user distributions for this target label class. Therefore, we can leverage this difference to detect backdoor attacks.
 
-\vspace{-10pt}
+\vspace{-.25cm}
 \paragraph{Detection Framework.}
-We assume that there exists one user who we can be confident is trustworthy to place in charge of gate-keeping the global model for updates. The detection method leverages the trusted user to evaluate incoming model weights and determine whether each contribution is allowed to participate in the global model update procedure. \yli{The assumption is reasonable as in reality the center server will also collect some data to help with the training process, not just blindly rely on the local data from users.} 
+We assume that there exists one user who we can be confident is trustworthy to place in charge of gate-keeping the global model for updates. The detection method leverages the trusted user to evaluate incoming model weights and determine whether each contribution is allowed to participate in the global model update procedure. \yli{The assumption is reasonable as, in reality, the center server will also collect some data to help with the training process, not just blindly relying on the local data from users.} 
+
 The main idea is to detect user models with an unusually distributed output layer with information from a single trusted user. Moving forward, we will refer to this single trusted user as the validation user. In each communication round, this validation user completes the following steps to generate a threshold for malicious user detection, see Algorithm~\ref{alg:t-agg}
 
-\vspace{-10pt}
 \begin{algorithm}[H]
 \caption{Trusted Aggregation \\ 
 Notation: Let ${\bm S}$ represent the random subset of users that will submit locally trained models $U_j$ to update the global model $G$, $U_T$ to denote the model from the trusted user, $\mX$ to denote the local data of the trusted user, and $\mathcal{D}$ to represent the distributional difference function.
@@ -201,9 +195,8 @@ Notation: Let ${\bm S}$ represent the random subset of users that will submit lo
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{-10pt}
 
-\yli{In general, Algorithm~\ref{alg:t-agg} determines which users will be used for the global updates based a threshold. During each round of training, we compute and store a forward pass output ($\vo_G$) of the global model on the validation user's local data. Then, local training is performed and forward pass outputs ($\vo_j, \vo_T$) on validation user's local data with the selected users' models and the model of the validation user are stored. For each class, we compute the class-conditional distributional distance ($v^{(c)}_j, v^{(c)}_T$) between the global model output ($\vo^{(c)}_G$) and the user output ($\vo^{(c)}_j$ or $\vo^{(c)}_T$) by applying a distributional difference function on estimated CDFs based on $\vo^{(c)}_G$, $\vo^{(c)}_j$ and $\vo^{(c)}_T$. Here, $\vo^{(c)}$ represents the outputs based on trust user's local data with label $c$. In our experiment, the Kolmogorov-Smirnov (KS) function is used to compute the distributional difference, but other distance functions can also be applied. Suppose there is $m$ classes in total, the process will result in a distance vector ($\vv_j, \vv_T\in\sR^m$) for each user, including the validation user. The distance vectors will then be used to determine which user can be selected for the update.}
+\yli{In general, Algorithm~\ref{alg:t-agg} determines which users will be used for the global updates based on a threshold. During each round of training, we compute and store a forward pass output ($\vo_G$) of the global model on the validation user's local data. Then, local training is performed, and forward pass outputs ($\vo_j, \vo_T$) on the validation user's local data with the selected users' models and the model of the validation user are stored. For each class, we compute the class-conditional distributional distance ($v^{(c)}_j, v^{(c)}_T$) between the global model output ($\vo^{(c)}_G$) and the user output ($\vo^{(c)}_j$ or $\vo^{(c)}_T$) by applying a distributional difference function on estimated CDFs based on $\vo^{(c)}_G$, $\vo^{(c)}_j$ and $\vo^{(c)}_T$. Here, $\vo^{(c)}$ represents the outputs based on the trusted user's local data with the label $c$. In our experiment, the Kolmogorov-Smirnov (KS) function is used to compute the distributional difference, but other distance functions can also be applied. Suppose there are $m$ classes in total; the process will result in a distance vector ($\vv_j, \vv_T\in\sR^m$) for each user, including the validation user. The distance vectors will then determine which users can be selected for the update.}
 
 %
 %\begin{wrapfigure}{r}{.5\textwidth}
@@ -216,24 +209,27 @@ Notation: Let ${\bm S}$ represent the random subset of users that will submit lo
 %\end{align}
 %\end{wrapfigure}
 
-\vspace{-10pt}
-\paragraph{Threshold Construction.} In this part, we discuss how to decide the threshold ($\tau$) and how to use it to select users. \yli{The threshold is determined by the largest possible change that a non-malicious user could contribute. Users with distance values exceed the threshold will be excluded.}
+\vspace{-.25cm}
+\paragraph{Threshold Construction.} In this part, we discuss how to decide the threshold ($\tau$) and how to use it to select users. 
+We quantify the threshold as the largest possible change a non-malicious user could contribute. Users with distance values exceeding the threshold will be excluded.
+%\yli{The threshold is determined by the largest possible change that a non-malicious user could contribute. Users with distance values exceed the threshold will be excluded.}
 %Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. 
 %Hence, we want to estimate the most prominent possible distributional distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. 
 Assume that the class-conditional distances ($v^{(c)}$) are Uniform on $[0, b_c]$ for each class $c$, where $b_c$ is the maximum possible change to the output layer of class $c$ through local training by a non-malicious user. 
 Therefore, the threshold can be generated by estimating the maximum of $b_c$ for any class. 
 Let $m$ represent the total number of classes, equation~\ref{eq:geq_bound} shows that under the assumption, twice the maximum of the class-conditional distance ($2\max(v^{(c)})$) is a practical estimation of the upper bound of $b_c, \forall c\in [1,...,m]$.
 
-\vspace{-10pt}
+\vspace{-0.6cm}
 \begin{align}
     &\forall c \in [1,...,m], v^{(c)} \sim \textrm{ Uniform}(0, b_c), \textrm{let } j = \argmax_c \left( b_c \right) \textrm{ such that } b_j = \max_c \left( b_c \right). \nonumber \\
     &\max_c \left( v^{(c)} \right) \geq v^{(j)} \Longrightarrow E \left[ \max_c \left( v^{(c)} \right) \right] \geq E \left[ v^{(j)} \right] = \dfrac{b_j}{2}  \Longrightarrow E \left[ 2 \times \max_c \left( v^{(c)} \right) \right] \geq b_j \label{eq:geq_bound} 
 \end{align}
-\vspace{-10pt}
 
-\yli{Since the validation user is a non-malicious user, its distance vector can be a good representation of non-malicious users. Therefore, we estimate the threshold $\tau$ by setting $\tau=2\times\max(\vv_T)$, where $\vv_T\in\sR^m$ is the distance vector of the validation user and $\max(\cdot)$ means getting the maximum value of the vector $\vv_T$. Then, the maximum distance value ($\max(\vv_j)$) of each selected user will be compared with the threshold ($\tau$) to determine the final list of users who can participate in the update. A user with maximum distance smaller than the threshold is considered as a benign user, while a user with maximum distance larger than the threshold will be removed.}
+\vspace{-.3cm}
+Since the validation user is non-malicious, their distance vector serves as a good representation for other non-malicious users. Therefore, we estimate the threshold $\tau$ by setting $\tau=2\times\max(\vv_T)$, where $\vv_T\in\sR^m$ is the distance vector of the validation user and $\max(\cdot)$ means getting the maximum value of the vector $\vv_T$. Then, the maximum distance value ($\max(\vv_j)$) of each selected user will be compared with the threshold ($\tau$) to determine the final list of users who can participate in the update. A user with a maximum distance smaller than the threshold is considered a benign user, while a user with a maximum distance larger than or equal to the threshold will be removed.
+%\yli{Since the validation user is a non-malicious user, its distance vector can be a good representation of non-malicious users. Therefore, we estimate the threshold $\tau$ by setting $\tau=2\times\max(\vv_T)$, where $\vv_T\in\sR^m$ is the distance vector of the validation user and $\max(\cdot)$ means getting the maximum value of the vector $\vv_T$. Then, the maximum distance value ($\max(\vv_j)$) of each selected user will be compared with the threshold ($\tau$) to determine the final list of users who can participate in the update. A user with maximum distance smaller than the threshold is considered as a benign user, while a user with maximum distance larger than the threshold will be removed.}
 %we aim to estimate and use a representation for the maximum of $b_c$, the maximal benign change to any class, as a cutoff for returning user models. 
-However, we find that this naive threshold is very unstable and a lucky malicious user can get pass in some rounds due to the instability. Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the concern.
+However, this naive threshold is very unstable, and a lucky malicious user can get past it in some rounds due to the instability. Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the concern.
 
 
 %Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the following concerns: (1) In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have ample opportunity to impact the model at the beginning of Federated Learning; (2) there is extreme instability round-to-round in our threshold. A lucky malicious user can get past a large cutoff for that round due to instability.
@@ -242,26 +238,23 @@ However, we find that this naive threshold is very unstable and a lucky maliciou
 
 %Hence, we refocus our efforts on estimating an upper bound for the most considerable change a non-malicious user with balanced data can make to the output layer of the global model. Our final threshold includes global min-mean smoothing and class frequency scaling to address the above concerns.
 
-\vspace{-10pt}
+\vspace{-.25cm}
 \paragraph{Global-Min Mean Smoothing.} 
 %We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We use averaging as a valuable solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. 
-A straightforward way to stabilize the threshold value is smoothing. However, in the early communication rounds, the naive threshold value rapidly decreases as the model starts making connections between inputs and output classes. Therefore, applying smoothing method early will result in a relatively high threshold, which may let attackers bypass. 
+A straightforward way to stabilize the threshold value is smoothing methods. However, in the early communication rounds, the naive threshold value rapidly decreases as the model starts making connections between inputs and output classes. Therefore, applying a smoothing method early will result in a relatively high threshold, which may let attackers bypass it. 
 %Although smoothing aids stability, smoothing methods tend to exacerbate the problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. 
 When the naive threshold ($\tau$) decreases rapidly, we do not wish to use any previous communication rounds for the smoothing. 
 
 \begin{wrapfigure}{r}{.4\textwidth}
-    \vspace{-15pt}
-    \includegraphics[width=.4\textwidth]{make_article/make_visuals/visuals/smoothing--d_rounds30.png}
-    \vspace{-15pt}
+    \includegraphics[width=.4\textwidth]{pics/smoothing--d_rounds30.png}
     \caption{\footnotesize Comparison of the global min-mean smoothing with the base (naive) threshold and various smoothing methods. 
     %The global min-mean is smooth and captures the early round behavior of the base threshold.
     }
-    \vspace{-0.8cm}
     \label{fig: smoothing}
 \end{wrapfigure}
 
 %Our solution is to use as our cutoff the running mean since the lowest observed value (Global-Min Mean) of the maximum class distance for the validated user. 
-Therefore, we propose to use the lowest observed value (Global Min) of $\tau$ as the staring point of smoothing. Let $\tau_t$ represent the naive estimation of the threshold in round $t$, the smoothed threshold $\tilde{\tau}$ at round $n$ is given by
+Therefore, we propose to use the lowest observed value (Global Min) of $\tau$ as the starting point of smoothing. Let $\tau_t$ represent the naive estimation of the threshold in round $t$, the smoothed threshold $\tilde{\tau}$ at round $n$ is given by
 \begin{align*}
     \tilde{\tau} = \frac{1}{n-t_s+1}\sum_{t=t_s}^n \tau_t,
 \end{align*}
@@ -269,15 +262,15 @@ where $t_s$ is the round that when the global min is observed. Details of the gl
 %As a result, our solution quickly adapts to decreasing values of $max_c (b_c)$ over communication rounds. 
 %As $max_c (b_c)$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. 
 In addition, when our estimate stabilizes, previous values are leveraged to smooth the threshold, which keeps lucky malicious users from getting past a volatile threshold. Figure~\ref{fig: smoothing} compares our global min-mean smoothing with the naive threshold and various smoothing techniques.
-The global min-mean smoothing best captures early behavior of the naive threshold while providing remarkable improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
+The global min-mean smoothing best captures the naive threshold's early behavior while providing remarkable stability improvements. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
 
-\vspace{-10pt}
 \begin{algorithm}[H]
 \caption{Global-Min Mean Smoothing \\ 
 Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of values that we wish to smooth.
 }
 \label{alg:smoothing}
 \begin{algorithmic}[1]
+
     \Procedure{Global-Min Mean Smoothing}{$\tau_1, \cdots, \tau_{n - 1}, \tau_n$}
         \State Record the location of global minimum: $i = \argmin\limits_{t \in [1,...,n] } \tau_t$
         \State Subset to a sequence starting with the global min: $\{\tau_t\}_{t=i}^n = \{\tau_i, \cdots, \tau_n \}$
@@ -285,11 +278,8 @@ Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of va
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{-10pt}
 
-\vspace{-10pt}
 \section{EXPERIMENTS}
-\vspace{-10pt}
 
 \subsection{Setting}
 
