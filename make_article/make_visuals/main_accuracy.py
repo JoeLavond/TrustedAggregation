@@ -39,11 +39,6 @@ def get_args():
 def main():
 
     args = get_args()
-    out_suffix = (
-        f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
-        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-    )
-
     # hyper-parameters
     font = {
         'size': args.font_size
@@ -53,8 +48,16 @@ def main():
     datasets = ('cifar_10', 'cifar_100', 'stl_10')
     if args.neuro:
         n_rounds = (250, 250, 250)
+        d_scale = (None, 1.01, 1.1)
     else:
         n_rounds = (250, 250, 250)
+        d_scale = (None, 1.01, 1.1)
+
+    out_suffix = (
+        f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
+        + ('--d_scale' if sum([1 if x is not None else 0 for x in d_scale]) else '')
+        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+    )
 
     d_rounds = n_rounds
     subdirs = [
@@ -64,7 +67,11 @@ def main():
     ]
 
     methods = ('tag', 'base/mean', 'base/median')
-    file_suffices = ('', f'--beta{args.beta}', '')
+    file_suffices = (
+        '',
+        f'--beta{args.beta}',
+        ''
+    )
 
     line_styles = ['solid', 'dotted', 'dashed']
     warm_colors = ['pink', 'red', 'orange']
@@ -127,6 +134,11 @@ def main():
                     (
                         'output_global_acc'
                         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                        + (
+                            f'--d_scale{d_scale[i]}'
+                            if (d_scale[i] is not None and method == 'tag')
+                            else ''
+                        )
                         + file_suffices[j]
                         + '.npy'
                     )

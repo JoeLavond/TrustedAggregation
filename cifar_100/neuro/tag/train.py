@@ -406,9 +406,15 @@ def main():
             )
 
             user_ks_max = max(user_ks)
-            user_update = (
-                user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
+            thresh = np.minimum(
+                ((args.n_classes + 1) / args.n_classes) * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]), 1
             )
+            user_update = (user_ks_max < thresh)
+            if m_user:
+                logger.info(
+                    'User KS Max: %.4f, Thresh: %.4f, Update: %r',
+                    user_ks_max, thresh, user_update
+                )
 
             # send updates to global
             if ((r < args.d_start) or user_update):

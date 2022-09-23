@@ -45,9 +45,9 @@ def get_args():
 
     """ Federated learning """
     # basic fl
-    parser.add_argument('--n_users', default=20, type=int)
-    parser.add_argument('--n_local_data', default=400, type=int)
-    parser.add_argument('--p_report', default=0.5, type=float)
+    parser.add_argument('--n_users', default=100, type=int)
+    parser.add_argument('--n_local_data', default=500, type=int)
+    parser.add_argument('--p_report', default=0.1, type=float)
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
@@ -393,9 +393,14 @@ def main():
             )
 
             user_ks_max = max(user_ks)
-            user_update = (
-                user_ks_max < (2 * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
-            )
+
+            thresh = (((args.n_classes + 1) / args.n_classes) * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
+            user_update = (user_ks_max < thresh)
+            if m_user:
+                logger.info(
+                    'User KS Max: %.4f, Thresh: %.4f, Update: %r',
+                    user_ks_max, thresh, user_update
+                )
 
             # send updates to global
             if ((r < args.d_start) or user_update):

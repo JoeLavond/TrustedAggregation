@@ -1,1171 +1,2506 @@
-[2022/09/22 10:21:45] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, n_users=20, n_local_data=400, p_report=0.5, n_rounds=250, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, neuro_p=0.1, dba=0, p_pois=0.1, target=0, row_size=24, col_size=24, d_start=1, alpha_val=10000, remove_val=1, out_path='centralized/alpha10000--alpha_val10000/n_rounds250--d_start1--m_start1--n_malicious1')
-[2022/09/22 10:22:08] - 
+[2022/09/22 20:56:58] - Namespace(seed=0, n_classes=10, gpu_start=0, print_all=0, n_users=20, n_local_data=400, p_report=0.5, n_rounds=250, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, neuro_p=0.1, dba=0, p_pois=0.1, target=0, row_size=24, col_size=24, d_start=1, alpha_val=10000, remove_val=1, out_path='centralized/alpha10000--alpha_val10000/n_rounds250--d_start1--m_start1--n_malicious1')
+[2022/09/22 20:57:14] - 
 
 --- GLOBAL VALIDATION - Round: 0 of 250 ---
-[2022/09/22 10:22:21] - TESTING CLEAN - Time 0.8, Loss 2.7939, Acc 0.1024
-[2022/09/22 10:22:22] - TESTING POIS - Time 0.8, Loss 2.8818, Acc 0.0000
-[2022/09/22 10:22:22] - 
+[2022/09/22 20:57:25] - TESTING CLEAN - Time 0.7, Loss 2.7939, Acc 0.1024
+[2022/09/22 20:57:26] - TESTING POIS - Time 0.7, Loss 2.8818, Acc 0.0000
+[2022/09/22 20:57:26] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:22:30] - TRAINING - Epoch: 10, Time 0.7, Loss 1.9991, Acc 0.2774
-[2022/09/22 10:23:33] - 
+[2022/09/22 20:57:32] - TRAINING - Epoch: 10, Time 0.6, Loss 1.9991, Acc 0.2774
+[2022/09/22 20:57:32] - User KS Max: 1.0000, Thresh: 1.0746, Update: True
+[2022/09/22 20:58:19] - 
 
---- GLOBAL EVALUATIONS - Round: 1 of 250, Time: 70.9 ---
-[2022/09/22 10:23:41] - TESTING CLEAN - Time 0.9, Loss 2.0270, Acc 0.2424
-[2022/09/22 10:23:42] - TESTING POIS - Time 0.8, Loss 2.3345, Acc 0.0489
-[2022/09/22 10:23:42] - 
+--- GLOBAL EVALUATIONS - Round: 1 of 250, Time: 53.7 ---
+[2022/09/22 20:58:25] - TESTING CLEAN - Time 0.7, Loss 2.0270, Acc 0.2424
+[2022/09/22 20:58:26] - TESTING POIS - Time 0.7, Loss 2.3345, Acc 0.0489
+[2022/09/22 20:58:26] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:23:50] - TRAINING - Epoch: 10, Time 0.8, Loss 1.7460, Acc 0.3511
-[2022/09/22 10:24:54] - 
+[2022/09/22 20:58:33] - TRAINING - Epoch: 10, Time 0.7, Loss 1.7460, Acc 0.3511
+[2022/09/22 20:58:34] - User KS Max: 0.5630, Thresh: 0.8579, Update: True
+[2022/09/22 20:59:23] - 
 
---- GLOBAL EVALUATIONS - Round: 2 of 250, Time: 72.5 ---
-[2022/09/22 10:25:02] - TESTING CLEAN - Time 0.8, Loss 1.7982, Acc 0.3212
-[2022/09/22 10:25:03] - TESTING POIS - Time 0.8, Loss 2.7926, Acc 0.1409
-[2022/09/22 10:25:03] - 
+--- GLOBAL EVALUATIONS - Round: 2 of 250, Time: 57.0 ---
+[2022/09/22 20:59:29] - TESTING CLEAN - Time 0.7, Loss 1.7995, Acc 0.3176
+[2022/09/22 20:59:30] - TESTING POIS - Time 0.7, Loss 2.7660, Acc 0.1671
+[2022/09/22 20:59:30] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:25:12] - TRAINING - Epoch: 10, Time 0.8, Loss 1.6460, Acc 0.3384
-[2022/09/22 10:26:16] - 
+[2022/09/22 20:59:37] - TRAINING - Epoch: 10, Time 0.7, Loss 1.6379, Acc 0.3740
+[2022/09/22 20:59:37] - User KS Max: 0.3080, Thresh: 0.4862, Update: True
+[2022/09/22 21:00:27] - 
 
---- GLOBAL EVALUATIONS - Round: 3 of 250, Time: 73.3 ---
-[2022/09/22 10:26:25] - TESTING CLEAN - Time 0.8, Loss 1.6776, Acc 0.3468
-[2022/09/22 10:26:25] - TESTING POIS - Time 0.8, Loss 2.9933, Acc 0.1484
-[2022/09/22 10:26:26] - 
+--- GLOBAL EVALUATIONS - Round: 3 of 250, Time: 57.0 ---
+[2022/09/22 21:00:33] - TESTING CLEAN - Time 0.7, Loss 1.6913, Acc 0.3360
+[2022/09/22 21:00:34] - TESTING POIS - Time 0.7, Loss 3.0224, Acc 0.1453
+[2022/09/22 21:00:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:26:34] - TRAINING - Epoch: 10, Time 0.8, Loss 1.5254, Acc 0.4555
-[2022/09/22 10:27:38] - 
+[2022/09/22 21:00:41] - TRAINING - Epoch: 10, Time 0.7, Loss 1.5159, Acc 0.4478
+[2022/09/22 21:00:42] - User KS Max: 0.5350, Thresh: 0.3223, Update: False
+[2022/09/22 21:01:30] - 
 
---- GLOBAL EVALUATIONS - Round: 4 of 250, Time: 72.6 ---
-[2022/09/22 10:27:46] - TESTING CLEAN - Time 0.9, Loss 1.6314, Acc 0.3640
-[2022/09/22 10:27:47] - TESTING POIS - Time 0.8, Loss 3.2009, Acc 0.1458
-[2022/09/22 10:27:47] - 
+--- GLOBAL EVALUATIONS - Round: 4 of 250, Time: 56.1 ---
+[2022/09/22 21:01:36] - TESTING CLEAN - Time 0.7, Loss 1.6657, Acc 0.3584
+[2022/09/22 21:01:37] - TESTING POIS - Time 0.7, Loss 3.1980, Acc 0.1569
+[2022/09/22 21:01:37] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:27:56] - TRAINING - Epoch: 10, Time 0.8, Loss 1.4807, Acc 0.4249
-[2022/09/22 10:28:59] - 
+[2022/09/22 21:01:44] - TRAINING - Epoch: 10, Time 0.7, Loss 1.4761, Acc 0.4071
+[2022/09/22 21:01:45] - User KS Max: 0.4570, Thresh: 0.2167, Update: False
+[2022/09/22 21:02:36] - 
 
---- GLOBAL EVALUATIONS - Round: 5 of 250, Time: 71.8 ---
-[2022/09/22 10:29:07] - TESTING CLEAN - Time 0.9, Loss 1.5587, Acc 0.3964
-[2022/09/22 10:29:08] - TESTING POIS - Time 0.8, Loss 4.4290, Acc 0.0196
-[2022/09/22 10:29:08] - 
+--- GLOBAL EVALUATIONS - Round: 5 of 250, Time: 59.3 ---
+[2022/09/22 21:02:43] - TESTING CLEAN - Time 0.7, Loss 1.6816, Acc 0.3564
+[2022/09/22 21:02:44] - TESTING POIS - Time 0.7, Loss 3.7737, Acc 0.0604
+[2022/09/22 21:02:44] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:29:18] - TRAINING - Epoch: 10, Time 1.0, Loss 1.4301, Acc 0.4402
-[2022/09/22 10:30:30] - 
+[2022/09/22 21:02:52] - TRAINING - Epoch: 10, Time 0.7, Loss 1.4269, Acc 0.4275
+[2022/09/22 21:02:52] - User KS Max: 0.3010, Thresh: 0.2057, Update: False
+[2022/09/22 21:03:43] - 
 
---- GLOBAL EVALUATIONS - Round: 6 of 250, Time: 81.8 ---
-[2022/09/22 10:30:40] - TESTING CLEAN - Time 0.9, Loss 1.5778, Acc 0.4056
-[2022/09/22 10:30:41] - TESTING POIS - Time 0.8, Loss 4.2636, Acc 0.0498
-[2022/09/22 10:30:41] - 
+--- GLOBAL EVALUATIONS - Round: 6 of 250, Time: 59.5 ---
+[2022/09/22 21:03:50] - TESTING CLEAN - Time 0.7, Loss 1.6665, Acc 0.3688
+[2022/09/22 21:03:51] - TESTING POIS - Time 0.7, Loss 4.3517, Acc 0.0498
+[2022/09/22 21:03:51] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:30:51] - TRAINING - Epoch: 10, Time 1.0, Loss 1.3660, Acc 0.4885
-[2022/09/22 10:32:03] - 
+[2022/09/22 21:03:58] - TRAINING - Epoch: 10, Time 0.7, Loss 1.3904, Acc 0.4606
+[2022/09/22 21:03:59] - User KS Max: 0.4600, Thresh: 0.3030, Update: False
+[2022/09/22 21:04:50] - 
 
---- GLOBAL EVALUATIONS - Round: 7 of 250, Time: 81.8 ---
-[2022/09/22 10:32:13] - TESTING CLEAN - Time 0.9, Loss 1.4872, Acc 0.4348
-[2022/09/22 10:32:14] - TESTING POIS - Time 0.9, Loss 4.8459, Acc 0.0293
-[2022/09/22 10:32:14] - 
+--- GLOBAL EVALUATIONS - Round: 7 of 250, Time: 59.7 ---
+[2022/09/22 21:04:57] - TESTING CLEAN - Time 0.7, Loss 1.4885, Acc 0.4284
+[2022/09/22 21:04:58] - TESTING POIS - Time 0.7, Loss 4.5665, Acc 0.0311
+[2022/09/22 21:04:58] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:32:24] - TRAINING - Epoch: 10, Time 0.9, Loss 1.2737, Acc 0.5369
-[2022/09/22 10:33:33] - 
+[2022/09/22 21:05:06] - TRAINING - Epoch: 10, Time 0.8, Loss 1.2868, Acc 0.5242
+[2022/09/22 21:05:06] - User KS Max: 0.6360, Thresh: 0.3648, Update: False
+[2022/09/22 21:05:58] - 
 
---- GLOBAL EVALUATIONS - Round: 8 of 250, Time: 79.1 ---
-[2022/09/22 10:33:42] - TESTING CLEAN - Time 0.8, Loss 1.4527, Acc 0.4508
-[2022/09/22 10:33:43] - TESTING POIS - Time 0.8, Loss 4.5427, Acc 0.0742
-[2022/09/22 10:33:43] - 
+--- GLOBAL EVALUATIONS - Round: 8 of 250, Time: 60.0 ---
+[2022/09/22 21:06:05] - TESTING CLEAN - Time 0.7, Loss 1.4649, Acc 0.4432
+[2022/09/22 21:06:05] - TESTING POIS - Time 0.7, Loss 4.3732, Acc 0.0702
+[2022/09/22 21:06:05] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:33:53] - TRAINING - Epoch: 10, Time 0.9, Loss 1.2412, Acc 0.5318
-[2022/09/22 10:35:09] - 
+[2022/09/22 21:06:13] - TRAINING - Epoch: 10, Time 0.8, Loss 1.2633, Acc 0.5140
+[2022/09/22 21:06:13] - User KS Max: 0.4120, Thresh: 0.3459, Update: False
+[2022/09/22 21:07:05] - 
 
---- GLOBAL EVALUATIONS - Round: 9 of 250, Time: 86.0 ---
-[2022/09/22 10:35:19] - TESTING CLEAN - Time 0.9, Loss 1.3985, Acc 0.4760
-[2022/09/22 10:35:19] - TESTING POIS - Time 0.8, Loss 4.9004, Acc 0.0244
-[2022/09/22 10:35:19] - 
+--- GLOBAL EVALUATIONS - Round: 9 of 250, Time: 59.7 ---
+[2022/09/22 21:07:12] - TESTING CLEAN - Time 0.7, Loss 1.3816, Acc 0.4796
+[2022/09/22 21:07:12] - TESTING POIS - Time 0.7, Loss 4.7777, Acc 0.0280
+[2022/09/22 21:07:12] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:35:29] - TRAINING - Epoch: 10, Time 1.0, Loss 1.2487, Acc 0.5293
-[2022/09/22 10:36:42] - 
+[2022/09/22 21:07:20] - TRAINING - Epoch: 10, Time 0.8, Loss 1.3011, Acc 0.4784
+[2022/09/22 21:07:21] - User KS Max: 0.5330, Thresh: 0.3328, Update: False
+[2022/09/22 21:08:12] - 
 
---- GLOBAL EVALUATIONS - Round: 10 of 250, Time: 82.7 ---
-[2022/09/22 10:36:50] - TESTING CLEAN - Time 0.9, Loss 1.4175, Acc 0.4852
-[2022/09/22 10:36:51] - TESTING POIS - Time 0.8, Loss 4.8592, Acc 0.0676
-[2022/09/22 10:36:51] - 
+--- GLOBAL EVALUATIONS - Round: 10 of 250, Time: 60.0 ---
+[2022/09/22 21:08:19] - TESTING CLEAN - Time 0.8, Loss 1.4385, Acc 0.4756
+[2022/09/22 21:08:20] - TESTING POIS - Time 0.7, Loss 4.9795, Acc 0.0587
+[2022/09/22 21:08:20] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:37:01] - TRAINING - Epoch: 10, Time 1.0, Loss 1.2078, Acc 0.5573
-[2022/09/22 10:38:11] - 
+[2022/09/22 21:08:28] - TRAINING - Epoch: 10, Time 0.7, Loss 1.2931, Acc 0.5344
+[2022/09/22 21:08:28] - User KS Max: 0.4820, Thresh: 0.2002, Update: False
+[2022/09/22 21:09:19] - 
 
---- GLOBAL EVALUATIONS - Round: 11 of 250, Time: 80.3 ---
-[2022/09/22 10:38:20] - TESTING CLEAN - Time 0.9, Loss 1.4314, Acc 0.4740
-[2022/09/22 10:38:21] - TESTING POIS - Time 0.8, Loss 5.0805, Acc 0.0249
-[2022/09/22 10:38:21] - 
+--- GLOBAL EVALUATIONS - Round: 11 of 250, Time: 59.6 ---
+[2022/09/22 21:09:26] - TESTING CLEAN - Time 0.7, Loss 1.7418, Acc 0.4340
+[2022/09/22 21:09:27] - TESTING POIS - Time 0.7, Loss 5.5287, Acc 0.0289
+[2022/09/22 21:09:27] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:38:31] - TRAINING - Epoch: 10, Time 1.0, Loss 1.1107, Acc 0.5903
-[2022/09/22 10:39:45] - 
+[2022/09/22 21:09:34] - TRAINING - Epoch: 10, Time 0.7, Loss 1.1504, Acc 0.5598
+[2022/09/22 21:09:35] - User KS Max: 0.5200, Thresh: 0.2084, Update: False
+[2022/09/22 21:10:27] - 
 
---- GLOBAL EVALUATIONS - Round: 12 of 250, Time: 83.6 ---
-[2022/09/22 10:39:54] - TESTING CLEAN - Time 0.8, Loss 1.5043, Acc 0.4584
-[2022/09/22 10:39:55] - TESTING POIS - Time 0.8, Loss 4.5586, Acc 0.0511
-[2022/09/22 10:39:55] - 
+--- GLOBAL EVALUATIONS - Round: 12 of 250, Time: 59.8 ---
+[2022/09/22 21:10:33] - TESTING CLEAN - Time 0.7, Loss 1.8272, Acc 0.3964
+[2022/09/22 21:10:34] - TESTING POIS - Time 0.7, Loss 4.4679, Acc 0.1133
+[2022/09/22 21:10:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:40:05] - TRAINING - Epoch: 10, Time 1.0, Loss 1.0586, Acc 0.6183
-[2022/09/22 10:41:16] - 
+[2022/09/22 21:10:42] - TRAINING - Epoch: 10, Time 0.8, Loss 1.1953, Acc 0.5623
+[2022/09/22 21:10:42] - User KS Max: 0.3130, Thresh: 0.2797, Update: False
+[2022/09/22 21:11:34] - 
 
---- GLOBAL EVALUATIONS - Round: 13 of 250, Time: 81.5 ---
-[2022/09/22 10:41:24] - TESTING CLEAN - Time 0.9, Loss 1.3774, Acc 0.5144
-[2022/09/22 10:41:25] - TESTING POIS - Time 0.9, Loss 4.7848, Acc 0.0453
-[2022/09/22 10:41:25] - 
+--- GLOBAL EVALUATIONS - Round: 13 of 250, Time: 60.5 ---
+[2022/09/22 21:11:43] - TESTING CLEAN - Time 0.9, Loss 1.3852, Acc 0.5000
+[2022/09/22 21:11:43] - TESTING POIS - Time 0.8, Loss 4.7884, Acc 0.1004
+[2022/09/22 21:11:44] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:41:36] - TRAINING - Epoch: 10, Time 1.1, Loss 0.9244, Acc 0.6819
-[2022/09/22 10:42:42] - 
+[2022/09/22 21:11:51] - TRAINING - Epoch: 10, Time 0.7, Loss 1.0542, Acc 0.6158
+[2022/09/22 21:11:51] - User KS Max: 0.5050, Thresh: 0.1606, Update: False
+[2022/09/22 21:12:43] - 
 
---- GLOBAL EVALUATIONS - Round: 14 of 250, Time: 77.1 ---
-[2022/09/22 10:42:51] - TESTING CLEAN - Time 0.9, Loss 1.4016, Acc 0.5040
-[2022/09/22 10:42:52] - TESTING POIS - Time 0.8, Loss 5.0030, Acc 0.0373
-[2022/09/22 10:42:52] - 
+--- GLOBAL EVALUATIONS - Round: 14 of 250, Time: 59.6 ---
+[2022/09/22 21:12:50] - TESTING CLEAN - Time 0.9, Loss 1.3852, Acc 0.5000
+[2022/09/22 21:12:51] - TESTING POIS - Time 0.8, Loss 4.7884, Acc 0.1004
+[2022/09/22 21:12:51] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:43:02] - TRAINING - Epoch: 10, Time 1.5, Loss 0.8546, Acc 0.6870
-[2022/09/22 10:44:13] - 
+[2022/09/22 21:12:59] - TRAINING - Epoch: 10, Time 0.7, Loss 1.0757, Acc 0.5929
+[2022/09/22 21:12:59] - User KS Max: 0.5050, Thresh: 0.1787, Update: False
+[2022/09/22 21:13:52] - 
 
---- GLOBAL EVALUATIONS - Round: 15 of 250, Time: 81.5 ---
-[2022/09/22 10:44:22] - TESTING CLEAN - Time 0.9, Loss 1.3779, Acc 0.5064
-[2022/09/22 10:44:23] - TESTING POIS - Time 0.8, Loss 5.1303, Acc 0.0427
-[2022/09/22 10:44:23] - 
+--- GLOBAL EVALUATIONS - Round: 15 of 250, Time: 61.5 ---
+[2022/09/22 21:13:59] - TESTING CLEAN - Time 0.7, Loss 1.3988, Acc 0.5096
+[2022/09/22 21:13:59] - TESTING POIS - Time 0.7, Loss 4.9974, Acc 0.0778
+[2022/09/22 21:13:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:44:33] - TRAINING - Epoch: 10, Time 1.0, Loss 0.8858, Acc 0.6565
-[2022/09/22 10:45:43] - 
+[2022/09/22 21:14:07] - TRAINING - Epoch: 10, Time 0.7, Loss 1.0326, Acc 0.6031
+[2022/09/22 21:14:08] - User KS Max: 0.4520, Thresh: 0.1848, Update: False
+[2022/09/22 21:15:00] - 
 
---- GLOBAL EVALUATIONS - Round: 16 of 250, Time: 80.1 ---
-[2022/09/22 10:45:52] - TESTING CLEAN - Time 0.9, Loss 1.2589, Acc 0.5496
-[2022/09/22 10:45:53] - TESTING POIS - Time 0.8, Loss 5.1692, Acc 0.0640
-[2022/09/22 10:45:53] - 
+--- GLOBAL EVALUATIONS - Round: 16 of 250, Time: 60.9 ---
+[2022/09/22 21:15:07] - TESTING CLEAN - Time 0.7, Loss 1.4135, Acc 0.5124
+[2022/09/22 21:15:08] - TESTING POIS - Time 0.7, Loss 5.7280, Acc 0.0564
+[2022/09/22 21:15:08] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:46:03] - TRAINING - Epoch: 10, Time 0.9, Loss 0.9051, Acc 0.6641
-[2022/09/22 10:47:17] - 
+[2022/09/22 21:15:15] - TRAINING - Epoch: 10, Time 0.7, Loss 1.0385, Acc 0.6565
+[2022/09/22 21:15:16] - User KS Max: 0.5300, Thresh: 0.3148, Update: False
+[2022/09/22 21:16:08] - 
 
---- GLOBAL EVALUATIONS - Round: 17 of 250, Time: 83.7 ---
-[2022/09/22 10:47:26] - TESTING CLEAN - Time 1.0, Loss 1.3327, Acc 0.5492
-[2022/09/22 10:47:27] - TESTING POIS - Time 0.8, Loss 5.3202, Acc 0.0591
-[2022/09/22 10:47:27] - 
+--- GLOBAL EVALUATIONS - Round: 17 of 250, Time: 60.8 ---
+[2022/09/22 21:16:15] - TESTING CLEAN - Time 0.7, Loss 1.3575, Acc 0.5324
+[2022/09/22 21:16:16] - TESTING POIS - Time 0.6, Loss 6.0244, Acc 0.0356
+[2022/09/22 21:16:16] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:47:37] - TRAINING - Epoch: 10, Time 1.0, Loss 0.6886, Acc 0.7888
-[2022/09/22 10:48:49] - 
+[2022/09/22 21:16:24] - TRAINING - Epoch: 10, Time 0.7, Loss 0.9172, Acc 0.6896
+[2022/09/22 21:16:24] - User KS Max: 0.5780, Thresh: 0.3040, Update: False
+[2022/09/22 21:17:16] - 
 
---- GLOBAL EVALUATIONS - Round: 18 of 250, Time: 81.9 ---
-[2022/09/22 10:48:58] - TESTING CLEAN - Time 0.9, Loss 1.3509, Acc 0.5364
-[2022/09/22 10:48:59] - TESTING POIS - Time 0.8, Loss 4.7865, Acc 0.0658
-[2022/09/22 10:48:59] - 
+--- GLOBAL EVALUATIONS - Round: 18 of 250, Time: 60.6 ---
+[2022/09/22 21:17:23] - TESTING CLEAN - Time 0.7, Loss 1.5485, Acc 0.4896
+[2022/09/22 21:17:24] - TESTING POIS - Time 0.7, Loss 6.1505, Acc 0.0440
+[2022/09/22 21:17:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:49:09] - TRAINING - Epoch: 10, Time 0.9, Loss 0.7626, Acc 0.7354
-[2022/09/22 10:50:23] - 
+[2022/09/22 21:17:32] - TRAINING - Epoch: 10, Time 0.8, Loss 0.9642, Acc 0.6438
+[2022/09/22 21:17:32] - User KS Max: 0.5330, Thresh: 0.3122, Update: False
+[2022/09/22 21:18:24] - 
 
---- GLOBAL EVALUATIONS - Round: 19 of 250, Time: 84.4 ---
-[2022/09/22 10:50:32] - TESTING CLEAN - Time 1.0, Loss 1.3172, Acc 0.5480
-[2022/09/22 10:50:33] - TESTING POIS - Time 0.9, Loss 4.7899, Acc 0.0791
-[2022/09/22 10:50:33] - 
+--- GLOBAL EVALUATIONS - Round: 19 of 250, Time: 60.4 ---
+[2022/09/22 21:18:31] - TESTING CLEAN - Time 0.7, Loss 1.3506, Acc 0.5464
+[2022/09/22 21:18:32] - TESTING POIS - Time 0.7, Loss 5.9964, Acc 0.0387
+[2022/09/22 21:18:32] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:50:43] - TRAINING - Epoch: 10, Time 1.0, Loss 0.8675, Acc 0.6997
-[2022/09/22 10:51:52] - 
+[2022/09/22 21:18:39] - TRAINING - Epoch: 10, Time 0.8, Loss 0.9928, Acc 0.6514
+[2022/09/22 21:18:40] - User KS Max: 0.4750, Thresh: 0.3180, Update: False
+[2022/09/22 21:19:32] - 
 
---- GLOBAL EVALUATIONS - Round: 20 of 250, Time: 79.5 ---
-[2022/09/22 10:52:02] - TESTING CLEAN - Time 0.9, Loss 1.2073, Acc 0.5832
-[2022/09/22 10:52:03] - TESTING POIS - Time 0.8, Loss 4.6413, Acc 0.0822
-[2022/09/22 10:52:03] - 
+--- GLOBAL EVALUATIONS - Round: 20 of 250, Time: 60.5 ---
+[2022/09/22 21:19:39] - TESTING CLEAN - Time 0.7, Loss 1.2971, Acc 0.5624
+[2022/09/22 21:19:39] - TESTING POIS - Time 0.7, Loss 6.3666, Acc 0.0302
+[2022/09/22 21:19:40] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:52:13] - TRAINING - Epoch: 10, Time 1.0, Loss 0.5897, Acc 0.8244
-[2022/09/22 10:53:24] - 
+[2022/09/22 21:19:47] - TRAINING - Epoch: 10, Time 0.7, Loss 0.8200, Acc 0.6972
+[2022/09/22 21:19:48] - User KS Max: 0.5100, Thresh: 0.3099, Update: False
+[2022/09/22 21:20:40] - 
 
---- GLOBAL EVALUATIONS - Round: 21 of 250, Time: 81.9 ---
-[2022/09/22 10:53:34] - TESTING CLEAN - Time 0.9, Loss 1.2153, Acc 0.5824
-[2022/09/22 10:53:35] - TESTING POIS - Time 0.9, Loss 4.7915, Acc 0.0729
-[2022/09/22 10:53:35] - 
+--- GLOBAL EVALUATIONS - Round: 21 of 250, Time: 60.1 ---
+[2022/09/22 21:20:46] - TESTING CLEAN - Time 0.7, Loss 1.3820, Acc 0.5444
+[2022/09/22 21:20:47] - TESTING POIS - Time 0.7, Loss 6.5651, Acc 0.0249
+[2022/09/22 21:20:47] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:53:45] - TRAINING - Epoch: 10, Time 1.0, Loss 0.6225, Acc 0.8015
-[2022/09/22 10:54:58] - 
+[2022/09/22 21:20:55] - TRAINING - Epoch: 10, Time 0.7, Loss 0.8553, Acc 0.7277
+[2022/09/22 21:20:55] - User KS Max: 0.5830, Thresh: 0.1474, Update: False
+[2022/09/22 21:21:47] - 
 
---- GLOBAL EVALUATIONS - Round: 22 of 250, Time: 82.7 ---
-[2022/09/22 10:55:06] - TESTING CLEAN - Time 0.8, Loss 1.3885, Acc 0.5320
-[2022/09/22 10:55:07] - TESTING POIS - Time 0.8, Loss 5.7724, Acc 0.0191
-[2022/09/22 10:55:07] - 
+--- GLOBAL EVALUATIONS - Round: 22 of 250, Time: 59.8 ---
+[2022/09/22 21:21:54] - TESTING CLEAN - Time 0.8, Loss 1.3820, Acc 0.5444
+[2022/09/22 21:21:54] - TESTING POIS - Time 0.7, Loss 6.5651, Acc 0.0249
+[2022/09/22 21:21:54] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:55:17] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6592, Acc 0.7659
-[2022/09/22 10:56:26] - 
+[2022/09/22 21:22:02] - TRAINING - Epoch: 10, Time 0.7, Loss 0.9044, Acc 0.6616
+[2022/09/22 21:22:02] - User KS Max: 0.5510, Thresh: 0.2849, Update: False
+[2022/09/22 21:22:55] - 
 
---- GLOBAL EVALUATIONS - Round: 23 of 250, Time: 79.2 ---
-[2022/09/22 10:56:36] - TESTING CLEAN - Time 0.9, Loss 1.1870, Acc 0.6000
-[2022/09/22 10:56:37] - TESTING POIS - Time 0.8, Loss 4.8452, Acc 0.0636
-[2022/09/22 10:56:37] - 
+--- GLOBAL EVALUATIONS - Round: 23 of 250, Time: 60.3 ---
+[2022/09/22 21:23:01] - TESTING CLEAN - Time 0.7, Loss 1.3376, Acc 0.5560
+[2022/09/22 21:23:02] - TESTING POIS - Time 0.7, Loss 6.5769, Acc 0.0267
+[2022/09/22 21:23:02] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:56:47] - TRAINING - Epoch: 10, Time 0.9, Loss 0.6887, Acc 0.7990
-[2022/09/22 10:57:55] - 
+[2022/09/22 21:23:10] - TRAINING - Epoch: 10, Time 0.7, Loss 0.9136, Acc 0.6947
+[2022/09/22 21:23:10] - User KS Max: 0.5810, Thresh: 0.3047, Update: False
+[2022/09/22 21:24:02] - 
 
---- GLOBAL EVALUATIONS - Round: 24 of 250, Time: 78.2 ---
-[2022/09/22 10:58:05] - TESTING CLEAN - Time 1.0, Loss 1.2324, Acc 0.5776
-[2022/09/22 10:58:05] - TESTING POIS - Time 0.8, Loss 4.9159, Acc 0.0471
-[2022/09/22 10:58:05] - 
+--- GLOBAL EVALUATIONS - Round: 24 of 250, Time: 60.4 ---
+[2022/09/22 21:24:09] - TESTING CLEAN - Time 0.7, Loss 1.3275, Acc 0.5644
+[2022/09/22 21:24:10] - TESTING POIS - Time 0.7, Loss 7.0197, Acc 0.0120
+[2022/09/22 21:24:10] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:58:15] - TRAINING - Epoch: 10, Time 0.9, Loss 0.5721, Acc 0.8219
-[2022/09/22 10:59:22] - 
+[2022/09/22 21:24:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.7744, Acc 0.7455
+[2022/09/22 21:24:18] - User KS Max: 0.4820, Thresh: 0.3242, Update: False
+[2022/09/22 21:25:10] - 
 
---- GLOBAL EVALUATIONS - Round: 25 of 250, Time: 76.4 ---
-[2022/09/22 10:59:30] - TESTING CLEAN - Time 0.9, Loss 1.1928, Acc 0.6008
-[2022/09/22 10:59:31] - TESTING POIS - Time 0.8, Loss 4.9827, Acc 0.0564
-[2022/09/22 10:59:31] - 
+--- GLOBAL EVALUATIONS - Round: 25 of 250, Time: 60.1 ---
+[2022/09/22 21:25:17] - TESTING CLEAN - Time 0.7, Loss 1.3586, Acc 0.5568
+[2022/09/22 21:25:17] - TESTING POIS - Time 0.6, Loss 6.7553, Acc 0.0404
+[2022/09/22 21:25:18] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 10:59:41] - TRAINING - Epoch: 10, Time 1.0, Loss 0.6192, Acc 0.7786
-[2022/09/22 11:00:54] - 
+[2022/09/22 21:25:25] - TRAINING - Epoch: 10, Time 0.8, Loss 0.8535, Acc 0.7074
+[2022/09/22 21:25:26] - User KS Max: 0.4900, Thresh: 0.1364, Update: False
+[2022/09/22 21:26:17] - 
 
---- GLOBAL EVALUATIONS - Round: 26 of 250, Time: 83.5 ---
-[2022/09/22 11:01:04] - TESTING CLEAN - Time 0.9, Loss 1.2114, Acc 0.6072
-[2022/09/22 11:01:04] - TESTING POIS - Time 0.8, Loss 5.0243, Acc 0.0751
-[2022/09/22 11:01:05] - 
+--- GLOBAL EVALUATIONS - Round: 26 of 250, Time: 59.8 ---
+[2022/09/22 21:26:24] - TESTING CLEAN - Time 0.7, Loss 1.3586, Acc 0.5568
+[2022/09/22 21:26:25] - TESTING POIS - Time 0.8, Loss 6.7553, Acc 0.0404
+[2022/09/22 21:26:25] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:01:15] - TRAINING - Epoch: 10, Time 0.9, Loss 0.5422, Acc 0.7964
-[2022/09/22 11:02:30] - 
+[2022/09/22 21:26:33] - TRAINING - Epoch: 10, Time 0.8, Loss 0.8211, Acc 0.6768
+[2022/09/22 21:26:33] - User KS Max: 0.4340, Thresh: 0.2695, Update: False
+[2022/09/22 21:27:27] - 
 
---- GLOBAL EVALUATIONS - Round: 27 of 250, Time: 85.3 ---
-[2022/09/22 11:02:39] - TESTING CLEAN - Time 0.8, Loss 1.2170, Acc 0.6008
-[2022/09/22 11:02:40] - TESTING POIS - Time 0.8, Loss 5.2531, Acc 0.0680
-[2022/09/22 11:02:40] - 
+--- GLOBAL EVALUATIONS - Round: 27 of 250, Time: 62.4 ---
+[2022/09/22 21:27:34] - TESTING CLEAN - Time 0.7, Loss 1.2168, Acc 0.5904
+[2022/09/22 21:27:35] - TESTING POIS - Time 0.7, Loss 6.6458, Acc 0.0364
+[2022/09/22 21:27:35] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:02:50] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4898, Acc 0.8346
-[2022/09/22 11:04:04] - 
+[2022/09/22 21:27:42] - TRAINING - Epoch: 10, Time 0.8, Loss 0.7915, Acc 0.7226
+[2022/09/22 21:27:43] - User KS Max: 0.5560, Thresh: 0.2592, Update: False
+[2022/09/22 21:28:35] - 
 
---- GLOBAL EVALUATIONS - Round: 28 of 250, Time: 84.0 ---
-[2022/09/22 11:04:13] - TESTING CLEAN - Time 0.9, Loss 1.2131, Acc 0.6140
-[2022/09/22 11:04:14] - TESTING POIS - Time 0.8, Loss 5.5111, Acc 0.0351
-[2022/09/22 11:04:14] - 
+--- GLOBAL EVALUATIONS - Round: 28 of 250, Time: 61.0 ---
+[2022/09/22 21:28:42] - TESTING CLEAN - Time 0.8, Loss 1.3050, Acc 0.5816
+[2022/09/22 21:28:43] - TESTING POIS - Time 0.8, Loss 7.5924, Acc 0.0089
+[2022/09/22 21:28:43] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:04:24] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3857, Acc 0.8880
-[2022/09/22 11:05:38] - 
+[2022/09/22 21:28:52] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6765, Acc 0.7735
+[2022/09/22 21:28:52] - User KS Max: 0.6870, Thresh: 0.2700, Update: False
+[2022/09/22 21:29:45] - 
 
---- GLOBAL EVALUATIONS - Round: 29 of 250, Time: 84.0 ---
-[2022/09/22 11:05:46] - TESTING CLEAN - Time 0.8, Loss 1.2282, Acc 0.6076
-[2022/09/22 11:05:47] - TESTING POIS - Time 0.9, Loss 5.4035, Acc 0.0631
-[2022/09/22 11:05:47] - 
+--- GLOBAL EVALUATIONS - Round: 29 of 250, Time: 61.5 ---
+[2022/09/22 21:29:51] - TESTING CLEAN - Time 0.7, Loss 1.2793, Acc 0.5832
+[2022/09/22 21:29:52] - TESTING POIS - Time 0.7, Loss 6.8643, Acc 0.0369
+[2022/09/22 21:29:52] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:05:57] - TRAINING - Epoch: 10, Time 1.0, Loss 0.5771, Acc 0.8321
-[2022/09/22 11:07:11] - 
+[2022/09/22 21:30:00] - TRAINING - Epoch: 10, Time 0.7, Loss 0.8352, Acc 0.7379
+[2022/09/22 21:30:00] - User KS Max: 0.5450, Thresh: 0.2677, Update: False
+[2022/09/22 21:30:53] - 
 
---- GLOBAL EVALUATIONS - Round: 30 of 250, Time: 84.4 ---
-[2022/09/22 11:07:20] - TESTING CLEAN - Time 0.8, Loss 1.1698, Acc 0.6296
-[2022/09/22 11:07:21] - TESTING POIS - Time 0.8, Loss 4.7720, Acc 0.0951
-[2022/09/22 11:07:21] - 
+--- GLOBAL EVALUATIONS - Round: 30 of 250, Time: 60.7 ---
+[2022/09/22 21:31:00] - TESTING CLEAN - Time 0.7, Loss 1.3602, Acc 0.5800
+[2022/09/22 21:31:00] - TESTING POIS - Time 0.6, Loss 7.6804, Acc 0.0084
+[2022/09/22 21:31:00] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:07:31] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3837, Acc 0.8982
-[2022/09/22 11:08:44] - 
+[2022/09/22 21:31:08] - TRAINING - Epoch: 10, Time 0.7, Loss 0.6933, Acc 0.7506
+[2022/09/22 21:31:08] - User KS Max: 0.6870, Thresh: 0.2874, Update: False
+[2022/09/22 21:32:01] - 
 
---- GLOBAL EVALUATIONS - Round: 31 of 250, Time: 83.4 ---
-[2022/09/22 11:08:53] - TESTING CLEAN - Time 0.8, Loss 1.1925, Acc 0.6176
-[2022/09/22 11:08:54] - TESTING POIS - Time 0.8, Loss 4.2176, Acc 0.1444
-[2022/09/22 11:08:54] - 
+--- GLOBAL EVALUATIONS - Round: 31 of 250, Time: 60.5 ---
+[2022/09/22 21:32:08] - TESTING CLEAN - Time 0.7, Loss 1.2907, Acc 0.5836
+[2022/09/22 21:32:08] - TESTING POIS - Time 0.8, Loss 6.5069, Acc 0.0293
+[2022/09/22 21:32:08] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:09:04] - TRAINING - Epoch: 10, Time 1.0, Loss 0.4074, Acc 0.8728
-[2022/09/22 11:10:20] - 
+[2022/09/22 21:32:16] - TRAINING - Epoch: 10, Time 0.8, Loss 0.7482, Acc 0.7354
+[2022/09/22 21:32:17] - User KS Max: 0.3280, Thresh: 0.2828, Update: False
+[2022/09/22 21:33:10] - 
 
---- GLOBAL EVALUATIONS - Round: 32 of 250, Time: 86.0 ---
-[2022/09/22 11:10:29] - TESTING CLEAN - Time 0.9, Loss 1.2432, Acc 0.6128
-[2022/09/22 11:10:30] - TESTING POIS - Time 0.8, Loss 4.0569, Acc 0.1502
-[2022/09/22 11:10:30] - 
+--- GLOBAL EVALUATIONS - Round: 32 of 250, Time: 61.2 ---
+[2022/09/22 21:33:16] - TESTING CLEAN - Time 0.8, Loss 1.2474, Acc 0.6024
+[2022/09/22 21:33:17] - TESTING POIS - Time 0.7, Loss 6.9827, Acc 0.0480
+[2022/09/22 21:33:17] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:10:40] - TRAINING - Epoch: 10, Time 1.0, Loss 0.4825, Acc 0.8601
-[2022/09/22 11:11:54] - 
+[2022/09/22 21:33:25] - TRAINING - Epoch: 10, Time 0.8, Loss 0.7616, Acc 0.7532
+[2022/09/22 21:33:25] - User KS Max: 0.4750, Thresh: 0.2902, Update: False
+[2022/09/22 21:34:18] - 
 
---- GLOBAL EVALUATIONS - Round: 33 of 250, Time: 84.2 ---
-[2022/09/22 11:12:04] - TESTING CLEAN - Time 0.8, Loss 1.1534, Acc 0.6320
-[2022/09/22 11:12:05] - TESTING POIS - Time 0.9, Loss 4.3657, Acc 0.1089
-[2022/09/22 11:12:05] - 
+--- GLOBAL EVALUATIONS - Round: 33 of 250, Time: 60.9 ---
+[2022/09/22 21:34:25] - TESTING CLEAN - Time 0.7, Loss 1.1986, Acc 0.6188
+[2022/09/22 21:34:25] - TESTING POIS - Time 0.7, Loss 7.1702, Acc 0.0298
+[2022/09/22 21:34:26] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:12:15] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3722, Acc 0.8804
-[2022/09/22 11:13:29] - 
+[2022/09/22 21:34:33] - TRAINING - Epoch: 10, Time 0.7, Loss 0.6479, Acc 0.7786
+[2022/09/22 21:34:34] - User KS Max: 0.5810, Thresh: 0.2842, Update: False
+[2022/09/22 21:35:26] - 
 
---- GLOBAL EVALUATIONS - Round: 34 of 250, Time: 84.2 ---
-[2022/09/22 11:13:38] - TESTING CLEAN - Time 0.8, Loss 1.1458, Acc 0.6428
-[2022/09/22 11:13:39] - TESTING POIS - Time 0.8, Loss 5.0740, Acc 0.0827
-[2022/09/22 11:13:39] - 
+--- GLOBAL EVALUATIONS - Round: 34 of 250, Time: 60.7 ---
+[2022/09/22 21:35:33] - TESTING CLEAN - Time 0.7, Loss 1.1635, Acc 0.6188
+[2022/09/22 21:35:34] - TESTING POIS - Time 0.7, Loss 7.8969, Acc 0.0218
+[2022/09/22 21:35:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:13:49] - TRAINING - Epoch: 10, Time 1.1, Loss 0.3922, Acc 0.8855
-[2022/09/22 11:15:01] - 
+[2022/09/22 21:35:41] - TRAINING - Epoch: 10, Time 0.7, Loss 0.7352, Acc 0.7506
+[2022/09/22 21:35:42] - User KS Max: 0.5880, Thresh: 0.2789, Update: False
+[2022/09/22 21:36:34] - 
 
---- GLOBAL EVALUATIONS - Round: 35 of 250, Time: 82.1 ---
-[2022/09/22 11:15:11] - TESTING CLEAN - Time 0.8, Loss 1.1845, Acc 0.6376
-[2022/09/22 11:15:12] - TESTING POIS - Time 0.8, Loss 4.6899, Acc 0.1111
-[2022/09/22 11:15:12] - 
+--- GLOBAL EVALUATIONS - Round: 35 of 250, Time: 60.6 ---
+[2022/09/22 21:36:41] - TESTING CLEAN - Time 0.7, Loss 1.1490, Acc 0.6388
+[2022/09/22 21:36:42] - TESTING POIS - Time 0.7, Loss 8.1103, Acc 0.0209
+[2022/09/22 21:36:42] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:15:22] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3097, Acc 0.9008
-[2022/09/22 11:16:31] - 
+[2022/09/22 21:36:50] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6996, Acc 0.7430
+[2022/09/22 21:36:50] - User KS Max: 0.5880, Thresh: 0.2743, Update: False
+[2022/09/22 21:37:43] - 
 
---- GLOBAL EVALUATIONS - Round: 36 of 250, Time: 79.1 ---
-[2022/09/22 11:16:40] - TESTING CLEAN - Time 0.8, Loss 1.2130, Acc 0.6300
-[2022/09/22 11:16:41] - TESTING POIS - Time 0.8, Loss 5.0681, Acc 0.0800
-[2022/09/22 11:16:41] - 
+--- GLOBAL EVALUATIONS - Round: 36 of 250, Time: 60.9 ---
+[2022/09/22 21:37:50] - TESTING CLEAN - Time 0.7, Loss 1.2663, Acc 0.6156
+[2022/09/22 21:37:50] - TESTING POIS - Time 0.7, Loss 7.9641, Acc 0.0213
+[2022/09/22 21:37:50] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:16:51] - TRAINING - Epoch: 10, Time 1.0, Loss 0.7217, Acc 0.7735
-[2022/09/22 11:17:59] - 
+[2022/09/22 21:37:58] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6837, Acc 0.7710
+[2022/09/22 21:37:59] - User KS Max: 0.5610, Thresh: 0.2669, Update: False
+[2022/09/22 21:38:51] - 
 
---- GLOBAL EVALUATIONS - Round: 37 of 250, Time: 77.4 ---
-[2022/09/22 11:18:07] - TESTING CLEAN - Time 0.9, Loss 1.1670, Acc 0.6488
-[2022/09/22 11:18:08] - TESTING POIS - Time 0.8, Loss 4.8338, Acc 0.1049
-[2022/09/22 11:18:08] - 
+--- GLOBAL EVALUATIONS - Round: 37 of 250, Time: 61.0 ---
+[2022/09/22 21:38:58] - TESTING CLEAN - Time 0.7, Loss 1.2399, Acc 0.6296
+[2022/09/22 21:38:59] - TESTING POIS - Time 0.7, Loss 7.7244, Acc 0.0342
+[2022/09/22 21:38:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:18:18] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3401, Acc 0.8957
-[2022/09/22 11:19:24] - 
+[2022/09/22 21:39:07] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6797, Acc 0.7634
+[2022/09/22 21:39:07] - User KS Max: 0.5980, Thresh: 0.2618, Update: False
+[2022/09/22 21:40:01] - 
 
---- GLOBAL EVALUATIONS - Round: 38 of 250, Time: 76.4 ---
-[2022/09/22 11:19:33] - TESTING CLEAN - Time 0.9, Loss 1.1655, Acc 0.6512
-[2022/09/22 11:19:34] - TESTING POIS - Time 0.8, Loss 5.0925, Acc 0.0898
-[2022/09/22 11:19:34] - 
+--- GLOBAL EVALUATIONS - Round: 38 of 250, Time: 62.6 ---
+[2022/09/22 21:40:08] - TESTING CLEAN - Time 0.7, Loss 1.2486, Acc 0.6188
+[2022/09/22 21:40:09] - TESTING POIS - Time 0.8, Loss 8.3481, Acc 0.0129
+[2022/09/22 21:40:09] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:19:44] - TRAINING - Epoch: 10, Time 0.9, Loss 0.3443, Acc 0.8957
-[2022/09/22 11:20:56] - 
+[2022/09/22 21:40:17] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5748, Acc 0.7837
+[2022/09/22 21:40:17] - User KS Max: 0.4070, Thresh: 0.2603, Update: False
+[2022/09/22 21:41:10] - 
 
---- GLOBAL EVALUATIONS - Round: 39 of 250, Time: 82.6 ---
-[2022/09/22 11:21:05] - TESTING CLEAN - Time 0.8, Loss 1.1687, Acc 0.6460
-[2022/09/22 11:21:06] - TESTING POIS - Time 0.9, Loss 4.9154, Acc 0.0978
-[2022/09/22 11:21:06] - 
+--- GLOBAL EVALUATIONS - Round: 39 of 250, Time: 60.6 ---
+[2022/09/22 21:41:16] - TESTING CLEAN - Time 0.7, Loss 1.2480, Acc 0.6224
+[2022/09/22 21:41:17] - TESTING POIS - Time 0.7, Loss 7.2223, Acc 0.0316
+[2022/09/22 21:41:17] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:21:16] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2431, Acc 0.9313
-[2022/09/22 11:22:23] - 
+[2022/09/22 21:41:25] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5960, Acc 0.7761
+[2022/09/22 21:41:25] - User KS Max: 0.4440, Thresh: 0.2635, Update: False
+[2022/09/22 21:42:18] - 
 
---- GLOBAL EVALUATIONS - Round: 40 of 250, Time: 77.2 ---
-[2022/09/22 11:22:32] - TESTING CLEAN - Time 0.9, Loss 1.2339, Acc 0.6444
-[2022/09/22 11:22:33] - TESTING POIS - Time 0.8, Loss 5.7351, Acc 0.0667
-[2022/09/22 11:22:33] - 
+--- GLOBAL EVALUATIONS - Round: 40 of 250, Time: 61.1 ---
+[2022/09/22 21:42:25] - TESTING CLEAN - Time 0.7, Loss 1.3252, Acc 0.6228
+[2022/09/22 21:42:25] - TESTING POIS - Time 0.6, Loss 7.9870, Acc 0.0209
+[2022/09/22 21:42:25] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:22:43] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2889, Acc 0.9135
-[2022/09/22 11:23:53] - 
+[2022/09/22 21:42:33] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6025, Acc 0.7837
+[2022/09/22 21:42:34] - User KS Max: 0.5450, Thresh: 0.2642, Update: False
+[2022/09/22 21:43:26] - 
 
---- GLOBAL EVALUATIONS - Round: 41 of 250, Time: 80.3 ---
-[2022/09/22 11:24:02] - TESTING CLEAN - Time 0.9, Loss 1.1980, Acc 0.6436
-[2022/09/22 11:24:03] - TESTING POIS - Time 0.9, Loss 5.4577, Acc 0.0791
-[2022/09/22 11:24:03] - 
+--- GLOBAL EVALUATIONS - Round: 41 of 250, Time: 61.0 ---
+[2022/09/22 21:43:33] - TESTING CLEAN - Time 0.8, Loss 1.2949, Acc 0.6160
+[2022/09/22 21:43:34] - TESTING POIS - Time 0.7, Loss 8.5388, Acc 0.0182
+[2022/09/22 21:43:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:24:13] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2740, Acc 0.9211
-[2022/09/22 11:25:30] - 
+[2022/09/22 21:43:42] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4626, Acc 0.8346
+[2022/09/22 21:43:42] - User KS Max: 0.6160, Thresh: 0.2621, Update: False
+[2022/09/22 21:44:35] - 
 
---- GLOBAL EVALUATIONS - Round: 42 of 250, Time: 87.4 ---
-[2022/09/22 11:25:39] - TESTING CLEAN - Time 0.8, Loss 1.2215, Acc 0.6460
-[2022/09/22 11:25:40] - TESTING POIS - Time 0.8, Loss 5.3123, Acc 0.1031
-[2022/09/22 11:25:40] - 
+--- GLOBAL EVALUATIONS - Round: 42 of 250, Time: 60.9 ---
+[2022/09/22 21:44:41] - TESTING CLEAN - Time 0.7, Loss 1.2358, Acc 0.6384
+[2022/09/22 21:44:42] - TESTING POIS - Time 0.7, Loss 8.8052, Acc 0.0169
+[2022/09/22 21:44:42] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:25:50] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3123, Acc 0.9033
-[2022/09/22 11:27:08] - 
+[2022/09/22 21:44:50] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4948, Acc 0.8397
+[2022/09/22 21:44:50] - User KS Max: 0.5810, Thresh: 0.2676, Update: False
+[2022/09/22 21:45:43] - 
 
---- GLOBAL EVALUATIONS - Round: 43 of 250, Time: 88.3 ---
-[2022/09/22 11:27:16] - TESTING CLEAN - Time 0.8, Loss 1.1881, Acc 0.6536
-[2022/09/22 11:27:17] - TESTING POIS - Time 0.8, Loss 5.1655, Acc 0.1124
-[2022/09/22 11:27:17] - 
+--- GLOBAL EVALUATIONS - Round: 43 of 250, Time: 61.2 ---
+[2022/09/22 21:45:50] - TESTING CLEAN - Time 0.7, Loss 1.2340, Acc 0.6420
+[2022/09/22 21:45:51] - TESTING POIS - Time 0.7, Loss 7.9335, Acc 0.0436
+[2022/09/22 21:45:51] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:27:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4233, Acc 0.8779
-[2022/09/22 11:28:38] - 
+[2022/09/22 21:45:59] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5347, Acc 0.8346
+[2022/09/22 21:45:59] - User KS Max: 0.6410, Thresh: 0.2638, Update: False
+[2022/09/22 21:46:51] - 
 
---- GLOBAL EVALUATIONS - Round: 44 of 250, Time: 80.7 ---
-[2022/09/22 11:28:47] - TESTING CLEAN - Time 0.9, Loss 1.3325, Acc 0.6268
-[2022/09/22 11:28:48] - TESTING POIS - Time 0.8, Loss 5.1517, Acc 0.1253
-[2022/09/22 11:28:48] - 
+--- GLOBAL EVALUATIONS - Round: 44 of 250, Time: 60.7 ---
+[2022/09/22 21:46:58] - TESTING CLEAN - Time 0.7, Loss 1.4515, Acc 0.5960
+[2022/09/22 21:46:59] - TESTING POIS - Time 0.7, Loss 7.5145, Acc 0.0684
+[2022/09/22 21:46:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:28:58] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2573, Acc 0.9262
-[2022/09/22 11:30:10] - 
+[2022/09/22 21:47:07] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5131, Acc 0.8295
+[2022/09/22 21:47:07] - User KS Max: 0.5130, Thresh: 0.2601, Update: False
+[2022/09/22 21:48:00] - 
 
---- GLOBAL EVALUATIONS - Round: 45 of 250, Time: 81.8 ---
-[2022/09/22 11:30:18] - TESTING CLEAN - Time 1.0, Loss 1.2364, Acc 0.6444
-[2022/09/22 11:30:19] - TESTING POIS - Time 0.8, Loss 5.5556, Acc 0.0920
-[2022/09/22 11:30:19] - 
+--- GLOBAL EVALUATIONS - Round: 45 of 250, Time: 60.9 ---
+[2022/09/22 21:48:07] - TESTING CLEAN - Time 0.8, Loss 1.2450, Acc 0.6432
+[2022/09/22 21:48:08] - TESTING POIS - Time 0.8, Loss 8.2062, Acc 0.0373
+[2022/09/22 21:48:08] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:30:29] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2826, Acc 0.9135
-[2022/09/22 11:31:37] - 
+[2022/09/22 21:48:15] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4541, Acc 0.8422
+[2022/09/22 21:48:16] - User KS Max: 0.4770, Thresh: 0.2594, Update: False
+[2022/09/22 21:49:08] - 
 
---- GLOBAL EVALUATIONS - Round: 46 of 250, Time: 78.6 ---
-[2022/09/22 11:31:47] - TESTING CLEAN - Time 0.9, Loss 1.2601, Acc 0.6464
-[2022/09/22 11:31:48] - TESTING POIS - Time 0.9, Loss 5.3203, Acc 0.1289
-[2022/09/22 11:31:48] - 
+--- GLOBAL EVALUATIONS - Round: 46 of 250, Time: 60.6 ---
+[2022/09/22 21:49:15] - TESTING CLEAN - Time 0.7, Loss 1.2371, Acc 0.6444
+[2022/09/22 21:49:16] - TESTING POIS - Time 0.7, Loss 8.2960, Acc 0.0360
+[2022/09/22 21:49:16] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:31:58] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2206, Acc 0.9440
-[2022/09/22 11:33:15] - 
+[2022/09/22 21:49:23] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4734, Acc 0.8626
+[2022/09/22 21:49:24] - User KS Max: 0.4120, Thresh: 0.2581, Update: False
+[2022/09/22 21:50:16] - 
 
---- GLOBAL EVALUATIONS - Round: 47 of 250, Time: 86.5 ---
-[2022/09/22 11:33:25] - TESTING CLEAN - Time 1.0, Loss 1.3340, Acc 0.6348
-[2022/09/22 11:33:26] - TESTING POIS - Time 0.8, Loss 5.9010, Acc 0.0902
-[2022/09/22 11:33:26] - 
+--- GLOBAL EVALUATIONS - Round: 47 of 250, Time: 60.7 ---
+[2022/09/22 21:50:23] - TESTING CLEAN - Time 0.7, Loss 1.2826, Acc 0.6360
+[2022/09/22 21:50:24] - TESTING POIS - Time 0.7, Loss 8.7241, Acc 0.0244
+[2022/09/22 21:50:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:33:36] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2256, Acc 0.9338
-[2022/09/22 11:34:48] - 
+[2022/09/22 21:50:32] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5281, Acc 0.8142
+[2022/09/22 21:50:32] - User KS Max: 0.4020, Thresh: 0.2582, Update: False
+[2022/09/22 21:51:24] - 
 
---- GLOBAL EVALUATIONS - Round: 48 of 250, Time: 82.6 ---
-[2022/09/22 11:34:58] - TESTING CLEAN - Time 0.9, Loss 1.2290, Acc 0.6556
-[2022/09/22 11:34:59] - TESTING POIS - Time 0.8, Loss 5.4597, Acc 0.1147
-[2022/09/22 11:34:59] - 
+--- GLOBAL EVALUATIONS - Round: 48 of 250, Time: 60.5 ---
+[2022/09/22 21:51:31] - TESTING CLEAN - Time 0.7, Loss 1.2573, Acc 0.6420
+[2022/09/22 21:51:32] - TESTING POIS - Time 0.7, Loss 8.5166, Acc 0.0244
+[2022/09/22 21:51:32] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:35:09] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3810, Acc 0.8575
-[2022/09/22 11:36:20] - 
+[2022/09/22 21:51:39] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5357, Acc 0.7939
+[2022/09/22 21:51:40] - User KS Max: 0.5150, Thresh: 0.2564, Update: False
+[2022/09/22 21:52:32] - 
 
---- GLOBAL EVALUATIONS - Round: 49 of 250, Time: 81.5 ---
-[2022/09/22 11:36:29] - TESTING CLEAN - Time 0.9, Loss 1.1853, Acc 0.6632
-[2022/09/22 11:36:30] - TESTING POIS - Time 0.8, Loss 5.6975, Acc 0.0987
-[2022/09/22 11:36:30] - 
+--- GLOBAL EVALUATIONS - Round: 49 of 250, Time: 60.5 ---
+[2022/09/22 21:52:39] - TESTING CLEAN - Time 0.7, Loss 1.1974, Acc 0.6672
+[2022/09/22 21:52:40] - TESTING POIS - Time 0.7, Loss 8.7008, Acc 0.0280
+[2022/09/22 21:52:40] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:36:40] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2468, Acc 0.9288
-[2022/09/22 11:37:51] - 
+[2022/09/22 21:52:47] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4522, Acc 0.8422
+[2022/09/22 21:52:48] - User KS Max: 0.4720, Thresh: 0.2566, Update: False
+[2022/09/22 21:53:42] - 
 
---- GLOBAL EVALUATIONS - Round: 50 of 250, Time: 80.5 ---
-[2022/09/22 11:37:59] - TESTING CLEAN - Time 0.9, Loss 1.3203, Acc 0.6488
-[2022/09/22 11:38:00] - TESTING POIS - Time 0.9, Loss 6.2261, Acc 0.0751
-[2022/09/22 11:38:00] - 
+--- GLOBAL EVALUATIONS - Round: 50 of 250, Time: 62.6 ---
+[2022/09/22 21:53:49] - TESTING CLEAN - Time 0.7, Loss 1.2641, Acc 0.6576
+[2022/09/22 21:53:50] - TESTING POIS - Time 0.7, Loss 8.5313, Acc 0.0289
+[2022/09/22 21:53:50] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:38:10] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2156, Acc 0.9466
-[2022/09/22 11:39:17] - 
+[2022/09/22 21:53:58] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5240, Acc 0.8346
+[2022/09/22 21:53:58] - User KS Max: 0.6360, Thresh: 0.2602, Update: False
+[2022/09/22 21:54:51] - 
 
---- GLOBAL EVALUATIONS - Round: 51 of 250, Time: 76.3 ---
-[2022/09/22 11:39:25] - TESTING CLEAN - Time 1.0, Loss 1.2652, Acc 0.6520
-[2022/09/22 11:39:26] - TESTING POIS - Time 0.8, Loss 5.8906, Acc 0.0911
-[2022/09/22 11:39:26] - 
+--- GLOBAL EVALUATIONS - Round: 51 of 250, Time: 61.1 ---
+[2022/09/22 21:54:57] - TESTING CLEAN - Time 0.7, Loss 1.2703, Acc 0.6492
+[2022/09/22 21:54:58] - TESTING POIS - Time 0.7, Loss 9.3348, Acc 0.0218
+[2022/09/22 21:54:58] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:39:36] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1557, Acc 0.9466
-[2022/09/22 11:40:50] - 
+[2022/09/22 21:55:06] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3863, Acc 0.8804
+[2022/09/22 21:55:06] - User KS Max: 0.5780, Thresh: 0.2601, Update: False
+[2022/09/22 21:55:59] - 
 
---- GLOBAL EVALUATIONS - Round: 52 of 250, Time: 83.6 ---
-[2022/09/22 11:41:00] - TESTING CLEAN - Time 0.8, Loss 1.2144, Acc 0.6620
-[2022/09/22 11:41:00] - TESTING POIS - Time 0.8, Loss 5.0878, Acc 0.1400
-[2022/09/22 11:41:00] - 
+--- GLOBAL EVALUATIONS - Round: 52 of 250, Time: 61.2 ---
+[2022/09/22 21:56:06] - TESTING CLEAN - Time 0.8, Loss 1.2062, Acc 0.6616
+[2022/09/22 21:56:07] - TESTING POIS - Time 0.7, Loss 8.8654, Acc 0.0302
+[2022/09/22 21:56:07] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:41:11] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2992, Acc 0.9059
-[2022/09/22 11:42:24] - 
+[2022/09/22 21:56:14] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4589, Acc 0.8499
+[2022/09/22 21:56:15] - User KS Max: 0.5080, Thresh: 0.2588, Update: False
+[2022/09/22 21:57:08] - 
 
---- GLOBAL EVALUATIONS - Round: 53 of 250, Time: 83.7 ---
-[2022/09/22 11:42:35] - TESTING CLEAN - Time 0.9, Loss 1.2278, Acc 0.6644
-[2022/09/22 11:42:36] - TESTING POIS - Time 0.8, Loss 3.8314, Acc 0.2044
-[2022/09/22 11:42:36] - 
+--- GLOBAL EVALUATIONS - Round: 53 of 250, Time: 60.8 ---
+[2022/09/22 21:57:14] - TESTING CLEAN - Time 0.7, Loss 1.2268, Acc 0.6592
+[2022/09/22 21:57:15] - TESTING POIS - Time 0.7, Loss 8.7718, Acc 0.0298
+[2022/09/22 21:57:15] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:42:46] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1245, Acc 0.9847
-[2022/09/22 11:43:58] - 
+[2022/09/22 21:57:23] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3494, Acc 0.8957
+[2022/09/22 21:57:23] - User KS Max: 0.5400, Thresh: 0.2595, Update: False
+[2022/09/22 21:58:16] - 
 
---- GLOBAL EVALUATIONS - Round: 54 of 250, Time: 82.6 ---
-[2022/09/22 11:44:07] - TESTING CLEAN - Time 0.9, Loss 1.2334, Acc 0.6568
-[2022/09/22 11:44:08] - TESTING POIS - Time 0.8, Loss 4.1546, Acc 0.1911
-[2022/09/22 11:44:08] - 
+--- GLOBAL EVALUATIONS - Round: 54 of 250, Time: 61.0 ---
+[2022/09/22 21:58:23] - TESTING CLEAN - Time 0.7, Loss 1.3249, Acc 0.6464
+[2022/09/22 21:58:24] - TESTING POIS - Time 0.7, Loss 8.9064, Acc 0.0387
+[2022/09/22 21:58:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:44:18] - TRAINING - Epoch: 10, Time 0.9, Loss 0.4549, Acc 0.8550
-[2022/09/22 11:45:33] - 
+[2022/09/22 21:58:31] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4765, Acc 0.8575
+[2022/09/22 21:58:32] - User KS Max: 0.4550, Thresh: 0.2605, Update: False
+[2022/09/22 21:59:24] - 
 
---- GLOBAL EVALUATIONS - Round: 55 of 250, Time: 84.9 ---
-[2022/09/22 11:45:43] - TESTING CLEAN - Time 1.0, Loss 1.3082, Acc 0.6568
-[2022/09/22 11:45:44] - TESTING POIS - Time 0.9, Loss 5.0571, Acc 0.1484
-[2022/09/22 11:45:44] - 
+--- GLOBAL EVALUATIONS - Round: 55 of 250, Time: 60.6 ---
+[2022/09/22 21:59:31] - TESTING CLEAN - Time 0.8, Loss 1.3221, Acc 0.6516
+[2022/09/22 21:59:31] - TESTING POIS - Time 0.7, Loss 9.0381, Acc 0.0302
+[2022/09/22 21:59:32] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:45:54] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1798, Acc 0.9567
-[2022/09/22 11:47:06] - 
+[2022/09/22 21:59:39] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4658, Acc 0.8677
+[2022/09/22 21:59:40] - User KS Max: 0.5910, Thresh: 0.2654, Update: False
+[2022/09/22 22:00:33] - 
 
---- GLOBAL EVALUATIONS - Round: 56 of 250, Time: 82.2 ---
-[2022/09/22 11:47:14] - TESTING CLEAN - Time 0.9, Loss 1.2750, Acc 0.6560
-[2022/09/22 11:47:15] - TESTING POIS - Time 0.9, Loss 5.3633, Acc 0.1209
-[2022/09/22 11:47:15] - 
+--- GLOBAL EVALUATIONS - Round: 56 of 250, Time: 61.2 ---
+[2022/09/22 22:00:39] - TESTING CLEAN - Time 0.7, Loss 1.1775, Acc 0.6676
+[2022/09/22 22:00:40] - TESTING POIS - Time 0.7, Loss 8.6376, Acc 0.0271
+[2022/09/22 22:00:40] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:47:25] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1887, Acc 0.9389
-[2022/09/22 11:48:34] - 
+[2022/09/22 22:00:48] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3229, Acc 0.8830
+[2022/09/22 22:00:48] - User KS Max: 0.4970, Thresh: 0.2627, Update: False
+[2022/09/22 22:01:41] - 
 
---- GLOBAL EVALUATIONS - Round: 57 of 250, Time: 79.3 ---
-[2022/09/22 11:48:43] - TESTING CLEAN - Time 0.9, Loss 1.2641, Acc 0.6604
-[2022/09/22 11:48:43] - TESTING POIS - Time 0.8, Loss 5.4177, Acc 0.1151
-[2022/09/22 11:48:44] - 
+--- GLOBAL EVALUATIONS - Round: 57 of 250, Time: 60.9 ---
+[2022/09/22 22:01:48] - TESTING CLEAN - Time 0.8, Loss 1.2999, Acc 0.6628
+[2022/09/22 22:01:48] - TESTING POIS - Time 0.7, Loss 9.4689, Acc 0.0258
+[2022/09/22 22:01:48] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:48:53] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2727, Acc 0.9186
-[2022/09/22 11:50:06] - 
+[2022/09/22 22:01:56] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5203, Acc 0.8219
+[2022/09/22 22:01:57] - User KS Max: 0.5000, Thresh: 0.2606, Update: False
+[2022/09/22 22:02:50] - 
 
---- GLOBAL EVALUATIONS - Round: 58 of 250, Time: 83.0 ---
-[2022/09/22 11:50:15] - TESTING CLEAN - Time 0.9, Loss 1.2496, Acc 0.6636
-[2022/09/22 11:50:16] - TESTING POIS - Time 0.8, Loss 3.9192, Acc 0.2471
-[2022/09/22 11:50:16] - 
+--- GLOBAL EVALUATIONS - Round: 58 of 250, Time: 61.2 ---
+[2022/09/22 22:02:56] - TESTING CLEAN - Time 0.7, Loss 1.2745, Acc 0.6616
+[2022/09/22 22:02:57] - TESTING POIS - Time 0.7, Loss 9.2656, Acc 0.0324
+[2022/09/22 22:02:57] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:50:26] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1355, Acc 0.9720
-[2022/09/22 11:51:36] - 
+[2022/09/22 22:03:05] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3490, Acc 0.8906
+[2022/09/22 22:03:05] - User KS Max: 0.5530, Thresh: 0.2604, Update: False
+[2022/09/22 22:03:58] - 
 
---- GLOBAL EVALUATIONS - Round: 59 of 250, Time: 80.0 ---
-[2022/09/22 11:51:46] - TESTING CLEAN - Time 1.0, Loss 1.2879, Acc 0.6628
-[2022/09/22 11:51:47] - TESTING POIS - Time 0.9, Loss 4.4514, Acc 0.1676
-[2022/09/22 11:51:47] - 
+--- GLOBAL EVALUATIONS - Round: 59 of 250, Time: 60.7 ---
+[2022/09/22 22:04:04] - TESTING CLEAN - Time 0.8, Loss 1.2285, Acc 0.6740
+[2022/09/22 22:04:05] - TESTING POIS - Time 0.7, Loss 9.4833, Acc 0.0236
+[2022/09/22 22:04:05] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:51:57] - TRAINING - Epoch: 10, Time 1.1, Loss 0.1893, Acc 0.9491
-[2022/09/22 11:53:06] - 
+[2022/09/22 22:04:13] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4133, Acc 0.8626
+[2022/09/22 22:04:13] - User KS Max: 0.4420, Thresh: 0.2616, Update: False
+[2022/09/22 22:05:05] - 
 
---- GLOBAL EVALUATIONS - Round: 60 of 250, Time: 79.5 ---
-[2022/09/22 11:53:16] - TESTING CLEAN - Time 0.8, Loss 1.2554, Acc 0.6664
-[2022/09/22 11:53:17] - TESTING POIS - Time 0.8, Loss 3.8485, Acc 0.2240
-[2022/09/22 11:53:17] - 
+--- GLOBAL EVALUATIONS - Round: 60 of 250, Time: 60.2 ---
+[2022/09/22 22:05:12] - TESTING CLEAN - Time 0.7, Loss 1.2994, Acc 0.6592
+[2022/09/22 22:05:13] - TESTING POIS - Time 0.7, Loss 9.4171, Acc 0.0284
+[2022/09/22 22:05:13] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:53:27] - TRAINING - Epoch: 10, Time 1.1, Loss 0.2863, Acc 0.8982
-[2022/09/22 11:54:41] - 
+[2022/09/22 22:05:21] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4345, Acc 0.8321
+[2022/09/22 22:05:21] - User KS Max: 0.5810, Thresh: 0.2598, Update: False
+[2022/09/22 22:06:15] - 
 
---- GLOBAL EVALUATIONS - Round: 61 of 250, Time: 83.7 ---
-[2022/09/22 11:54:49] - TESTING CLEAN - Time 0.9, Loss 1.4270, Acc 0.6336
-[2022/09/22 11:54:50] - TESTING POIS - Time 0.8, Loss 2.2802, Acc 0.4476
-[2022/09/22 11:54:50] - 
+--- GLOBAL EVALUATIONS - Round: 61 of 250, Time: 62.3 ---
+[2022/09/22 22:06:22] - TESTING CLEAN - Time 0.7, Loss 1.3280, Acc 0.6496
+[2022/09/22 22:06:23] - TESTING POIS - Time 0.7, Loss 8.2395, Acc 0.0649
+[2022/09/22 22:06:23] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:55:00] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2156, Acc 0.9440
-[2022/09/22 11:56:15] - 
+[2022/09/22 22:06:31] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3828, Acc 0.8855
+[2022/09/22 22:06:31] - User KS Max: 0.4920, Thresh: 0.2603, Update: False
+[2022/09/22 22:07:24] - 
 
---- GLOBAL EVALUATIONS - Round: 62 of 250, Time: 84.9 ---
-[2022/09/22 11:56:23] - TESTING CLEAN - Time 1.0, Loss 1.2800, Acc 0.6536
-[2022/09/22 11:56:24] - TESTING POIS - Time 0.8, Loss 3.2008, Acc 0.2942
-[2022/09/22 11:56:24] - 
+--- GLOBAL EVALUATIONS - Round: 62 of 250, Time: 60.8 ---
+[2022/09/22 22:07:30] - TESTING CLEAN - Time 0.7, Loss 1.2331, Acc 0.6748
+[2022/09/22 22:07:31] - TESTING POIS - Time 0.7, Loss 9.4548, Acc 0.0324
+[2022/09/22 22:07:31] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:56:34] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1965, Acc 0.9313
-[2022/09/22 11:57:48] - 
+[2022/09/22 22:07:39] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3718, Acc 0.8779
+[2022/09/22 22:07:39] - User KS Max: 0.6190, Thresh: 0.2607, Update: False
+[2022/09/22 22:08:32] - 
 
---- GLOBAL EVALUATIONS - Round: 63 of 250, Time: 84.2 ---
-[2022/09/22 11:57:57] - TESTING CLEAN - Time 0.9, Loss 1.2509, Acc 0.6556
-[2022/09/22 11:57:58] - TESTING POIS - Time 0.8, Loss 4.2063, Acc 0.1822
-[2022/09/22 11:57:58] - 
+--- GLOBAL EVALUATIONS - Round: 63 of 250, Time: 60.6 ---
+[2022/09/22 22:08:39] - TESTING CLEAN - Time 0.8, Loss 1.3175, Acc 0.6544
+[2022/09/22 22:08:39] - TESTING POIS - Time 0.7, Loss 9.5316, Acc 0.0262
+[2022/09/22 22:08:39] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:58:08] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2013, Acc 0.9491
-[2022/09/22 11:59:23] - 
+[2022/09/22 22:08:47] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3048, Acc 0.9033
+[2022/09/22 22:08:48] - User KS Max: 0.5100, Thresh: 0.2595, Update: False
+[2022/09/22 22:09:40] - 
 
---- GLOBAL EVALUATIONS - Round: 64 of 250, Time: 85.2 ---
-[2022/09/22 11:59:33] - TESTING CLEAN - Time 0.9, Loss 1.2315, Acc 0.6828
-[2022/09/22 11:59:33] - TESTING POIS - Time 0.8, Loss 3.5198, Acc 0.2547
-[2022/09/22 11:59:33] - 
+--- GLOBAL EVALUATIONS - Round: 64 of 250, Time: 60.9 ---
+[2022/09/22 22:09:47] - TESTING CLEAN - Time 0.8, Loss 1.2039, Acc 0.6812
+[2022/09/22 22:09:48] - TESTING POIS - Time 0.7, Loss 9.6126, Acc 0.0204
+[2022/09/22 22:09:48] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 11:59:44] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2548, Acc 0.9313
-[2022/09/22 12:00:57] - 
+[2022/09/22 22:09:56] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4797, Acc 0.8448
+[2022/09/22 22:09:56] - User KS Max: 0.5630, Thresh: 0.2601, Update: False
+[2022/09/22 22:10:48] - 
 
---- GLOBAL EVALUATIONS - Round: 65 of 250, Time: 83.7 ---
-[2022/09/22 12:01:07] - TESTING CLEAN - Time 0.8, Loss 1.2878, Acc 0.6724
-[2022/09/22 12:01:08] - TESTING POIS - Time 0.8, Loss 2.3637, Acc 0.4156
-[2022/09/22 12:01:08] - 
+--- GLOBAL EVALUATIONS - Round: 65 of 250, Time: 60.7 ---
+[2022/09/22 22:10:55] - TESTING CLEAN - Time 0.7, Loss 1.3609, Acc 0.6528
+[2022/09/22 22:10:56] - TESTING POIS - Time 0.7, Loss 9.3360, Acc 0.0289
+[2022/09/22 22:10:56] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:01:17] - TRAINING - Epoch: 10, Time 1.1, Loss 0.2252, Acc 0.9288
-[2022/09/22 12:02:29] - 
+[2022/09/22 22:11:04] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5256, Acc 0.7812
+[2022/09/22 22:11:04] - User KS Max: 0.5050, Thresh: 0.1331, Update: False
+[2022/09/22 22:11:56] - 
 
---- GLOBAL EVALUATIONS - Round: 66 of 250, Time: 81.7 ---
-[2022/09/22 12:02:38] - TESTING CLEAN - Time 1.0, Loss 1.2664, Acc 0.6784
-[2022/09/22 12:02:39] - TESTING POIS - Time 0.8, Loss 2.3347, Acc 0.4147
-[2022/09/22 12:02:39] - 
+--- GLOBAL EVALUATIONS - Round: 66 of 250, Time: 59.7 ---
+[2022/09/22 22:12:02] - TESTING CLEAN - Time 0.7, Loss 1.3609, Acc 0.6528
+[2022/09/22 22:12:03] - TESTING POIS - Time 0.7, Loss 9.3360, Acc 0.0289
+[2022/09/22 22:12:03] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:02:49] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1824, Acc 0.9211
-[2022/09/22 12:04:01] - 
+[2022/09/22 22:12:11] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4634, Acc 0.8575
+[2022/09/22 22:12:11] - User KS Max: 0.3540, Thresh: 0.1512, Update: False
+[2022/09/22 22:13:03] - 
 
---- GLOBAL EVALUATIONS - Round: 67 of 250, Time: 81.5 ---
-[2022/09/22 12:04:10] - TESTING CLEAN - Time 0.8, Loss 1.3275, Acc 0.6672
-[2022/09/22 12:04:10] - TESTING POIS - Time 0.8, Loss 1.8235, Acc 0.5084
-[2022/09/22 12:04:10] - 
+--- GLOBAL EVALUATIONS - Round: 67 of 250, Time: 60.3 ---
+[2022/09/22 22:13:10] - TESTING CLEAN - Time 0.7, Loss 1.3609, Acc 0.6528
+[2022/09/22 22:13:11] - TESTING POIS - Time 0.7, Loss 9.3360, Acc 0.0289
+[2022/09/22 22:13:11] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:04:20] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2664, Acc 0.9288
-[2022/09/22 12:05:34] - 
+[2022/09/22 22:13:19] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5095, Acc 0.8321
+[2022/09/22 22:13:19] - User KS Max: 0.2270, Thresh: 0.1628, Update: False
+[2022/09/22 22:14:12] - 
 
---- GLOBAL EVALUATIONS - Round: 68 of 250, Time: 83.4 ---
-[2022/09/22 12:05:42] - TESTING CLEAN - Time 0.8, Loss 1.2953, Acc 0.6796
-[2022/09/22 12:05:43] - TESTING POIS - Time 0.8, Loss 2.6932, Acc 0.3862
-[2022/09/22 12:05:43] - 
+--- GLOBAL EVALUATIONS - Round: 68 of 250, Time: 60.9 ---
+[2022/09/22 22:14:18] - TESTING CLEAN - Time 0.7, Loss 1.3163, Acc 0.6692
+[2022/09/22 22:14:19] - TESTING POIS - Time 0.7, Loss 9.4604, Acc 0.0298
+[2022/09/22 22:14:19] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:05:53] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1956, Acc 0.9237
-[2022/09/22 12:07:06] - 
+[2022/09/22 22:14:27] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4482, Acc 0.8702
+[2022/09/22 22:14:27] - User KS Max: 0.4600, Thresh: 0.1644, Update: False
+[2022/09/22 22:15:20] - 
 
---- GLOBAL EVALUATIONS - Round: 69 of 250, Time: 83.6 ---
-[2022/09/22 12:07:15] - TESTING CLEAN - Time 0.9, Loss 1.3037, Acc 0.6732
-[2022/09/22 12:07:16] - TESTING POIS - Time 0.8, Loss 3.3001, Acc 0.2942
-[2022/09/22 12:07:16] - 
+--- GLOBAL EVALUATIONS - Round: 69 of 250, Time: 61.3 ---
+[2022/09/22 22:15:27] - TESTING CLEAN - Time 0.7, Loss 1.3109, Acc 0.6608
+[2022/09/22 22:15:28] - TESTING POIS - Time 0.7, Loss 9.6117, Acc 0.0280
+[2022/09/22 22:15:28] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:07:26] - TRAINING - Epoch: 10, Time 1.0, Loss 0.3097, Acc 0.9237
-[2022/09/22 12:08:37] - 
+[2022/09/22 22:15:36] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4454, Acc 0.8550
+[2022/09/22 22:15:36] - User KS Max: 0.5280, Thresh: 0.1793, Update: False
+[2022/09/22 22:16:29] - 
 
---- GLOBAL EVALUATIONS - Round: 70 of 250, Time: 80.8 ---
-[2022/09/22 12:08:47] - TESTING CLEAN - Time 0.8, Loss 1.2449, Acc 0.6832
-[2022/09/22 12:08:48] - TESTING POIS - Time 0.8, Loss 2.9060, Acc 0.3484
-[2022/09/22 12:08:48] - 
+--- GLOBAL EVALUATIONS - Round: 70 of 250, Time: 61.3 ---
+[2022/09/22 22:16:36] - TESTING CLEAN - Time 0.8, Loss 1.4075, Acc 0.6560
+[2022/09/22 22:16:37] - TESTING POIS - Time 0.8, Loss 9.0016, Acc 0.0364
+[2022/09/22 22:16:37] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:08:57] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2816, Acc 0.9135
-[2022/09/22 12:10:09] - 
+[2022/09/22 22:16:45] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4445, Acc 0.8397
+[2022/09/22 22:16:45] - User KS Max: 0.5100, Thresh: 0.1915, Update: False
+[2022/09/22 22:17:37] - 
 
---- GLOBAL EVALUATIONS - Round: 71 of 250, Time: 81.5 ---
-[2022/09/22 12:10:18] - TESTING CLEAN - Time 0.9, Loss 1.2464, Acc 0.6764
-[2022/09/22 12:10:19] - TESTING POIS - Time 0.8, Loss 2.1969, Acc 0.4667
-[2022/09/22 12:10:19] - 
+--- GLOBAL EVALUATIONS - Round: 71 of 250, Time: 60.5 ---
+[2022/09/22 22:17:44] - TESTING CLEAN - Time 0.7, Loss 1.6124, Acc 0.6156
+[2022/09/22 22:17:45] - TESTING POIS - Time 0.7, Loss 8.2451, Acc 0.0742
+[2022/09/22 22:17:45] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:10:29] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0755, Acc 0.9796
-[2022/09/22 12:11:40] - 
+[2022/09/22 22:17:53] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4797, Acc 0.8550
+[2022/09/22 22:17:53] - User KS Max: 0.4820, Thresh: 0.2027, Update: False
+[2022/09/22 22:18:45] - 
 
---- GLOBAL EVALUATIONS - Round: 72 of 250, Time: 81.7 ---
-[2022/09/22 12:11:49] - TESTING CLEAN - Time 0.9, Loss 1.2760, Acc 0.6772
-[2022/09/22 12:11:50] - TESTING POIS - Time 0.8, Loss 2.4316, Acc 0.4067
-[2022/09/22 12:11:50] - 
+--- GLOBAL EVALUATIONS - Round: 72 of 250, Time: 60.5 ---
+[2022/09/22 22:18:52] - TESTING CLEAN - Time 0.7, Loss 1.3990, Acc 0.6576
+[2022/09/22 22:18:53] - TESTING POIS - Time 0.7, Loss 9.4929, Acc 0.0231
+[2022/09/22 22:18:53] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:11:59] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0807, Acc 0.9873
-[2022/09/22 12:13:08] - 
+[2022/09/22 22:19:01] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2405, Acc 0.9288
+[2022/09/22 22:19:01] - User KS Max: 0.4520, Thresh: 0.2044, Update: False
+[2022/09/22 22:19:55] - 
 
---- GLOBAL EVALUATIONS - Round: 73 of 250, Time: 78.0 ---
-[2022/09/22 12:13:17] - TESTING CLEAN - Time 0.9, Loss 1.2464, Acc 0.6804
-[2022/09/22 12:13:19] - TESTING POIS - Time 1.1, Loss 1.9154, Acc 0.5107
-[2022/09/22 12:13:19] - 
+--- GLOBAL EVALUATIONS - Round: 73 of 250, Time: 61.9 ---
+[2022/09/22 22:20:01] - TESTING CLEAN - Time 0.7, Loss 1.2936, Acc 0.6740
+[2022/09/22 22:20:02] - TESTING POIS - Time 0.7, Loss 9.1316, Acc 0.0436
+[2022/09/22 22:20:02] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:13:28] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0696, Acc 0.9796
-[2022/09/22 12:14:44] - 
+[2022/09/22 22:20:10] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1940, Acc 0.9415
+[2022/09/22 22:20:10] - User KS Max: 0.5130, Thresh: 0.2054, Update: False
+[2022/09/22 22:21:03] - 
 
---- GLOBAL EVALUATIONS - Round: 74 of 250, Time: 85.7 ---
-[2022/09/22 12:14:54] - TESTING CLEAN - Time 0.9, Loss 1.3085, Acc 0.6796
-[2022/09/22 12:14:55] - TESTING POIS - Time 0.8, Loss 2.7487, Acc 0.3747
-[2022/09/22 12:14:55] - 
+--- GLOBAL EVALUATIONS - Round: 74 of 250, Time: 60.5 ---
+[2022/09/22 22:21:09] - TESTING CLEAN - Time 0.8, Loss 1.3023, Acc 0.6704
+[2022/09/22 22:21:10] - TESTING POIS - Time 0.7, Loss 8.9729, Acc 0.0449
+[2022/09/22 22:21:10] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:15:05] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0483, Acc 0.9949
-[2022/09/22 12:16:14] - 
+[2022/09/22 22:21:18] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2647, Acc 0.9160
+[2022/09/22 22:21:18] - User KS Max: 0.5810, Thresh: 0.2051, Update: False
+[2022/09/22 22:22:11] - 
 
---- GLOBAL EVALUATIONS - Round: 75 of 250, Time: 79.4 ---
-[2022/09/22 12:16:24] - TESTING CLEAN - Time 0.9, Loss 1.2828, Acc 0.6816
-[2022/09/22 12:16:25] - TESTING POIS - Time 0.8, Loss 2.8511, Acc 0.3653
-[2022/09/22 12:16:25] - 
+--- GLOBAL EVALUATIONS - Round: 75 of 250, Time: 60.5 ---
+[2022/09/22 22:22:17] - TESTING CLEAN - Time 0.7, Loss 1.2735, Acc 0.6776
+[2022/09/22 22:22:18] - TESTING POIS - Time 0.7, Loss 9.4067, Acc 0.0396
+[2022/09/22 22:22:18] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:16:35] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1004, Acc 0.9720
-[2022/09/22 12:17:45] - 
+[2022/09/22 22:22:26] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2547, Acc 0.9211
+[2022/09/22 22:22:26] - User KS Max: 0.6190, Thresh: 0.2193, Update: False
+[2022/09/22 22:23:19] - 
 
---- GLOBAL EVALUATIONS - Round: 76 of 250, Time: 80.3 ---
-[2022/09/22 12:17:54] - TESTING CLEAN - Time 0.9, Loss 1.3101, Acc 0.6796
-[2022/09/22 12:17:55] - TESTING POIS - Time 0.8, Loss 2.4021, Acc 0.4156
-[2022/09/22 12:17:55] - 
+--- GLOBAL EVALUATIONS - Round: 76 of 250, Time: 60.5 ---
+[2022/09/22 22:23:25] - TESTING CLEAN - Time 0.7, Loss 1.6005, Acc 0.6444
+[2022/09/22 22:23:26] - TESTING POIS - Time 0.7, Loss 10.8936, Acc 0.0156
+[2022/09/22 22:23:26] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:18:05] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0625, Acc 0.9898
-[2022/09/22 12:19:15] - 
+[2022/09/22 22:23:34] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4147, Acc 0.8804
+[2022/09/22 22:23:34] - User KS Max: 0.5230, Thresh: 0.2306, Update: False
+[2022/09/22 22:24:27] - 
 
---- GLOBAL EVALUATIONS - Round: 77 of 250, Time: 80.2 ---
-[2022/09/22 12:19:25] - TESTING CLEAN - Time 0.9, Loss 1.3108, Acc 0.6820
-[2022/09/22 12:19:26] - TESTING POIS - Time 0.8, Loss 2.8963, Acc 0.3520
-[2022/09/22 12:19:26] - 
+--- GLOBAL EVALUATIONS - Round: 77 of 250, Time: 60.8 ---
+[2022/09/22 22:24:34] - TESTING CLEAN - Time 0.8, Loss 1.3704, Acc 0.6652
+[2022/09/22 22:24:34] - TESTING POIS - Time 0.7, Loss 10.0500, Acc 0.0302
+[2022/09/22 22:24:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:19:36] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1096, Acc 0.9771
-[2022/09/22 12:20:49] - 
+[2022/09/22 22:24:42] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4080, Acc 0.8626
+[2022/09/22 22:24:42] - User KS Max: 0.4900, Thresh: 0.2432, Update: False
+[2022/09/22 22:25:35] - 
 
---- GLOBAL EVALUATIONS - Round: 78 of 250, Time: 82.3 ---
-[2022/09/22 12:20:58] - TESTING CLEAN - Time 0.8, Loss 1.3311, Acc 0.6804
-[2022/09/22 12:20:59] - TESTING POIS - Time 0.9, Loss 2.6023, Acc 0.4036
-[2022/09/22 12:20:59] - 
+--- GLOBAL EVALUATIONS - Round: 78 of 250, Time: 61.1 ---
+[2022/09/22 22:25:42] - TESTING CLEAN - Time 0.7, Loss 1.3834, Acc 0.6600
+[2022/09/22 22:25:43] - TESTING POIS - Time 0.7, Loss 9.7156, Acc 0.0324
+[2022/09/22 22:25:43] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:21:09] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1211, Acc 0.9746
-[2022/09/22 12:22:22] - 
+[2022/09/22 22:25:51] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2489, Acc 0.9186
+[2022/09/22 22:25:51] - User KS Max: 0.5380, Thresh: 0.2358, Update: False
+[2022/09/22 22:26:44] - 
 
---- GLOBAL EVALUATIONS - Round: 79 of 250, Time: 83.4 ---
-[2022/09/22 12:22:31] - TESTING CLEAN - Time 0.9, Loss 1.2960, Acc 0.6816
-[2022/09/22 12:22:32] - TESTING POIS - Time 0.8, Loss 2.0380, Acc 0.4822
-[2022/09/22 12:22:32] - 
+--- GLOBAL EVALUATIONS - Round: 79 of 250, Time: 60.8 ---
+[2022/09/22 22:26:50] - TESTING CLEAN - Time 0.7, Loss 1.3397, Acc 0.6708
+[2022/09/22 22:26:51] - TESTING POIS - Time 0.7, Loss 10.2576, Acc 0.0307
+[2022/09/22 22:26:51] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:22:42] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1686, Acc 0.9440
-[2022/09/22 12:23:55] - 
+[2022/09/22 22:26:59] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3605, Acc 0.8677
+[2022/09/22 22:26:59] - User KS Max: 0.5280, Thresh: 0.2349, Update: False
+[2022/09/22 22:27:52] - 
 
---- GLOBAL EVALUATIONS - Round: 80 of 250, Time: 82.8 ---
-[2022/09/22 12:24:04] - TESTING CLEAN - Time 0.9, Loss 1.3640, Acc 0.6696
-[2022/09/22 12:24:05] - TESTING POIS - Time 0.9, Loss 1.7042, Acc 0.5662
-[2022/09/22 12:24:05] - 
+--- GLOBAL EVALUATIONS - Round: 80 of 250, Time: 60.9 ---
+[2022/09/22 22:27:59] - TESTING CLEAN - Time 0.7, Loss 1.2724, Acc 0.6832
+[2022/09/22 22:27:59] - TESTING POIS - Time 0.8, Loss 10.0589, Acc 0.0262
+[2022/09/22 22:27:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:24:15] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2749, Acc 0.9186
-[2022/09/22 12:25:27] - 
+[2022/09/22 22:28:07] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4848, Acc 0.8448
+[2022/09/22 22:28:08] - User KS Max: 0.3590, Thresh: 0.2424, Update: False
+[2022/09/22 22:29:00] - 
 
---- GLOBAL EVALUATIONS - Round: 81 of 250, Time: 82.1 ---
-[2022/09/22 12:25:35] - TESTING CLEAN - Time 0.9, Loss 1.3891, Acc 0.6776
-[2022/09/22 12:25:36] - TESTING POIS - Time 0.8, Loss 3.0519, Acc 0.3267
-[2022/09/22 12:25:36] - 
+--- GLOBAL EVALUATIONS - Round: 81 of 250, Time: 60.7 ---
+[2022/09/22 22:29:07] - TESTING CLEAN - Time 0.7, Loss 1.3277, Acc 0.6728
+[2022/09/22 22:29:07] - TESTING POIS - Time 0.7, Loss 10.9525, Acc 0.0142
+[2022/09/22 22:29:07] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:25:46] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1410, Acc 0.9720
-[2022/09/22 12:26:55] - 
+[2022/09/22 22:29:15] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3306, Acc 0.8931
+[2022/09/22 22:29:16] - User KS Max: 0.6920, Thresh: 0.2587, Update: False
+[2022/09/22 22:30:08] - 
 
---- GLOBAL EVALUATIONS - Round: 82 of 250, Time: 79.0 ---
-[2022/09/22 12:27:05] - TESTING CLEAN - Time 0.9, Loss 1.3443, Acc 0.6788
-[2022/09/22 12:27:06] - TESTING POIS - Time 0.8, Loss 1.5323, Acc 0.5973
-[2022/09/22 12:27:06] - 
+--- GLOBAL EVALUATIONS - Round: 82 of 250, Time: 61.0 ---
+[2022/09/22 22:30:15] - TESTING CLEAN - Time 0.7, Loss 1.3305, Acc 0.6784
+[2022/09/22 22:30:16] - TESTING POIS - Time 0.7, Loss 9.9377, Acc 0.0409
+[2022/09/22 22:30:16] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:27:16] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2963, Acc 0.9109
-[2022/09/22 12:28:23] - 
+[2022/09/22 22:30:24] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2869, Acc 0.8982
+[2022/09/22 22:30:25] - User KS Max: 0.4220, Thresh: 0.2586, Update: False
+[2022/09/22 22:31:17] - 
 
---- GLOBAL EVALUATIONS - Round: 83 of 250, Time: 77.3 ---
-[2022/09/22 12:28:33] - TESTING CLEAN - Time 0.8, Loss 1.3423, Acc 0.6808
-[2022/09/22 12:28:34] - TESTING POIS - Time 0.9, Loss 2.7316, Acc 0.3764
-[2022/09/22 12:28:34] - 
+--- GLOBAL EVALUATIONS - Round: 83 of 250, Time: 61.2 ---
+[2022/09/22 22:31:24] - TESTING CLEAN - Time 0.7, Loss 1.3364, Acc 0.6692
+[2022/09/22 22:31:24] - TESTING POIS - Time 0.7, Loss 10.9405, Acc 0.0213
+[2022/09/22 22:31:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:28:44] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1027, Acc 0.9771
-[2022/09/22 12:30:01] - 
+[2022/09/22 22:31:32] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3518, Acc 0.8702
+[2022/09/22 22:31:33] - User KS Max: 0.4720, Thresh: 0.2570, Update: False
+[2022/09/22 22:32:26] - 
 
---- GLOBAL EVALUATIONS - Round: 84 of 250, Time: 87.0 ---
-[2022/09/22 12:30:10] - TESTING CLEAN - Time 0.8, Loss 1.2874, Acc 0.6856
-[2022/09/22 12:30:10] - TESTING POIS - Time 0.8, Loss 2.2046, Acc 0.4644
-[2022/09/22 12:30:10] - 
+--- GLOBAL EVALUATIONS - Round: 84 of 250, Time: 61.2 ---
+[2022/09/22 22:32:32] - TESTING CLEAN - Time 0.8, Loss 1.3119, Acc 0.6816
+[2022/09/22 22:32:33] - TESTING POIS - Time 0.6, Loss 10.8774, Acc 0.0244
+[2022/09/22 22:32:33] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:30:21] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0503, Acc 0.9975
-[2022/09/22 12:31:32] - 
+[2022/09/22 22:32:41] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2346, Acc 0.9135
+[2022/09/22 22:32:41] - User KS Max: 0.5380, Thresh: 0.2539, Update: False
+[2022/09/22 22:33:34] - 
 
---- GLOBAL EVALUATIONS - Round: 85 of 250, Time: 82.1 ---
-[2022/09/22 12:31:41] - TESTING CLEAN - Time 0.9, Loss 1.2970, Acc 0.6844
-[2022/09/22 12:31:42] - TESTING POIS - Time 0.9, Loss 3.2668, Acc 0.3133
-[2022/09/22 12:31:42] - 
+--- GLOBAL EVALUATIONS - Round: 85 of 250, Time: 61.3 ---
+[2022/09/22 22:33:41] - TESTING CLEAN - Time 0.8, Loss 1.3204, Acc 0.6812
+[2022/09/22 22:33:42] - TESTING POIS - Time 0.7, Loss 10.9383, Acc 0.0222
+[2022/09/22 22:33:42] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:31:53] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0563, Acc 0.9924
-[2022/09/22 12:33:03] - 
+[2022/09/22 22:33:50] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2146, Acc 0.9237
+[2022/09/22 22:33:50] - User KS Max: 0.5560, Thresh: 0.2499, Update: False
+[2022/09/22 22:34:43] - 
 
---- GLOBAL EVALUATIONS - Round: 86 of 250, Time: 80.2 ---
-[2022/09/22 12:33:11] - TESTING CLEAN - Time 0.9, Loss 1.2989, Acc 0.6876
-[2022/09/22 12:33:12] - TESTING POIS - Time 0.8, Loss 1.5527, Acc 0.5964
-[2022/09/22 12:33:12] - 
+--- GLOBAL EVALUATIONS - Round: 86 of 250, Time: 61.0 ---
+[2022/09/22 22:34:50] - TESTING CLEAN - Time 0.7, Loss 1.2736, Acc 0.6872
+[2022/09/22 22:34:50] - TESTING POIS - Time 0.7, Loss 10.5392, Acc 0.0236
+[2022/09/22 22:34:50] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:33:22] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1777, Acc 0.9415
-[2022/09/22 12:34:31] - 
+[2022/09/22 22:34:58] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3031, Acc 0.8804
+[2022/09/22 22:34:58] - User KS Max: 0.6640, Thresh: 0.2524, Update: False
+[2022/09/22 22:35:51] - 
 
---- GLOBAL EVALUATIONS - Round: 87 of 250, Time: 78.7 ---
-[2022/09/22 12:34:41] - TESTING CLEAN - Time 0.8, Loss 1.3922, Acc 0.6748
-[2022/09/22 12:34:42] - TESTING POIS - Time 0.8, Loss 3.1680, Acc 0.3236
-[2022/09/22 12:34:42] - 
+--- GLOBAL EVALUATIONS - Round: 87 of 250, Time: 60.9 ---
+[2022/09/22 22:35:58] - TESTING CLEAN - Time 0.7, Loss 1.4063, Acc 0.6728
+[2022/09/22 22:35:59] - TESTING POIS - Time 0.7, Loss 11.6233, Acc 0.0129
+[2022/09/22 22:35:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:34:52] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0446, Acc 0.9924
-[2022/09/22 12:36:02] - 
+[2022/09/22 22:36:06] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2281, Acc 0.9211
+[2022/09/22 22:36:07] - User KS Max: 0.5710, Thresh: 0.2493, Update: False
+[2022/09/22 22:36:59] - 
 
---- GLOBAL EVALUATIONS - Round: 88 of 250, Time: 80.5 ---
-[2022/09/22 12:36:12] - TESTING CLEAN - Time 0.9, Loss 1.2949, Acc 0.6912
-[2022/09/22 12:36:13] - TESTING POIS - Time 0.8, Loss 1.8030, Acc 0.5356
-[2022/09/22 12:36:13] - 
+--- GLOBAL EVALUATIONS - Round: 88 of 250, Time: 60.4 ---
+[2022/09/22 22:37:06] - TESTING CLEAN - Time 0.8, Loss 1.2748, Acc 0.6940
+[2022/09/22 22:37:07] - TESTING POIS - Time 0.7, Loss 10.7668, Acc 0.0182
+[2022/09/22 22:37:07] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:36:23] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1657, Acc 0.9491
-[2022/09/22 12:37:36] - 
+[2022/09/22 22:37:14] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1903, Acc 0.9389
+[2022/09/22 22:37:15] - User KS Max: 0.2170, Thresh: 0.2523, Update: True
+[2022/09/22 22:38:07] - 
 
---- GLOBAL EVALUATIONS - Round: 89 of 250, Time: 83.3 ---
-[2022/09/22 12:37:45] - TESTING CLEAN - Time 0.8, Loss 1.2984, Acc 0.6836
-[2022/09/22 12:37:46] - TESTING POIS - Time 0.8, Loss 2.0478, Acc 0.5107
-[2022/09/22 12:37:46] - 
+--- GLOBAL EVALUATIONS - Round: 89 of 250, Time: 60.2 ---
+[2022/09/22 22:38:13] - TESTING CLEAN - Time 0.7, Loss 1.2694, Acc 0.6848
+[2022/09/22 22:38:14] - TESTING POIS - Time 0.7, Loss 9.8428, Acc 0.0240
+[2022/09/22 22:38:14] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:37:56] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0835, Acc 0.9771
-[2022/09/22 12:39:09] - 
+[2022/09/22 22:38:22] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2694, Acc 0.9084
+[2022/09/22 22:38:22] - User KS Max: 0.5530, Thresh: 0.2523, Update: False
+[2022/09/22 22:39:15] - 
 
---- GLOBAL EVALUATIONS - Round: 90 of 250, Time: 83.4 ---
-[2022/09/22 12:39:20] - TESTING CLEAN - Time 0.9, Loss 1.2646, Acc 0.6924
-[2022/09/22 12:39:20] - TESTING POIS - Time 0.9, Loss 1.9741, Acc 0.5049
-[2022/09/22 12:39:20] - 
+--- GLOBAL EVALUATIONS - Round: 90 of 250, Time: 60.6 ---
+[2022/09/22 22:39:21] - TESTING CLEAN - Time 0.7, Loss 1.3630, Acc 0.6772
+[2022/09/22 22:39:22] - TESTING POIS - Time 0.7, Loss 9.8053, Acc 0.0338
+[2022/09/22 22:39:22] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:39:31] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1562, Acc 0.9618
-[2022/09/22 12:40:37] - 
+[2022/09/22 22:39:30] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1510, Acc 0.9517
+[2022/09/22 22:39:30] - User KS Max: 0.5610, Thresh: 0.2606, Update: False
+[2022/09/22 22:40:22] - 
 
---- GLOBAL EVALUATIONS - Round: 91 of 250, Time: 76.9 ---
-[2022/09/22 12:40:47] - TESTING CLEAN - Time 0.9, Loss 1.2734, Acc 0.6996
-[2022/09/22 12:40:47] - TESTING POIS - Time 0.8, Loss 1.7553, Acc 0.5671
-[2022/09/22 12:40:47] - 
+--- GLOBAL EVALUATIONS - Round: 91 of 250, Time: 59.9 ---
+[2022/09/22 22:40:28] - TESTING CLEAN - Time 0.7, Loss 1.3096, Acc 0.6892
+[2022/09/22 22:40:29] - TESTING POIS - Time 0.7, Loss 10.5091, Acc 0.0196
+[2022/09/22 22:40:29] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:40:58] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0778, Acc 0.9771
-[2022/09/22 12:42:12] - 
+[2022/09/22 22:40:37] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1945, Acc 0.9567
+[2022/09/22 22:40:37] - User KS Max: 0.4970, Thresh: 0.2624, Update: False
+[2022/09/22 22:41:30] - 
 
---- GLOBAL EVALUATIONS - Round: 92 of 250, Time: 84.3 ---
-[2022/09/22 12:42:20] - TESTING CLEAN - Time 0.8, Loss 1.2869, Acc 0.6952
-[2022/09/22 12:42:21] - TESTING POIS - Time 0.9, Loss 1.4425, Acc 0.6151
-[2022/09/22 12:42:21] - 
+--- GLOBAL EVALUATIONS - Round: 92 of 250, Time: 60.9 ---
+[2022/09/22 22:41:37] - TESTING CLEAN - Time 0.7, Loss 1.3514, Acc 0.6800
+[2022/09/22 22:41:37] - TESTING POIS - Time 0.6, Loss 9.9166, Acc 0.0351
+[2022/09/22 22:41:37] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:42:31] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2628, Acc 0.9211
-[2022/09/22 12:43:47] - 
+[2022/09/22 22:41:45] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4290, Acc 0.8677
+[2022/09/22 22:41:45] - User KS Max: 0.4570, Thresh: 0.2616, Update: False
+[2022/09/22 22:42:38] - 
 
---- GLOBAL EVALUATIONS - Round: 93 of 250, Time: 85.8 ---
-[2022/09/22 12:43:58] - TESTING CLEAN - Time 0.8, Loss 1.3742, Acc 0.6848
-[2022/09/22 12:43:58] - TESTING POIS - Time 0.8, Loss 1.5905, Acc 0.5987
-[2022/09/22 12:43:58] - 
+--- GLOBAL EVALUATIONS - Round: 93 of 250, Time: 60.5 ---
+[2022/09/22 22:42:45] - TESTING CLEAN - Time 0.7, Loss 1.3567, Acc 0.6772
+[2022/09/22 22:42:45] - TESTING POIS - Time 0.7, Loss 9.8267, Acc 0.0373
+[2022/09/22 22:42:45] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:44:08] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1233, Acc 0.9669
-[2022/09/22 12:45:19] - 
+[2022/09/22 22:42:53] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2765, Acc 0.9160
+[2022/09/22 22:42:53] - User KS Max: 0.6260, Thresh: 0.2591, Update: False
+[2022/09/22 22:43:46] - 
 
---- GLOBAL EVALUATIONS - Round: 94 of 250, Time: 80.5 ---
-[2022/09/22 12:45:28] - TESTING CLEAN - Time 0.8, Loss 1.2823, Acc 0.6856
-[2022/09/22 12:45:29] - TESTING POIS - Time 0.8, Loss 0.9213, Acc 0.7289
-[2022/09/22 12:45:29] - 
+--- GLOBAL EVALUATIONS - Round: 94 of 250, Time: 60.6 ---
+[2022/09/22 22:43:53] - TESTING CLEAN - Time 0.8, Loss 1.2778, Acc 0.6880
+[2022/09/22 22:43:53] - TESTING POIS - Time 0.8, Loss 10.1178, Acc 0.0271
+[2022/09/22 22:43:53] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:45:39] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0533, Acc 0.9949
-[2022/09/22 12:46:50] - 
+[2022/09/22 22:44:02] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1766, Acc 0.9517
+[2022/09/22 22:44:02] - User KS Max: 0.6140, Thresh: 0.2621, Update: False
+[2022/09/22 22:44:55] - 
 
---- GLOBAL EVALUATIONS - Round: 95 of 250, Time: 80.6 ---
-[2022/09/22 12:46:59] - TESTING CLEAN - Time 0.8, Loss 1.3551, Acc 0.6880
-[2022/09/22 12:47:00] - TESTING POIS - Time 0.8, Loss 1.9302, Acc 0.5333
-[2022/09/22 12:47:00] - 
+--- GLOBAL EVALUATIONS - Round: 95 of 250, Time: 61.4 ---
+[2022/09/22 22:45:01] - TESTING CLEAN - Time 0.8, Loss 1.3272, Acc 0.6876
+[2022/09/22 22:45:02] - TESTING POIS - Time 0.7, Loss 10.1140, Acc 0.0360
+[2022/09/22 22:45:02] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:47:10] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0599, Acc 0.9847
-[2022/09/22 12:48:20] - 
+[2022/09/22 22:45:10] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2083, Acc 0.9262
+[2022/09/22 22:45:10] - User KS Max: 0.4070, Thresh: 0.2651, Update: False
+[2022/09/22 22:46:03] - 
 
---- GLOBAL EVALUATIONS - Round: 96 of 250, Time: 80.1 ---
-[2022/09/22 12:48:29] - TESTING CLEAN - Time 1.3, Loss 1.3172, Acc 0.6960
-[2022/09/22 12:48:30] - TESTING POIS - Time 1.1, Loss 1.0568, Acc 0.7058
-[2022/09/22 12:48:30] - 
+--- GLOBAL EVALUATIONS - Round: 96 of 250, Time: 60.7 ---
+[2022/09/22 22:46:11] - TESTING CLEAN - Time 0.9, Loss 1.2875, Acc 0.6912
+[2022/09/22 22:46:12] - TESTING POIS - Time 0.8, Loss 10.1140, Acc 0.0284
+[2022/09/22 22:46:12] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:48:40] - TRAINING - Epoch: 10, Time 0.9, Loss 0.2772, Acc 0.9084
-[2022/09/22 12:49:49] - 
+[2022/09/22 22:46:20] - TRAINING - Epoch: 10, Time 0.7, Loss 0.5326, Acc 0.8346
+[2022/09/22 22:46:20] - User KS Max: 0.5330, Thresh: 0.2639, Update: False
+[2022/09/22 22:47:13] - 
 
---- GLOBAL EVALUATIONS - Round: 97 of 250, Time: 78.1 ---
-[2022/09/22 12:49:58] - TESTING CLEAN - Time 0.8, Loss 1.2959, Acc 0.6964
-[2022/09/22 12:49:59] - TESTING POIS - Time 0.8, Loss 1.2957, Acc 0.6591
-[2022/09/22 12:49:59] - 
+--- GLOBAL EVALUATIONS - Round: 97 of 250, Time: 61.3 ---
+[2022/09/22 22:47:20] - TESTING CLEAN - Time 0.7, Loss 1.2627, Acc 0.7000
+[2022/09/22 22:47:21] - TESTING POIS - Time 0.7, Loss 9.9181, Acc 0.0378
+[2022/09/22 22:47:21] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:50:09] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0436, Acc 0.9924
-[2022/09/22 12:51:19] - 
+[2022/09/22 22:47:28] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2382, Acc 0.9237
+[2022/09/22 22:47:29] - User KS Max: 0.3940, Thresh: 0.2626, Update: False
+[2022/09/22 22:48:21] - 
 
---- GLOBAL EVALUATIONS - Round: 98 of 250, Time: 80.5 ---
-[2022/09/22 12:51:28] - TESTING CLEAN - Time 0.9, Loss 1.4068, Acc 0.6768
-[2022/09/22 12:51:29] - TESTING POIS - Time 0.8, Loss 1.5770, Acc 0.6089
-[2022/09/22 12:51:29] - 
+--- GLOBAL EVALUATIONS - Round: 98 of 250, Time: 60.6 ---
+[2022/09/22 22:48:28] - TESTING CLEAN - Time 0.7, Loss 1.3048, Acc 0.6944
+[2022/09/22 22:48:29] - TESTING POIS - Time 0.7, Loss 9.9361, Acc 0.0324
+[2022/09/22 22:48:29] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:51:39] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1643, Acc 0.9466
-[2022/09/22 12:52:54] - 
+[2022/09/22 22:48:36] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3421, Acc 0.8906
+[2022/09/22 22:48:37] - User KS Max: 0.6390, Thresh: 0.1309, Update: False
+[2022/09/22 22:49:28] - 
 
---- GLOBAL EVALUATIONS - Round: 99 of 250, Time: 85.7 ---
-[2022/09/22 12:53:03] - TESTING CLEAN - Time 0.9, Loss 1.3433, Acc 0.6868
-[2022/09/22 12:53:04] - TESTING POIS - Time 0.8, Loss 1.4477, Acc 0.6338
-[2022/09/22 12:53:04] - 
+--- GLOBAL EVALUATIONS - Round: 99 of 250, Time: 59.5 ---
+[2022/09/22 22:49:35] - TESTING CLEAN - Time 0.7, Loss 1.3048, Acc 0.6944
+[2022/09/22 22:49:36] - TESTING POIS - Time 0.7, Loss 9.9361, Acc 0.0324
+[2022/09/22 22:49:36] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:53:14] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0603, Acc 0.9873
-[2022/09/22 12:54:22] - 
+[2022/09/22 22:49:43] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1521, Acc 0.9542
+[2022/09/22 22:49:44] - User KS Max: 0.3460, Thresh: 0.1639, Update: False
+[2022/09/22 22:50:36] - 
 
---- GLOBAL EVALUATIONS - Round: 100 of 250, Time: 78.6 ---
-[2022/09/22 12:54:31] - TESTING CLEAN - Time 0.9, Loss 1.3369, Acc 0.6928
-[2022/09/22 12:54:32] - TESTING POIS - Time 0.9, Loss 1.7323, Acc 0.5676
-[2022/09/22 12:54:32] - 
+--- GLOBAL EVALUATIONS - Round: 100 of 250, Time: 60.5 ---
+[2022/09/22 22:50:43] - TESTING CLEAN - Time 0.7, Loss 1.3409, Acc 0.6924
+[2022/09/22 22:50:43] - TESTING POIS - Time 0.7, Loss 10.8257, Acc 0.0276
+[2022/09/22 22:50:44] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:54:42] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1270, Acc 0.9720
-[2022/09/22 12:55:54] - 
+[2022/09/22 22:50:51] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3817, Acc 0.8880
+[2022/09/22 22:50:52] - User KS Max: 0.8060, Thresh: 0.1943, Update: False
+[2022/09/22 22:51:44] - 
 
---- GLOBAL EVALUATIONS - Round: 101 of 250, Time: 81.7 ---
-[2022/09/22 12:56:02] - TESTING CLEAN - Time 0.9, Loss 1.3631, Acc 0.6808
-[2022/09/22 12:56:03] - TESTING POIS - Time 0.8, Loss 1.0345, Acc 0.7062
-[2022/09/22 12:56:03] - 
+--- GLOBAL EVALUATIONS - Round: 101 of 250, Time: 60.6 ---
+[2022/09/22 22:51:51] - TESTING CLEAN - Time 0.7, Loss 1.4333, Acc 0.6708
+[2022/09/22 22:51:51] - TESTING POIS - Time 0.7, Loss 10.0081, Acc 0.0382
+[2022/09/22 22:51:52] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:56:13] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1185, Acc 0.9618
-[2022/09/22 12:57:29] - 
+[2022/09/22 22:51:59] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3773, Acc 0.8880
+[2022/09/22 22:52:00] - User KS Max: 0.4920, Thresh: 0.2472, Update: False
+[2022/09/22 22:52:52] - 
 
---- GLOBAL EVALUATIONS - Round: 102 of 250, Time: 86.0 ---
-[2022/09/22 12:57:39] - TESTING CLEAN - Time 0.9, Loss 1.3007, Acc 0.6932
-[2022/09/22 12:57:40] - TESTING POIS - Time 0.8, Loss 1.1749, Acc 0.6884
-[2022/09/22 12:57:40] - 
+--- GLOBAL EVALUATIONS - Round: 102 of 250, Time: 60.8 ---
+[2022/09/22 22:52:59] - TESTING CLEAN - Time 0.7, Loss 1.3081, Acc 0.6844
+[2022/09/22 22:53:00] - TESTING POIS - Time 0.7, Loss 10.1743, Acc 0.0302
+[2022/09/22 22:53:00] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:57:50] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0496, Acc 0.9898
-[2022/09/22 12:59:04] - 
+[2022/09/22 22:53:07] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2157, Acc 0.9313
+[2022/09/22 22:53:08] - User KS Max: 0.6620, Thresh: 0.2472, Update: False
+[2022/09/22 22:54:00] - 
 
---- GLOBAL EVALUATIONS - Round: 103 of 250, Time: 83.4 ---
-[2022/09/22 12:59:14] - TESTING CLEAN - Time 0.9, Loss 1.3816, Acc 0.6884
-[2022/09/22 12:59:15] - TESTING POIS - Time 0.7, Loss 0.8057, Acc 0.7747
-[2022/09/22 12:59:15] - 
+--- GLOBAL EVALUATIONS - Round: 103 of 250, Time: 60.7 ---
+[2022/09/22 22:54:07] - TESTING CLEAN - Time 0.7, Loss 1.3997, Acc 0.6772
+[2022/09/22 22:54:08] - TESTING POIS - Time 0.7, Loss 11.4399, Acc 0.0173
+[2022/09/22 22:54:08] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 12:59:25] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1348, Acc 0.9720
-[2022/09/22 13:00:39] - 
+[2022/09/22 22:54:16] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3311, Acc 0.8957
+[2022/09/22 22:54:16] - User KS Max: 0.6740, Thresh: 0.2385, Update: False
+[2022/09/22 22:55:09] - 
 
---- GLOBAL EVALUATIONS - Round: 104 of 250, Time: 84.6 ---
-[2022/09/22 13:00:48] - TESTING CLEAN - Time 0.8, Loss 1.3672, Acc 0.6956
-[2022/09/22 13:00:48] - TESTING POIS - Time 0.8, Loss 1.1519, Acc 0.6884
-[2022/09/22 13:00:49] - 
+--- GLOBAL EVALUATIONS - Round: 104 of 250, Time: 60.8 ---
+[2022/09/22 22:55:15] - TESTING CLEAN - Time 0.7, Loss 1.3840, Acc 0.6800
+[2022/09/22 22:55:16] - TESTING POIS - Time 0.7, Loss 11.1031, Acc 0.0258
+[2022/09/22 22:55:16] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:00:59] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0569, Acc 0.9847
-[2022/09/22 13:02:08] - 
+[2022/09/22 22:55:24] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2823, Acc 0.9109
+[2022/09/22 22:55:24] - User KS Max: 0.7900, Thresh: 0.2242, Update: False
+[2022/09/22 22:56:17] - 
 
---- GLOBAL EVALUATIONS - Round: 105 of 250, Time: 79.4 ---
-[2022/09/22 13:02:17] - TESTING CLEAN - Time 0.8, Loss 1.4087, Acc 0.6848
-[2022/09/22 13:02:18] - TESTING POIS - Time 0.8, Loss 1.5709, Acc 0.6156
-[2022/09/22 13:02:18] - 
+--- GLOBAL EVALUATIONS - Round: 105 of 250, Time: 60.7 ---
+[2022/09/22 22:56:23] - TESTING CLEAN - Time 0.7, Loss 1.4309, Acc 0.6796
+[2022/09/22 22:56:24] - TESTING POIS - Time 0.7, Loss 10.1071, Acc 0.0520
+[2022/09/22 22:56:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:02:28] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0324, Acc 1.0000
-[2022/09/22 13:03:40] - 
+[2022/09/22 22:56:32] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2281, Acc 0.9186
+[2022/09/22 22:56:32] - User KS Max: 0.4240, Thresh: 0.2271, Update: False
+[2022/09/22 22:57:25] - 
 
---- GLOBAL EVALUATIONS - Round: 106 of 250, Time: 82.3 ---
-[2022/09/22 13:03:49] - TESTING CLEAN - Time 0.8, Loss 1.3748, Acc 0.6952
-[2022/09/22 13:03:50] - TESTING POIS - Time 0.8, Loss 1.6900, Acc 0.5947
-[2022/09/22 13:03:50] - 
+--- GLOBAL EVALUATIONS - Round: 106 of 250, Time: 60.6 ---
+[2022/09/22 22:57:32] - TESTING CLEAN - Time 0.8, Loss 1.2879, Acc 0.7000
+[2022/09/22 22:57:32] - TESTING POIS - Time 0.7, Loss 10.5909, Acc 0.0204
+[2022/09/22 22:57:32] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:03:59] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0925, Acc 0.9822
-[2022/09/22 13:05:09] - 
+[2022/09/22 22:57:40] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3786, Acc 0.8880
+[2022/09/22 22:57:41] - User KS Max: 0.3110, Thresh: 0.2275, Update: False
+[2022/09/22 22:58:33] - 
 
---- GLOBAL EVALUATIONS - Round: 107 of 250, Time: 79.1 ---
-[2022/09/22 13:05:17] - TESTING CLEAN - Time 0.9, Loss 1.3546, Acc 0.6944
-[2022/09/22 13:05:18] - TESTING POIS - Time 0.8, Loss 1.4473, Acc 0.6511
-[2022/09/22 13:05:18] - 
+--- GLOBAL EVALUATIONS - Round: 107 of 250, Time: 61.1 ---
+[2022/09/22 22:58:40] - TESTING CLEAN - Time 0.7, Loss 1.3871, Acc 0.6956
+[2022/09/22 22:58:41] - TESTING POIS - Time 0.7, Loss 11.6646, Acc 0.0178
+[2022/09/22 22:58:41] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:05:29] - TRAINING - Epoch: 10, Time 1.1, Loss 0.0565, Acc 0.9898
-[2022/09/22 13:06:38] - 
+[2022/09/22 22:58:48] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1753, Acc 0.9466
+[2022/09/22 22:58:49] - User KS Max: 0.6010, Thresh: 0.2226, Update: False
+[2022/09/22 22:59:43] - 
 
---- GLOBAL EVALUATIONS - Round: 108 of 250, Time: 80.0 ---
-[2022/09/22 13:06:48] - TESTING CLEAN - Time 0.8, Loss 1.3359, Acc 0.6936
-[2022/09/22 13:06:48] - TESTING POIS - Time 0.8, Loss 1.1831, Acc 0.6849
-[2022/09/22 13:06:49] - 
+--- GLOBAL EVALUATIONS - Round: 108 of 250, Time: 62.3 ---
+[2022/09/22 22:59:50] - TESTING CLEAN - Time 0.8, Loss 1.4223, Acc 0.6900
+[2022/09/22 22:59:50] - TESTING POIS - Time 0.7, Loss 10.9222, Acc 0.0316
+[2022/09/22 22:59:51] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:06:59] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0331, Acc 0.9949
-[2022/09/22 13:08:07] - 
+[2022/09/22 22:59:58] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1835, Acc 0.9491
+[2022/09/22 22:59:59] - User KS Max: 0.5760, Thresh: 0.2294, Update: False
+[2022/09/22 23:00:51] - 
 
---- GLOBAL EVALUATIONS - Round: 109 of 250, Time: 78.8 ---
-[2022/09/22 13:08:16] - TESTING CLEAN - Time 0.8, Loss 1.3308, Acc 0.6904
-[2022/09/22 13:08:17] - TESTING POIS - Time 0.9, Loss 1.1800, Acc 0.6831
-[2022/09/22 13:08:17] - 
+--- GLOBAL EVALUATIONS - Round: 109 of 250, Time: 60.8 ---
+[2022/09/22 23:00:58] - TESTING CLEAN - Time 0.7, Loss 1.3238, Acc 0.6972
+[2022/09/22 23:00:59] - TESTING POIS - Time 0.7, Loss 10.7701, Acc 0.0276
+[2022/09/22 23:00:59] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:08:27] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1958, Acc 0.9389
-[2022/09/22 13:09:39] - 
+[2022/09/22 23:01:07] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2820, Acc 0.8931
+[2022/09/22 23:01:07] - User KS Max: 0.3230, Thresh: 0.2315, Update: False
+[2022/09/22 23:02:00] - 
 
---- GLOBAL EVALUATIONS - Round: 110 of 250, Time: 81.9 ---
-[2022/09/22 13:09:49] - TESTING CLEAN - Time 0.9, Loss 1.3258, Acc 0.6932
-[2022/09/22 13:09:50] - TESTING POIS - Time 0.8, Loss 1.0551, Acc 0.7084
-[2022/09/22 13:09:50] - 
+--- GLOBAL EVALUATIONS - Round: 110 of 250, Time: 61.1 ---
+[2022/09/22 23:02:07] - TESTING CLEAN - Time 0.7, Loss 1.3098, Acc 0.6960
+[2022/09/22 23:02:07] - TESTING POIS - Time 0.7, Loss 10.3814, Acc 0.0387
+[2022/09/22 23:02:07] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:10:00] - TRAINING - Epoch: 10, Time 1.1, Loss 0.0518, Acc 0.9873
-[2022/09/22 13:11:07] - 
+[2022/09/22 23:02:15] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1399, Acc 0.9593
+[2022/09/22 23:02:16] - User KS Max: 0.3360, Thresh: 0.2284, Update: False
+[2022/09/22 23:03:08] - 
 
---- GLOBAL EVALUATIONS - Round: 111 of 250, Time: 76.5 ---
-[2022/09/22 13:11:15] - TESTING CLEAN - Time 0.8, Loss 1.3579, Acc 0.6976
-[2022/09/22 13:11:16] - TESTING POIS - Time 0.8, Loss 0.8439, Acc 0.7609
-[2022/09/22 13:11:16] - 
+--- GLOBAL EVALUATIONS - Round: 111 of 250, Time: 60.8 ---
+[2022/09/22 23:03:15] - TESTING CLEAN - Time 0.7, Loss 1.3652, Acc 0.6896
+[2022/09/22 23:03:16] - TESTING POIS - Time 0.7, Loss 10.6527, Acc 0.0289
+[2022/09/22 23:03:16] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:11:26] - TRAINING - Epoch: 10, Time 1.0, Loss 0.2135, Acc 0.9491
-[2022/09/22 13:12:37] - 
+[2022/09/22 23:03:23] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2010, Acc 0.9237
+[2022/09/22 23:03:24] - User KS Max: 0.4970, Thresh: 0.2284, Update: False
+[2022/09/22 23:04:16] - 
 
---- GLOBAL EVALUATIONS - Round: 112 of 250, Time: 80.3 ---
-[2022/09/22 13:12:45] - TESTING CLEAN - Time 0.9, Loss 1.3368, Acc 0.6956
-[2022/09/22 13:12:46] - TESTING POIS - Time 0.8, Loss 0.5360, Acc 0.8427
-[2022/09/22 13:12:46] - 
+--- GLOBAL EVALUATIONS - Round: 112 of 250, Time: 60.7 ---
+[2022/09/22 23:04:23] - TESTING CLEAN - Time 0.8, Loss 1.3463, Acc 0.6948
+[2022/09/22 23:04:24] - TESTING POIS - Time 0.7, Loss 10.9942, Acc 0.0271
+[2022/09/22 23:04:24] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:12:56] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0876, Acc 0.9746
-[2022/09/22 13:14:10] - 
+[2022/09/22 23:04:31] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2814, Acc 0.9211
+[2022/09/22 23:04:32] - User KS Max: 0.6990, Thresh: 0.2372, Update: False
+[2022/09/22 23:05:24] - 
 
---- GLOBAL EVALUATIONS - Round: 113 of 250, Time: 84.2 ---
-[2022/09/22 13:14:19] - TESTING CLEAN - Time 0.8, Loss 1.3297, Acc 0.6988
-[2022/09/22 13:14:20] - TESTING POIS - Time 0.8, Loss 0.8576, Acc 0.7573
-[2022/09/22 13:14:20] - 
+--- GLOBAL EVALUATIONS - Round: 113 of 250, Time: 60.6 ---
+[2022/09/22 23:05:31] - TESTING CLEAN - Time 0.7, Loss 1.2636, Acc 0.7000
+[2022/09/22 23:05:32] - TESTING POIS - Time 0.6, Loss 10.3990, Acc 0.0396
+[2022/09/22 23:05:32] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:14:30] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0937, Acc 0.9695
-[2022/09/22 13:15:43] - 
+[2022/09/22 23:05:40] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2708, Acc 0.9059
+[2022/09/22 23:05:40] - User KS Max: 0.4850, Thresh: 0.2352, Update: False
+[2022/09/22 23:06:33] - 
 
---- GLOBAL EVALUATIONS - Round: 114 of 250, Time: 83.1 ---
-[2022/09/22 13:15:53] - TESTING CLEAN - Time 0.9, Loss 1.3492, Acc 0.6920
-[2022/09/22 13:15:54] - TESTING POIS - Time 0.8, Loss 1.0429, Acc 0.7169
-[2022/09/22 13:15:54] - 
+--- GLOBAL EVALUATIONS - Round: 114 of 250, Time: 60.9 ---
+[2022/09/22 23:06:40] - TESTING CLEAN - Time 0.8, Loss 1.3468, Acc 0.6988
+[2022/09/22 23:06:40] - TESTING POIS - Time 0.7, Loss 10.2837, Acc 0.0440
+[2022/09/22 23:06:40] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:16:04] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0310, Acc 0.9924
-[2022/09/22 13:17:16] - 
+[2022/09/22 23:06:48] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1760, Acc 0.9542
+[2022/09/22 23:06:49] - User KS Max: 0.3430, Thresh: 0.2555, Update: False
+[2022/09/22 23:07:41] - 
 
---- GLOBAL EVALUATIONS - Round: 115 of 250, Time: 82.4 ---
-[2022/09/22 13:17:26] - TESTING CLEAN - Time 0.8, Loss 1.4023, Acc 0.6980
-[2022/09/22 13:17:27] - TESTING POIS - Time 0.8, Loss 0.7282, Acc 0.7902
-[2022/09/22 13:17:27] - 
+--- GLOBAL EVALUATIONS - Round: 115 of 250, Time: 61.0 ---
+[2022/09/22 23:07:48] - TESTING CLEAN - Time 0.7, Loss 1.3571, Acc 0.7000
+[2022/09/22 23:07:49] - TESTING POIS - Time 0.8, Loss 10.9069, Acc 0.0298
+[2022/09/22 23:07:49] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:17:37] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0472, Acc 0.9873
-[2022/09/22 13:18:47] - 
+[2022/09/22 23:07:57] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1955, Acc 0.9338
+[2022/09/22 23:07:57] - User KS Max: 0.5430, Thresh: 0.2564, Update: False
+[2022/09/22 23:08:50] - 
 
---- GLOBAL EVALUATIONS - Round: 116 of 250, Time: 80.9 ---
-[2022/09/22 13:18:57] - TESTING CLEAN - Time 0.8, Loss 1.3351, Acc 0.6972
-[2022/09/22 13:18:58] - TESTING POIS - Time 0.8, Loss 0.5353, Acc 0.8387
-[2022/09/22 13:18:58] - 
+--- GLOBAL EVALUATIONS - Round: 116 of 250, Time: 60.7 ---
+[2022/09/22 23:08:56] - TESTING CLEAN - Time 0.7, Loss 1.3911, Acc 0.6940
+[2022/09/22 23:08:57] - TESTING POIS - Time 0.7, Loss 10.5206, Acc 0.0329
+[2022/09/22 23:08:57] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:19:08] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1254, Acc 0.9695
-[2022/09/22 13:20:22] - 
+[2022/09/22 23:09:05] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2536, Acc 0.9186
+[2022/09/22 23:09:05] - User KS Max: 0.6670, Thresh: 0.2513, Update: False
+[2022/09/22 23:09:57] - 
 
---- GLOBAL EVALUATIONS - Round: 117 of 250, Time: 83.4 ---
-[2022/09/22 13:20:31] - TESTING CLEAN - Time 0.9, Loss 1.3973, Acc 0.6944
-[2022/09/22 13:20:32] - TESTING POIS - Time 0.8, Loss 1.5470, Acc 0.5996
-[2022/09/22 13:20:32] - 
+--- GLOBAL EVALUATIONS - Round: 117 of 250, Time: 60.4 ---
+[2022/09/22 23:10:04] - TESTING CLEAN - Time 0.8, Loss 1.3737, Acc 0.6912
+[2022/09/22 23:10:05] - TESTING POIS - Time 0.7, Loss 10.8593, Acc 0.0271
+[2022/09/22 23:10:05] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:20:43] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1290, Acc 0.9567
-[2022/09/22 13:21:53] - 
+[2022/09/22 23:10:13] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2593, Acc 0.9160
+[2022/09/22 23:10:13] - User KS Max: 0.5780, Thresh: 0.2496, Update: False
+[2022/09/22 23:11:06] - 
 
---- GLOBAL EVALUATIONS - Round: 118 of 250, Time: 80.7 ---
-[2022/09/22 13:22:02] - TESTING CLEAN - Time 0.9, Loss 1.3222, Acc 0.6944
-[2022/09/22 13:22:03] - TESTING POIS - Time 0.8, Loss 0.7644, Acc 0.7876
-[2022/09/22 13:22:03] - 
+--- GLOBAL EVALUATIONS - Round: 118 of 250, Time: 61.2 ---
+[2022/09/22 23:11:13] - TESTING CLEAN - Time 0.7, Loss 1.3543, Acc 0.6952
+[2022/09/22 23:11:13] - TESTING POIS - Time 0.7, Loss 10.7115, Acc 0.0329
+[2022/09/22 23:11:13] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:22:13] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0302, Acc 0.9924
-[2022/09/22 13:23:26] - 
+[2022/09/22 23:11:21] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2693, Acc 0.9084
+[2022/09/22 23:11:22] - User KS Max: 0.5000, Thresh: 0.2533, Update: False
+[2022/09/22 23:12:15] - 
 
---- GLOBAL EVALUATIONS - Round: 119 of 250, Time: 82.4 ---
-[2022/09/22 13:23:35] - TESTING CLEAN - Time 1.0, Loss 1.3264, Acc 0.6924
-[2022/09/22 13:23:35] - TESTING POIS - Time 0.8, Loss 0.9351, Acc 0.7409
-[2022/09/22 13:23:35] - 
+--- GLOBAL EVALUATIONS - Round: 119 of 250, Time: 62.0 ---
+[2022/09/22 23:12:22] - TESTING CLEAN - Time 0.8, Loss 1.3731, Acc 0.6988
+[2022/09/22 23:12:23] - TESTING POIS - Time 0.8, Loss 11.0589, Acc 0.0316
+[2022/09/22 23:12:23] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:23:45] - TRAINING - Epoch: 10, Time 0.9, Loss 0.1785, Acc 0.9389
-[2022/09/22 13:25:03] - 
+[2022/09/22 23:12:31] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2323, Acc 0.9211
+[2022/09/22 23:12:31] - User KS Max: 0.4650, Thresh: 0.2520, Update: False
+[2022/09/22 23:13:23] - 
 
---- GLOBAL EVALUATIONS - Round: 120 of 250, Time: 87.3 ---
-[2022/09/22 13:25:12] - TESTING CLEAN - Time 0.9, Loss 1.3682, Acc 0.6868
-[2022/09/22 13:25:13] - TESTING POIS - Time 0.8, Loss 1.7332, Acc 0.5853
-[2022/09/22 13:25:13] - 
+--- GLOBAL EVALUATIONS - Round: 120 of 250, Time: 60.6 ---
+[2022/09/22 23:13:30] - TESTING CLEAN - Time 0.7, Loss 1.4608, Acc 0.6892
+[2022/09/22 23:13:31] - TESTING POIS - Time 0.7, Loss 11.0675, Acc 0.0347
+[2022/09/22 23:13:31] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:25:23] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0438, Acc 0.9949
-[2022/09/22 13:26:36] - 
+[2022/09/22 23:13:39] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2043, Acc 0.9466
+[2022/09/22 23:13:39] - User KS Max: 0.4600, Thresh: 0.1254, Update: False
+[2022/09/22 23:14:30] - 
 
---- GLOBAL EVALUATIONS - Round: 121 of 250, Time: 83.1 ---
-[2022/09/22 13:26:45] - TESTING CLEAN - Time 0.8, Loss 1.4648, Acc 0.6920
-[2022/09/22 13:26:46] - TESTING POIS - Time 0.9, Loss 1.4964, Acc 0.6329
-[2022/09/22 13:26:46] - 
+--- GLOBAL EVALUATIONS - Round: 121 of 250, Time: 59.6 ---
+[2022/09/22 23:14:37] - TESTING CLEAN - Time 0.8, Loss 1.4608, Acc 0.6892
+[2022/09/22 23:14:38] - TESTING POIS - Time 0.7, Loss 11.0675, Acc 0.0347
+[2022/09/22 23:14:38] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:26:56] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0383, Acc 0.9924
-[2022/09/22 13:28:06] - 
+[2022/09/22 23:14:46] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3118, Acc 0.8855
+[2022/09/22 23:14:46] - User KS Max: 0.4340, Thresh: 0.1710, Update: False
+[2022/09/22 23:15:38] - 
 
---- GLOBAL EVALUATIONS - Round: 122 of 250, Time: 79.8 ---
-[2022/09/22 13:28:16] - TESTING CLEAN - Time 0.9, Loss 1.3801, Acc 0.6888
-[2022/09/22 13:28:17] - TESTING POIS - Time 0.8, Loss 1.5862, Acc 0.6138
-[2022/09/22 13:28:17] - 
+--- GLOBAL EVALUATIONS - Round: 122 of 250, Time: 60.4 ---
+[2022/09/22 23:15:45] - TESTING CLEAN - Time 0.7, Loss 1.4680, Acc 0.6916
+[2022/09/22 23:15:46] - TESTING POIS - Time 0.7, Loss 10.2976, Acc 0.0507
+[2022/09/22 23:15:46] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:28:27] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0761, Acc 0.9847
-[2022/09/22 13:29:43] - 
+[2022/09/22 23:15:54] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2815, Acc 0.9135
+[2022/09/22 23:15:54] - User KS Max: 0.5180, Thresh: 0.1734, Update: False
+[2022/09/22 23:16:46] - 
 
---- GLOBAL EVALUATIONS - Round: 123 of 250, Time: 86.1 ---
-[2022/09/22 13:29:52] - TESTING CLEAN - Time 0.9, Loss 1.3901, Acc 0.6936
-[2022/09/22 13:29:53] - TESTING POIS - Time 0.9, Loss 0.9365, Acc 0.7471
-[2022/09/22 13:29:53] - 
+--- GLOBAL EVALUATIONS - Round: 123 of 250, Time: 60.5 ---
+[2022/09/22 23:16:53] - TESTING CLEAN - Time 0.8, Loss 1.4232, Acc 0.6836
+[2022/09/22 23:16:54] - TESTING POIS - Time 0.7, Loss 11.0472, Acc 0.0280
+[2022/09/22 23:16:54] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:30:03] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1381, Acc 0.9567
-[2022/09/22 13:31:12] - 
+[2022/09/22 23:17:02] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3622, Acc 0.8728
+[2022/09/22 23:17:02] - User KS Max: 0.5880, Thresh: 0.1773, Update: False
+[2022/09/22 23:17:55] - 
 
---- GLOBAL EVALUATIONS - Round: 124 of 250, Time: 78.9 ---
-[2022/09/22 13:31:21] - TESTING CLEAN - Time 0.9, Loss 1.3282, Acc 0.7056
-[2022/09/22 13:31:21] - TESTING POIS - Time 0.8, Loss 0.6703, Acc 0.7956
-[2022/09/22 13:31:21] - 
+--- GLOBAL EVALUATIONS - Round: 124 of 250, Time: 60.8 ---
+[2022/09/22 23:18:01] - TESTING CLEAN - Time 0.7, Loss 1.3577, Acc 0.6932
+[2022/09/22 23:18:02] - TESTING POIS - Time 0.7, Loss 11.0906, Acc 0.0258
+[2022/09/22 23:18:02] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:31:31] - TRAINING - Epoch: 10, Time 1.0, Loss 0.1444, Acc 0.9644
-[2022/09/22 13:32:45] - 
+[2022/09/22 23:18:10] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3595, Acc 0.8880
+[2022/09/22 23:18:10] - User KS Max: 0.7680, Thresh: 0.0946, Update: False
+[2022/09/22 23:19:02] - 
 
---- GLOBAL EVALUATIONS - Round: 125 of 250, Time: 83.5 ---
-[2022/09/22 13:32:53] - TESTING CLEAN - Time 0.8, Loss 1.3437, Acc 0.7016
-[2022/09/22 13:32:54] - TESTING POIS - Time 0.8, Loss 0.8706, Acc 0.7578
-[2022/09/22 13:32:54] - 
+--- GLOBAL EVALUATIONS - Round: 125 of 250, Time: 60.3 ---
+[2022/09/22 23:19:09] - TESTING CLEAN - Time 0.7, Loss 1.7341, Acc 0.6620
+[2022/09/22 23:19:09] - TESTING POIS - Time 0.7, Loss 12.0032, Acc 0.0222
+[2022/09/22 23:19:10] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:33:04] - TRAINING - Epoch: 10, Time 1.0, Loss 0.0669, Acc 0.9822
-[2022/09/22 13:34:15] - 
+[2022/09/22 23:19:17] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1673, Acc 0.9364
+[2022/09/22 23:19:18] - User KS Max: 0.6210, Thresh: 0.2194, Update: False
+[2022/09/22 23:20:10] - 
 
---- GLOBAL EVALUATIONS - Round: 126 of 250, Time: 81.1 ---
-[2022/09/22 13:34:25] - TESTING CLEAN - Time 0.9, Loss 1.4239, Acc 0.6964
-[2022/09/22 13:34:26] - TESTING POIS - Time 0.8, Loss 0.9460, Acc 0.7444
-[2022/09/22 13:34:26] - 
+--- GLOBAL EVALUATIONS - Round: 126 of 250, Time: 60.6 ---
+[2022/09/22 23:20:17] - TESTING CLEAN - Time 0.7, Loss 1.4921, Acc 0.6908
+[2022/09/22 23:20:17] - TESTING POIS - Time 0.7, Loss 11.8747, Acc 0.0173
+[2022/09/22 23:20:18] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:34:36] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0635, Acc 0.9847
-[2022/09/22 13:35:45] - 
+[2022/09/22 23:20:25] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3212, Acc 0.8906
+[2022/09/22 23:20:26] - User KS Max: 0.7220, Thresh: 0.1943, Update: False
+[2022/09/22 23:21:18] - 
 
---- GLOBAL EVALUATIONS - Round: 127 of 250, Time: 79.0 ---
-[2022/09/22 13:35:54] - TESTING CLEAN - Time 0.9, Loss 1.3414, Acc 0.6996
-[2022/09/22 13:35:55] - TESTING POIS - Time 0.8, Loss 0.6319, Acc 0.8058
-[2022/09/22 13:35:55] - 
+--- GLOBAL EVALUATIONS - Round: 127 of 250, Time: 60.6 ---
+[2022/09/22 23:21:25] - TESTING CLEAN - Time 0.7, Loss 1.3853, Acc 0.7036
+[2022/09/22 23:21:25] - TESTING POIS - Time 0.7, Loss 11.7454, Acc 0.0173
+[2022/09/22 23:21:25] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:36:05] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0889, Acc 0.9644
-[2022/09/22 13:37:16] - 
+[2022/09/22 23:21:33] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2226, Acc 0.9288
+[2022/09/22 23:21:34] - User KS Max: 0.6360, Thresh: 0.1771, Update: False
+[2022/09/22 23:22:26] - 
 
---- GLOBAL EVALUATIONS - Round: 128 of 250, Time: 81.4 ---
-[2022/09/22 13:37:26] - TESTING CLEAN - Time 0.9, Loss 1.3867, Acc 0.7024
-[2022/09/22 13:37:26] - TESTING POIS - Time 0.9, Loss 1.2309, Acc 0.6773
-[2022/09/22 13:37:26] - 
+--- GLOBAL EVALUATIONS - Round: 128 of 250, Time: 61.0 ---
+[2022/09/22 23:22:33] - TESTING CLEAN - Time 0.7, Loss 1.4211, Acc 0.7068
+[2022/09/22 23:22:34] - TESTING POIS - Time 0.7, Loss 11.9479, Acc 0.0213
+[2022/09/22 23:22:34] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:37:36] - TRAINING - Epoch: 10, Time 0.9, Loss 0.0590, Acc 0.9771
-[2022/09/22 13:38:47] - 
+[2022/09/22 23:22:42] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2469, Acc 0.9313
+[2022/09/22 23:22:42] - User KS Max: 0.5980, Thresh: 0.2195, Update: False
+[2022/09/22 23:23:35] - 
 
---- GLOBAL EVALUATIONS - Round: 129 of 250, Time: 80.7 ---
-[2022/09/22 13:38:56] - TESTING CLEAN - Time 0.9, Loss 1.3795, Acc 0.6972
-[2022/09/22 13:38:56] - TESTING POIS - Time 0.8, Loss 0.4998, Acc 0.8520
-[2022/09/22 13:38:56] - 
+--- GLOBAL EVALUATIONS - Round: 129 of 250, Time: 60.9 ---
+[2022/09/22 23:23:42] - TESTING CLEAN - Time 0.8, Loss 1.5283, Acc 0.6792
+[2022/09/22 23:23:42] - TESTING POIS - Time 0.7, Loss 10.2965, Acc 0.0520
+[2022/09/22 23:23:42] - 
 
 --- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
-[2022/09/22 13:39:07] - TRAINING - Epoch: 10, Time 1.6, Loss 0.0816, Acc 0.9720
+[2022/09/22 23:23:50] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3269, Acc 0.8982
+[2022/09/22 23:23:51] - User KS Max: 0.4470, Thresh: 0.2145, Update: False
+[2022/09/22 23:24:43] - 
+
+--- GLOBAL EVALUATIONS - Round: 130 of 250, Time: 61.0 ---
+[2022/09/22 23:24:50] - TESTING CLEAN - Time 0.8, Loss 1.4911, Acc 0.6920
+[2022/09/22 23:24:51] - TESTING POIS - Time 0.7, Loss 10.5536, Acc 0.0413
+[2022/09/22 23:24:51] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:24:59] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2321, Acc 0.9160
+[2022/09/22 23:25:00] - User KS Max: 0.6210, Thresh: 0.2093, Update: False
+[2022/09/22 23:25:52] - 
+
+--- GLOBAL EVALUATIONS - Round: 131 of 250, Time: 61.5 ---
+[2022/09/22 23:25:59] - TESTING CLEAN - Time 0.7, Loss 1.5033, Acc 0.6916
+[2022/09/22 23:26:00] - TESTING POIS - Time 0.7, Loss 10.6308, Acc 0.0449
+[2022/09/22 23:26:00] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:26:08] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5270, Acc 0.8499
+[2022/09/22 23:26:08] - User KS Max: 0.3260, Thresh: 0.2310, Update: False
+[2022/09/22 23:27:02] - 
+
+--- GLOBAL EVALUATIONS - Round: 132 of 250, Time: 61.8 ---
+[2022/09/22 23:27:08] - TESTING CLEAN - Time 0.8, Loss 1.4591, Acc 0.6888
+[2022/09/22 23:27:09] - TESTING POIS - Time 0.7, Loss 11.5344, Acc 0.0262
+[2022/09/22 23:27:09] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:27:17] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0937, Acc 0.9720
+[2022/09/22 23:27:17] - User KS Max: 0.5630, Thresh: 0.2389, Update: False
+[2022/09/22 23:28:09] - 
+
+--- GLOBAL EVALUATIONS - Round: 133 of 250, Time: 60.5 ---
+[2022/09/22 23:28:16] - TESTING CLEAN - Time 0.7, Loss 1.3656, Acc 0.6964
+[2022/09/22 23:28:17] - TESTING POIS - Time 0.7, Loss 11.0785, Acc 0.0240
+[2022/09/22 23:28:17] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:28:25] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1153, Acc 0.9669
+[2022/09/22 23:28:25] - User KS Max: 0.5380, Thresh: 0.2394, Update: False
+[2022/09/22 23:29:17] - 
+
+--- GLOBAL EVALUATIONS - Round: 134 of 250, Time: 60.5 ---
+[2022/09/22 23:29:24] - TESTING CLEAN - Time 0.7, Loss 1.3550, Acc 0.7012
+[2022/09/22 23:29:25] - TESTING POIS - Time 0.7, Loss 11.4526, Acc 0.0244
+[2022/09/22 23:29:25] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:29:32] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1509, Acc 0.9517
+[2022/09/22 23:29:33] - User KS Max: 0.4750, Thresh: 0.2528, Update: False
+[2022/09/22 23:30:25] - 
+
+--- GLOBAL EVALUATIONS - Round: 135 of 250, Time: 60.4 ---
+[2022/09/22 23:30:32] - TESTING CLEAN - Time 0.8, Loss 1.3464, Acc 0.6976
+[2022/09/22 23:30:33] - TESTING POIS - Time 0.7, Loss 10.9154, Acc 0.0329
+[2022/09/22 23:30:33] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:30:40] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4178, Acc 0.8651
+[2022/09/22 23:30:41] - User KS Max: 0.3010, Thresh: 0.2419, Update: False
+[2022/09/22 23:31:33] - 
+
+--- GLOBAL EVALUATIONS - Round: 136 of 250, Time: 60.7 ---
+[2022/09/22 23:31:40] - TESTING CLEAN - Time 0.7, Loss 1.3334, Acc 0.7008
+[2022/09/22 23:31:41] - TESTING POIS - Time 0.7, Loss 10.9325, Acc 0.0329
+[2022/09/22 23:31:41] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:31:48] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1873, Acc 0.9415
+[2022/09/22 23:31:49] - User KS Max: 0.6440, Thresh: 0.2384, Update: False
+[2022/09/22 23:32:42] - 
+
+--- GLOBAL EVALUATIONS - Round: 137 of 250, Time: 60.8 ---
+[2022/09/22 23:32:48] - TESTING CLEAN - Time 0.7, Loss 1.4151, Acc 0.6960
+[2022/09/22 23:32:49] - TESTING POIS - Time 0.7, Loss 11.3507, Acc 0.0324
+[2022/09/22 23:32:49] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:32:57] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1565, Acc 0.9491
+[2022/09/22 23:32:57] - User KS Max: 0.6040, Thresh: 0.2380, Update: False
+[2022/09/22 23:33:50] - 
+
+--- GLOBAL EVALUATIONS - Round: 138 of 250, Time: 61.0 ---
+[2022/09/22 23:33:57] - TESTING CLEAN - Time 0.8, Loss 1.3774, Acc 0.7036
+[2022/09/22 23:33:58] - TESTING POIS - Time 0.7, Loss 11.2816, Acc 0.0280
+[2022/09/22 23:33:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:34:05] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1147, Acc 0.9771
+[2022/09/22 23:34:06] - User KS Max: 0.6920, Thresh: 0.2299, Update: False
+[2022/09/22 23:34:58] - 
+
+--- GLOBAL EVALUATIONS - Round: 139 of 250, Time: 60.9 ---
+[2022/09/22 23:35:05] - TESTING CLEAN - Time 0.7, Loss 1.3632, Acc 0.7040
+[2022/09/22 23:35:06] - TESTING POIS - Time 0.7, Loss 11.2078, Acc 0.0311
+[2022/09/22 23:35:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:35:14] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2902, Acc 0.9059
+[2022/09/22 23:35:14] - User KS Max: 0.5100, Thresh: 0.2267, Update: False
+[2022/09/22 23:36:07] - 
+
+--- GLOBAL EVALUATIONS - Round: 140 of 250, Time: 61.0 ---
+[2022/09/22 23:36:14] - TESTING CLEAN - Time 0.7, Loss 1.4000, Acc 0.7048
+[2022/09/22 23:36:15] - TESTING POIS - Time 0.7, Loss 11.8966, Acc 0.0209
+[2022/09/22 23:36:15] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:36:23] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1683, Acc 0.9491
+[2022/09/22 23:36:23] - User KS Max: 0.6410, Thresh: 0.2228, Update: False
+[2022/09/22 23:37:15] - 
+
+--- GLOBAL EVALUATIONS - Round: 141 of 250, Time: 60.8 ---
+[2022/09/22 23:37:22] - TESTING CLEAN - Time 0.8, Loss 1.4231, Acc 0.6912
+[2022/09/22 23:37:23] - TESTING POIS - Time 0.7, Loss 11.6402, Acc 0.0320
+[2022/09/22 23:37:23] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:37:31] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1572, Acc 0.9466
+[2022/09/22 23:37:31] - User KS Max: 0.6840, Thresh: 0.2248, Update: False
+[2022/09/22 23:38:24] - 
+
+--- GLOBAL EVALUATIONS - Round: 142 of 250, Time: 61.0 ---
+[2022/09/22 23:38:30] - TESTING CLEAN - Time 0.7, Loss 1.4752, Acc 0.7016
+[2022/09/22 23:38:31] - TESTING POIS - Time 0.7, Loss 11.2995, Acc 0.0302
+[2022/09/22 23:38:31] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:38:39] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1291, Acc 0.9593
+[2022/09/22 23:38:40] - User KS Max: 0.3860, Thresh: 0.2197, Update: False
+[2022/09/22 23:39:32] - 
+
+--- GLOBAL EVALUATIONS - Round: 143 of 250, Time: 61.3 ---
+[2022/09/22 23:39:39] - TESTING CLEAN - Time 0.8, Loss 1.3957, Acc 0.6956
+[2022/09/22 23:39:40] - TESTING POIS - Time 0.7, Loss 10.7850, Acc 0.0333
+[2022/09/22 23:39:40] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:39:48] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4284, Acc 0.8626
+[2022/09/22 23:39:48] - User KS Max: 0.4920, Thresh: 0.2269, Update: False
+[2022/09/22 23:40:41] - 
+
+--- GLOBAL EVALUATIONS - Round: 144 of 250, Time: 61.3 ---
+[2022/09/22 23:40:48] - TESTING CLEAN - Time 0.7, Loss 1.3464, Acc 0.7064
+[2022/09/22 23:40:49] - TESTING POIS - Time 0.7, Loss 11.3400, Acc 0.0324
+[2022/09/22 23:40:49] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:40:57] - TRAINING - Epoch: 10, Time 0.8, Loss 0.5054, Acc 0.8448
+[2022/09/22 23:40:57] - User KS Max: 0.3860, Thresh: 0.2265, Update: False
+[2022/09/22 23:41:50] - 
+
+--- GLOBAL EVALUATIONS - Round: 145 of 250, Time: 60.8 ---
+[2022/09/22 23:41:57] - TESTING CLEAN - Time 0.7, Loss 1.3633, Acc 0.7024
+[2022/09/22 23:41:57] - TESTING POIS - Time 0.7, Loss 11.0507, Acc 0.0329
+[2022/09/22 23:41:57] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:42:05] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2032, Acc 0.9466
+[2022/09/22 23:42:05] - User KS Max: 0.5680, Thresh: 0.2325, Update: False
+[2022/09/22 23:42:58] - 
+
+--- GLOBAL EVALUATIONS - Round: 146 of 250, Time: 61.0 ---
+[2022/09/22 23:43:05] - TESTING CLEAN - Time 0.7, Loss 1.3787, Acc 0.6928
+[2022/09/22 23:43:06] - TESTING POIS - Time 0.7, Loss 11.1447, Acc 0.0271
+[2022/09/22 23:43:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:43:13] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1569, Acc 0.9542
+[2022/09/22 23:43:14] - User KS Max: 0.4290, Thresh: 0.2310, Update: False
+[2022/09/22 23:44:06] - 
+
+--- GLOBAL EVALUATIONS - Round: 147 of 250, Time: 60.4 ---
+[2022/09/22 23:44:13] - TESTING CLEAN - Time 0.7, Loss 1.3683, Acc 0.7008
+[2022/09/22 23:44:14] - TESTING POIS - Time 0.7, Loss 11.1748, Acc 0.0311
+[2022/09/22 23:44:14] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:44:21] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1583, Acc 0.9517
+[2022/09/22 23:44:22] - User KS Max: 0.3160, Thresh: 0.2288, Update: False
+[2022/09/22 23:45:14] - 
+
+--- GLOBAL EVALUATIONS - Round: 148 of 250, Time: 60.7 ---
+[2022/09/22 23:45:21] - TESTING CLEAN - Time 0.7, Loss 1.3585, Acc 0.7036
+[2022/09/22 23:45:22] - TESTING POIS - Time 0.7, Loss 10.4469, Acc 0.0400
+[2022/09/22 23:45:22] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:45:30] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1622, Acc 0.9364
+[2022/09/22 23:45:30] - User KS Max: 0.2220, Thresh: 0.2322, Update: True
+[2022/09/22 23:46:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 149 of 250, Time: 60.8 ---
+[2022/09/22 23:46:29] - TESTING CLEAN - Time 0.7, Loss 1.3562, Acc 0.7032
+[2022/09/22 23:46:30] - TESTING POIS - Time 0.7, Loss 11.0405, Acc 0.0213
+[2022/09/22 23:46:30] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:46:38] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1268, Acc 0.9644
+[2022/09/22 23:46:38] - User KS Max: 0.5280, Thresh: 0.2312, Update: False
+[2022/09/22 23:47:31] - 
+
+--- GLOBAL EVALUATIONS - Round: 150 of 250, Time: 60.8 ---
+[2022/09/22 23:47:38] - TESTING CLEAN - Time 0.7, Loss 1.3981, Acc 0.7084
+[2022/09/22 23:47:38] - TESTING POIS - Time 0.7, Loss 9.9466, Acc 0.0436
+[2022/09/22 23:47:38] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:47:46] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1716, Acc 0.9466
+[2022/09/22 23:47:46] - User KS Max: 0.4190, Thresh: 0.2323, Update: False
+[2022/09/22 23:48:39] - 
+
+--- GLOBAL EVALUATIONS - Round: 151 of 250, Time: 60.6 ---
+[2022/09/22 23:48:46] - TESTING CLEAN - Time 0.7, Loss 1.3686, Acc 0.7060
+[2022/09/22 23:48:46] - TESTING POIS - Time 0.7, Loss 10.1938, Acc 0.0347
+[2022/09/22 23:48:46] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:48:54] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1107, Acc 0.9720
+[2022/09/22 23:48:55] - User KS Max: 0.5560, Thresh: 0.2373, Update: False
+[2022/09/22 23:49:47] - 
+
+--- GLOBAL EVALUATIONS - Round: 152 of 250, Time: 60.6 ---
+[2022/09/22 23:49:54] - TESTING CLEAN - Time 0.7, Loss 1.3789, Acc 0.7108
+[2022/09/22 23:49:54] - TESTING POIS - Time 0.7, Loss 10.1279, Acc 0.0480
+[2022/09/22 23:49:55] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:50:02] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3923, Acc 0.8957
+[2022/09/22 23:50:03] - User KS Max: 0.4240, Thresh: 0.2356, Update: False
+[2022/09/22 23:50:55] - 
+
+--- GLOBAL EVALUATIONS - Round: 153 of 250, Time: 61.0 ---
+[2022/09/22 23:51:02] - TESTING CLEAN - Time 0.7, Loss 1.3813, Acc 0.7072
+[2022/09/22 23:51:03] - TESTING POIS - Time 0.7, Loss 10.2849, Acc 0.0436
+[2022/09/22 23:51:03] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:51:10] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1858, Acc 0.9389
+[2022/09/22 23:51:11] - User KS Max: 0.3940, Thresh: 0.2342, Update: False
+[2022/09/22 23:52:04] - 
+
+--- GLOBAL EVALUATIONS - Round: 154 of 250, Time: 61.3 ---
+[2022/09/22 23:52:11] - TESTING CLEAN - Time 0.8, Loss 1.4079, Acc 0.7024
+[2022/09/22 23:52:12] - TESTING POIS - Time 0.8, Loss 10.6717, Acc 0.0409
+[2022/09/22 23:52:12] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:52:20] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1334, Acc 0.9593
+[2022/09/22 23:52:20] - User KS Max: 0.3610, Thresh: 0.2381, Update: False
+[2022/09/22 23:53:13] - 
+
+--- GLOBAL EVALUATIONS - Round: 155 of 250, Time: 61.5 ---
+[2022/09/22 23:53:20] - TESTING CLEAN - Time 0.7, Loss 1.3341, Acc 0.7068
+[2022/09/22 23:53:21] - TESTING POIS - Time 0.7, Loss 10.3337, Acc 0.0382
+[2022/09/22 23:53:21] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:53:28] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2041, Acc 0.9288
+[2022/09/22 23:53:29] - User KS Max: 0.5080, Thresh: 0.2369, Update: False
+[2022/09/22 23:54:22] - 
+
+--- GLOBAL EVALUATIONS - Round: 156 of 250, Time: 61.2 ---
+[2022/09/22 23:54:28] - TESTING CLEAN - Time 0.7, Loss 1.3990, Acc 0.7032
+[2022/09/22 23:54:29] - TESTING POIS - Time 0.7, Loss 10.5372, Acc 0.0351
+[2022/09/22 23:54:29] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:54:37] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0939, Acc 0.9720
+[2022/09/22 23:54:37] - User KS Max: 0.4190, Thresh: 0.2356, Update: False
+[2022/09/22 23:55:30] - 
+
+--- GLOBAL EVALUATIONS - Round: 157 of 250, Time: 60.7 ---
+[2022/09/22 23:55:37] - TESTING CLEAN - Time 0.7, Loss 1.4210, Acc 0.7020
+[2022/09/22 23:55:37] - TESTING POIS - Time 0.7, Loss 10.7066, Acc 0.0369
+[2022/09/22 23:55:37] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:55:45] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1349, Acc 0.9542
+[2022/09/22 23:55:45] - User KS Max: 0.3610, Thresh: 0.2323, Update: False
+[2022/09/22 23:56:38] - 
+
+--- GLOBAL EVALUATIONS - Round: 158 of 250, Time: 60.6 ---
+[2022/09/22 23:56:45] - TESTING CLEAN - Time 0.7, Loss 1.4295, Acc 0.7020
+[2022/09/22 23:56:45] - TESTING POIS - Time 0.8, Loss 11.0714, Acc 0.0280
+[2022/09/22 23:56:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:56:53] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2903, Acc 0.9338
+[2022/09/22 23:56:53] - User KS Max: 0.5610, Thresh: 0.2319, Update: False
+[2022/09/22 23:57:46] - 
+
+--- GLOBAL EVALUATIONS - Round: 159 of 250, Time: 60.6 ---
+[2022/09/22 23:57:52] - TESTING CLEAN - Time 0.7, Loss 1.3348, Acc 0.7060
+[2022/09/22 23:57:53] - TESTING POIS - Time 0.7, Loss 10.9153, Acc 0.0302
+[2022/09/22 23:57:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:58:01] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3349, Acc 0.9033
+[2022/09/22 23:58:01] - User KS Max: 0.4800, Thresh: 0.2328, Update: False
+[2022/09/22 23:58:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 160 of 250, Time: 60.6 ---
+[2022/09/22 23:59:01] - TESTING CLEAN - Time 0.7, Loss 1.3587, Acc 0.7040
+[2022/09/22 23:59:01] - TESTING POIS - Time 0.7, Loss 10.7839, Acc 0.0342
+[2022/09/22 23:59:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/22 23:59:09] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2438, Acc 0.9313
+[2022/09/22 23:59:10] - User KS Max: 0.4290, Thresh: 0.2434, Update: False
+[2022/09/23 00:00:02] - 
+
+--- GLOBAL EVALUATIONS - Round: 161 of 250, Time: 60.9 ---
+[2022/09/23 00:00:09] - TESTING CLEAN - Time 0.7, Loss 1.4250, Acc 0.7096
+[2022/09/23 00:00:10] - TESTING POIS - Time 0.6, Loss 11.3625, Acc 0.0320
+[2022/09/23 00:00:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:00:17] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0821, Acc 0.9847
+[2022/09/23 00:00:18] - User KS Max: 0.5300, Thresh: 0.2423, Update: False
+[2022/09/23 00:01:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 162 of 250, Time: 60.8 ---
+[2022/09/23 00:01:17] - TESTING CLEAN - Time 0.7, Loss 1.3835, Acc 0.7056
+[2022/09/23 00:01:18] - TESTING POIS - Time 0.7, Loss 10.8918, Acc 0.0364
+[2022/09/23 00:01:18] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:01:26] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0772, Acc 0.9822
+[2022/09/23 00:01:26] - User KS Max: 0.3030, Thresh: 0.2412, Update: False
+[2022/09/23 00:02:18] - 
+
+--- GLOBAL EVALUATIONS - Round: 163 of 250, Time: 60.6 ---
+[2022/09/23 00:02:25] - TESTING CLEAN - Time 0.7, Loss 1.3967, Acc 0.7100
+[2022/09/23 00:02:26] - TESTING POIS - Time 0.7, Loss 11.3251, Acc 0.0213
+[2022/09/23 00:02:26] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:02:34] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1255, Acc 0.9593
+[2022/09/23 00:02:34] - User KS Max: 0.6060, Thresh: 0.2405, Update: False
+[2022/09/23 00:03:27] - 
+
+--- GLOBAL EVALUATIONS - Round: 164 of 250, Time: 61.3 ---
+[2022/09/23 00:03:34] - TESTING CLEAN - Time 0.8, Loss 1.4227, Acc 0.7136
+[2022/09/23 00:03:35] - TESTING POIS - Time 0.7, Loss 11.5251, Acc 0.0307
+[2022/09/23 00:03:35] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:03:43] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4921, Acc 0.8499
+[2022/09/23 00:03:43] - User KS Max: 0.5780, Thresh: 0.2407, Update: False
+[2022/09/23 00:04:36] - 
+
+--- GLOBAL EVALUATIONS - Round: 165 of 250, Time: 60.8 ---
+[2022/09/23 00:04:42] - TESTING CLEAN - Time 0.7, Loss 1.3824, Acc 0.7052
+[2022/09/23 00:04:43] - TESTING POIS - Time 0.7, Loss 11.1518, Acc 0.0378
+[2022/09/23 00:04:43] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:04:51] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1771, Acc 0.9389
+[2022/09/23 00:04:51] - User KS Max: 0.4520, Thresh: 0.2376, Update: False
+[2022/09/23 00:05:44] - 
+
+--- GLOBAL EVALUATIONS - Round: 166 of 250, Time: 61.1 ---
+[2022/09/23 00:05:51] - TESTING CLEAN - Time 0.7, Loss 1.3993, Acc 0.7028
+[2022/09/23 00:05:51] - TESTING POIS - Time 0.7, Loss 11.8784, Acc 0.0244
+[2022/09/23 00:05:52] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:05:59] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2214, Acc 0.9237
+[2022/09/23 00:06:00] - User KS Max: 0.4820, Thresh: 0.2357, Update: False
+[2022/09/23 00:06:53] - 
+
+--- GLOBAL EVALUATIONS - Round: 167 of 250, Time: 61.0 ---
+[2022/09/23 00:06:59] - TESTING CLEAN - Time 0.7, Loss 1.3755, Acc 0.7084
+[2022/09/23 00:07:00] - TESTING POIS - Time 0.8, Loss 11.0919, Acc 0.0284
+[2022/09/23 00:07:00] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:07:08] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3037, Acc 0.9033
+[2022/09/23 00:07:09] - User KS Max: 0.5030, Thresh: 0.2355, Update: False
+[2022/09/23 00:08:02] - 
+
+--- GLOBAL EVALUATIONS - Round: 168 of 250, Time: 61.7 ---
+[2022/09/23 00:08:08] - TESTING CLEAN - Time 0.7, Loss 1.4723, Acc 0.6952
+[2022/09/23 00:08:09] - TESTING POIS - Time 0.7, Loss 11.1035, Acc 0.0244
+[2022/09/23 00:08:09] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:08:17] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1530, Acc 0.9542
+[2022/09/23 00:08:17] - User KS Max: 0.6240, Thresh: 0.2361, Update: False
+[2022/09/23 00:09:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 169 of 250, Time: 61.3 ---
+[2022/09/23 00:09:17] - TESTING CLEAN - Time 0.7, Loss 1.3826, Acc 0.7144
+[2022/09/23 00:09:18] - TESTING POIS - Time 0.7, Loss 11.5664, Acc 0.0293
+[2022/09/23 00:09:18] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:09:26] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2778, Acc 0.9135
+[2022/09/23 00:09:26] - User KS Max: 0.3180, Thresh: 0.2340, Update: False
+[2022/09/23 00:10:18] - 
+
+--- GLOBAL EVALUATIONS - Round: 170 of 250, Time: 60.6 ---
+[2022/09/23 00:10:25] - TESTING CLEAN - Time 0.7, Loss 1.4157, Acc 0.7136
+[2022/09/23 00:10:26] - TESTING POIS - Time 0.7, Loss 11.7186, Acc 0.0244
+[2022/09/23 00:10:26] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:10:33] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1835, Acc 0.9415
+[2022/09/23 00:10:34] - User KS Max: 0.3790, Thresh: 0.2354, Update: False
+[2022/09/23 00:11:26] - 
+
+--- GLOBAL EVALUATIONS - Round: 171 of 250, Time: 60.4 ---
+[2022/09/23 00:11:33] - TESTING CLEAN - Time 0.7, Loss 1.3566, Acc 0.7124
+[2022/09/23 00:11:34] - TESTING POIS - Time 0.7, Loss 11.4345, Acc 0.0324
+[2022/09/23 00:11:34] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:11:41] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2703, Acc 0.9109
+[2022/09/23 00:11:42] - User KS Max: 0.3940, Thresh: 0.2348, Update: False
+[2022/09/23 00:12:34] - 
+
+--- GLOBAL EVALUATIONS - Round: 172 of 250, Time: 60.8 ---
+[2022/09/23 00:12:41] - TESTING CLEAN - Time 0.7, Loss 1.3872, Acc 0.7064
+[2022/09/23 00:12:42] - TESTING POIS - Time 0.7, Loss 10.7359, Acc 0.0409
+[2022/09/23 00:12:42] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:12:49] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1414, Acc 0.9644
+[2022/09/23 00:12:50] - User KS Max: 0.6790, Thresh: 0.2343, Update: False
+[2022/09/23 00:13:43] - 
+
+--- GLOBAL EVALUATIONS - Round: 173 of 250, Time: 60.9 ---
+[2022/09/23 00:13:49] - TESTING CLEAN - Time 0.7, Loss 1.4745, Acc 0.7048
+[2022/09/23 00:13:50] - TESTING POIS - Time 0.7, Loss 11.3482, Acc 0.0302
+[2022/09/23 00:13:50] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:13:58] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2471, Acc 0.9262
+[2022/09/23 00:13:58] - User KS Max: 0.6460, Thresh: 0.2344, Update: False
+[2022/09/23 00:14:51] - 
+
+--- GLOBAL EVALUATIONS - Round: 174 of 250, Time: 60.8 ---
+[2022/09/23 00:14:57] - TESTING CLEAN - Time 0.7, Loss 1.4374, Acc 0.6960
+[2022/09/23 00:14:58] - TESTING POIS - Time 0.7, Loss 10.4639, Acc 0.0422
+[2022/09/23 00:14:58] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:15:06] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0977, Acc 0.9669
+[2022/09/23 00:15:06] - User KS Max: 0.4870, Thresh: 0.2350, Update: False
+[2022/09/23 00:15:59] - 
+
+--- GLOBAL EVALUATIONS - Round: 175 of 250, Time: 60.4 ---
+[2022/09/23 00:16:05] - TESTING CLEAN - Time 0.7, Loss 1.4263, Acc 0.6988
+[2022/09/23 00:16:06] - TESTING POIS - Time 0.7, Loss 11.2224, Acc 0.0307
+[2022/09/23 00:16:06] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:16:14] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1455, Acc 0.9542
+[2022/09/23 00:16:14] - User KS Max: 0.5480, Thresh: 0.2345, Update: False
+[2022/09/23 00:17:06] - 
+
+--- GLOBAL EVALUATIONS - Round: 176 of 250, Time: 60.4 ---
+[2022/09/23 00:17:13] - TESTING CLEAN - Time 0.7, Loss 1.4174, Acc 0.7060
+[2022/09/23 00:17:14] - TESTING POIS - Time 0.7, Loss 11.3446, Acc 0.0298
+[2022/09/23 00:17:14] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:17:21] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1004, Acc 0.9720
+[2022/09/23 00:17:22] - User KS Max: 0.4320, Thresh: 0.2343, Update: False
+[2022/09/23 00:18:14] - 
+
+--- GLOBAL EVALUATIONS - Round: 177 of 250, Time: 60.6 ---
+[2022/09/23 00:18:21] - TESTING CLEAN - Time 0.7, Loss 1.3801, Acc 0.7080
+[2022/09/23 00:18:22] - TESTING POIS - Time 0.7, Loss 11.8132, Acc 0.0200
+[2022/09/23 00:18:22] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:18:30] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2486, Acc 0.9109
+[2022/09/23 00:18:30] - User KS Max: 0.6820, Thresh: 0.2382, Update: False
+[2022/09/23 00:19:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 178 of 250, Time: 61.2 ---
+[2022/09/23 00:19:30] - TESTING CLEAN - Time 0.7, Loss 1.4227, Acc 0.7124
+[2022/09/23 00:19:30] - TESTING POIS - Time 0.7, Loss 11.4825, Acc 0.0324
+[2022/09/23 00:19:30] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:19:38] - TRAINING - Epoch: 10, Time 0.8, Loss 0.6396, Acc 0.8041
+[2022/09/23 00:19:38] - User KS Max: 0.6310, Thresh: 0.2367, Update: False
+[2022/09/23 00:20:31] - 
+
+--- GLOBAL EVALUATIONS - Round: 179 of 250, Time: 61.1 ---
+[2022/09/23 00:20:38] - TESTING CLEAN - Time 0.7, Loss 1.3849, Acc 0.7140
+[2022/09/23 00:20:39] - TESTING POIS - Time 0.7, Loss 11.4963, Acc 0.0298
+[2022/09/23 00:20:39] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:20:47] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0662, Acc 0.9822
+[2022/09/23 00:20:47] - User KS Max: 0.4120, Thresh: 0.2381, Update: False
+[2022/09/23 00:21:40] - 
+
+--- GLOBAL EVALUATIONS - Round: 180 of 250, Time: 61.5 ---
+[2022/09/23 00:21:47] - TESTING CLEAN - Time 0.7, Loss 1.3582, Acc 0.7084
+[2022/09/23 00:21:48] - TESTING POIS - Time 0.8, Loss 10.9639, Acc 0.0364
+[2022/09/23 00:21:48] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:21:55] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0815, Acc 0.9822
+[2022/09/23 00:21:56] - User KS Max: 0.3860, Thresh: 0.2391, Update: False
+[2022/09/23 00:22:49] - 
+
+--- GLOBAL EVALUATIONS - Round: 181 of 250, Time: 61.0 ---
+[2022/09/23 00:22:56] - TESTING CLEAN - Time 0.7, Loss 1.3926, Acc 0.7148
+[2022/09/23 00:22:56] - TESTING POIS - Time 0.7, Loss 11.4287, Acc 0.0293
+[2022/09/23 00:22:56] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:23:04] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3118, Acc 0.8982
+[2022/09/23 00:23:05] - User KS Max: 0.3760, Thresh: 0.2408, Update: False
+[2022/09/23 00:23:57] - 
+
+--- GLOBAL EVALUATIONS - Round: 182 of 250, Time: 60.8 ---
+[2022/09/23 00:24:04] - TESTING CLEAN - Time 0.7, Loss 1.3571, Acc 0.7184
+[2022/09/23 00:24:04] - TESTING POIS - Time 0.7, Loss 11.1466, Acc 0.0324
+[2022/09/23 00:24:05] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:24:12] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0806, Acc 0.9796
+[2022/09/23 00:24:13] - User KS Max: 0.5400, Thresh: 0.2388, Update: False
+[2022/09/23 00:25:05] - 
+
+--- GLOBAL EVALUATIONS - Round: 183 of 250, Time: 60.4 ---
+[2022/09/23 00:25:12] - TESTING CLEAN - Time 0.7, Loss 1.3501, Acc 0.7196
+[2022/09/23 00:25:12] - TESTING POIS - Time 0.7, Loss 11.4653, Acc 0.0276
+[2022/09/23 00:25:12] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:25:20] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0859, Acc 0.9746
+[2022/09/23 00:25:20] - User KS Max: 0.5710, Thresh: 0.2374, Update: False
+[2022/09/23 00:26:13] - 
+
+--- GLOBAL EVALUATIONS - Round: 184 of 250, Time: 60.3 ---
+[2022/09/23 00:26:19] - TESTING CLEAN - Time 0.7, Loss 1.3877, Acc 0.7128
+[2022/09/23 00:26:20] - TESTING POIS - Time 0.7, Loss 11.4211, Acc 0.0280
+[2022/09/23 00:26:20] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:26:28] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4803, Acc 0.8626
+[2022/09/23 00:26:28] - User KS Max: 0.5930, Thresh: 0.2409, Update: False
+[2022/09/23 00:27:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 185 of 250, Time: 60.7 ---
+[2022/09/23 00:27:27] - TESTING CLEAN - Time 0.8, Loss 1.4739, Acc 0.7096
+[2022/09/23 00:27:28] - TESTING POIS - Time 0.7, Loss 10.6139, Acc 0.0498
+[2022/09/23 00:27:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:27:36] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2080, Acc 0.9364
+[2022/09/23 00:27:36] - User KS Max: 0.2950, Thresh: 0.2406, Update: False
+[2022/09/23 00:28:29] - 
+
+--- GLOBAL EVALUATIONS - Round: 186 of 250, Time: 60.7 ---
+[2022/09/23 00:28:36] - TESTING CLEAN - Time 0.7, Loss 1.3820, Acc 0.7052
+[2022/09/23 00:28:36] - TESTING POIS - Time 0.7, Loss 11.4130, Acc 0.0289
+[2022/09/23 00:28:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:28:44] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3198, Acc 0.9084
+[2022/09/23 00:28:45] - User KS Max: 0.5880, Thresh: 0.2415, Update: False
+[2022/09/23 00:29:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 187 of 250, Time: 60.6 ---
+[2022/09/23 00:29:44] - TESTING CLEAN - Time 0.7, Loss 1.4185, Acc 0.7068
+[2022/09/23 00:29:45] - TESTING POIS - Time 0.7, Loss 11.5797, Acc 0.0298
+[2022/09/23 00:29:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:29:52] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0982, Acc 0.9695
+[2022/09/23 00:29:53] - User KS Max: 0.4190, Thresh: 0.2434, Update: False
+[2022/09/23 00:30:45] - 
+
+--- GLOBAL EVALUATIONS - Round: 188 of 250, Time: 60.7 ---
+[2022/09/23 00:30:52] - TESTING CLEAN - Time 0.7, Loss 1.3665, Acc 0.7096
+[2022/09/23 00:30:53] - TESTING POIS - Time 0.7, Loss 11.4757, Acc 0.0307
+[2022/09/23 00:30:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:31:00] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3180, Acc 0.9160
+[2022/09/23 00:31:01] - User KS Max: 0.4240, Thresh: 0.2424, Update: False
+[2022/09/23 00:31:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 189 of 250, Time: 61.2 ---
+[2022/09/23 00:32:01] - TESTING CLEAN - Time 0.7, Loss 1.3942, Acc 0.7040
+[2022/09/23 00:32:01] - TESTING POIS - Time 0.7, Loss 11.8281, Acc 0.0231
+[2022/09/23 00:32:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:32:09] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2438, Acc 0.9033
+[2022/09/23 00:32:09] - User KS Max: 0.4750, Thresh: 0.2433, Update: False
+[2022/09/23 00:33:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 190 of 250, Time: 61.2 ---
+[2022/09/23 00:33:09] - TESTING CLEAN - Time 0.7, Loss 1.3768, Acc 0.7100
+[2022/09/23 00:33:10] - TESTING POIS - Time 0.7, Loss 11.1015, Acc 0.0324
+[2022/09/23 00:33:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:33:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1044, Acc 0.9669
+[2022/09/23 00:33:18] - User KS Max: 0.6040, Thresh: 0.2454, Update: False
+[2022/09/23 00:34:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 191 of 250, Time: 61.5 ---
+[2022/09/23 00:34:18] - TESTING CLEAN - Time 0.7, Loss 1.4862, Acc 0.6956
+[2022/09/23 00:34:19] - TESTING POIS - Time 0.7, Loss 10.9105, Acc 0.0369
+[2022/09/23 00:34:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:34:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3918, Acc 0.8753
+[2022/09/23 00:34:27] - User KS Max: 0.4340, Thresh: 0.2438, Update: False
+[2022/09/23 00:35:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 192 of 250, Time: 60.9 ---
+[2022/09/23 00:35:27] - TESTING CLEAN - Time 0.7, Loss 1.3628, Acc 0.7088
+[2022/09/23 00:35:27] - TESTING POIS - Time 0.7, Loss 11.4625, Acc 0.0240
+[2022/09/23 00:35:27] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:35:35] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1982, Acc 0.9313
+[2022/09/23 00:35:35] - User KS Max: 0.6360, Thresh: 0.2429, Update: False
+[2022/09/23 00:36:28] - 
+
+--- GLOBAL EVALUATIONS - Round: 193 of 250, Time: 61.1 ---
+[2022/09/23 00:36:35] - TESTING CLEAN - Time 0.7, Loss 1.3839, Acc 0.7076
+[2022/09/23 00:36:36] - TESTING POIS - Time 0.7, Loss 11.0521, Acc 0.0302
+[2022/09/23 00:36:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:36:44] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1686, Acc 0.9466
+[2022/09/23 00:36:44] - User KS Max: 0.4570, Thresh: 0.2416, Update: False
+[2022/09/23 00:37:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 194 of 250, Time: 61.2 ---
+[2022/09/23 00:37:44] - TESTING CLEAN - Time 0.7, Loss 1.3946, Acc 0.7032
+[2022/09/23 00:37:45] - TESTING POIS - Time 0.7, Loss 10.9180, Acc 0.0351
+[2022/09/23 00:37:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:37:53] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2101, Acc 0.9313
+[2022/09/23 00:37:53] - User KS Max: 0.5580, Thresh: 0.2413, Update: False
+[2022/09/23 00:38:46] - 
+
+--- GLOBAL EVALUATIONS - Round: 195 of 250, Time: 61.1 ---
+[2022/09/23 00:38:53] - TESTING CLEAN - Time 0.7, Loss 1.3780, Acc 0.7124
+[2022/09/23 00:38:53] - TESTING POIS - Time 0.7, Loss 11.3744, Acc 0.0280
+[2022/09/23 00:38:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:39:01] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2137, Acc 0.9288
+[2022/09/23 00:39:02] - User KS Max: 0.4550, Thresh: 0.2407, Update: False
+[2022/09/23 00:39:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 196 of 250, Time: 61.1 ---
+[2022/09/23 00:40:01] - TESTING CLEAN - Time 0.7, Loss 1.3797, Acc 0.7092
+[2022/09/23 00:40:02] - TESTING POIS - Time 0.7, Loss 11.0831, Acc 0.0347
+[2022/09/23 00:40:02] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:40:10] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1118, Acc 0.9644
+[2022/09/23 00:40:10] - User KS Max: 0.5250, Thresh: 0.2435, Update: False
+[2022/09/23 00:41:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 197 of 250, Time: 60.9 ---
+[2022/09/23 00:41:09] - TESTING CLEAN - Time 0.7, Loss 1.4013, Acc 0.7128
+[2022/09/23 00:41:10] - TESTING POIS - Time 0.7, Loss 11.0132, Acc 0.0453
+[2022/09/23 00:41:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:41:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1675, Acc 0.9618
+[2022/09/23 00:41:18] - User KS Max: 0.5100, Thresh: 0.2462, Update: False
+[2022/09/23 00:42:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 198 of 250, Time: 61.1 ---
+[2022/09/23 00:42:18] - TESTING CLEAN - Time 0.7, Loss 1.3948, Acc 0.7092
+[2022/09/23 00:42:19] - TESTING POIS - Time 0.7, Loss 11.5320, Acc 0.0302
+[2022/09/23 00:42:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:42:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2405, Acc 0.9237
+[2022/09/23 00:42:27] - User KS Max: 0.4550, Thresh: 0.2475, Update: False
+[2022/09/23 00:43:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 199 of 250, Time: 61.2 ---
+[2022/09/23 00:43:27] - TESTING CLEAN - Time 0.7, Loss 1.3499, Acc 0.7108
+[2022/09/23 00:43:28] - TESTING POIS - Time 0.7, Loss 11.2775, Acc 0.0320
+[2022/09/23 00:43:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:43:35] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1240, Acc 0.9618
+[2022/09/23 00:43:36] - User KS Max: 0.4070, Thresh: 0.2475, Update: False
+[2022/09/23 00:44:28] - 
+
+--- GLOBAL EVALUATIONS - Round: 200 of 250, Time: 60.7 ---
+[2022/09/23 00:44:35] - TESTING CLEAN - Time 0.8, Loss 1.3986, Acc 0.7176
+[2022/09/23 00:44:36] - TESTING POIS - Time 0.7, Loss 11.6479, Acc 0.0280
+[2022/09/23 00:44:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:44:44] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2782, Acc 0.9135
+[2022/09/23 00:44:44] - User KS Max: 0.5230, Thresh: 0.2516, Update: False
+[2022/09/23 00:45:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 201 of 250, Time: 60.9 ---
+[2022/09/23 00:45:43] - TESTING CLEAN - Time 0.7, Loss 1.3478, Acc 0.7248
+[2022/09/23 00:45:44] - TESTING POIS - Time 0.7, Loss 11.7877, Acc 0.0249
+[2022/09/23 00:45:44] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:45:52] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3241, Acc 0.9135
+[2022/09/23 00:45:52] - User KS Max: 0.4700, Thresh: 0.2518, Update: False
+[2022/09/23 00:46:45] - 
+
+--- GLOBAL EVALUATIONS - Round: 202 of 250, Time: 60.5 ---
+[2022/09/23 00:46:51] - TESTING CLEAN - Time 0.7, Loss 1.4376, Acc 0.7100
+[2022/09/23 00:46:52] - TESTING POIS - Time 0.7, Loss 12.1315, Acc 0.0253
+[2022/09/23 00:46:52] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:47:00] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2590, Acc 0.9160
+[2022/09/23 00:47:00] - User KS Max: 0.4670, Thresh: 0.2501, Update: False
+[2022/09/23 00:47:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 203 of 250, Time: 61.9 ---
+[2022/09/23 00:48:01] - TESTING CLEAN - Time 0.8, Loss 1.3609, Acc 0.7100
+[2022/09/23 00:48:01] - TESTING POIS - Time 0.7, Loss 12.0109, Acc 0.0236
+[2022/09/23 00:48:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:48:09] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2083, Acc 0.9288
+[2022/09/23 00:48:10] - User KS Max: 0.8690, Thresh: 0.2499, Update: False
+[2022/09/23 00:49:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 204 of 250, Time: 61.3 ---
+[2022/09/23 00:49:09] - TESTING CLEAN - Time 0.7, Loss 1.3877, Acc 0.7148
+[2022/09/23 00:49:10] - TESTING POIS - Time 0.7, Loss 11.4094, Acc 0.0333
+[2022/09/23 00:49:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:49:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1980, Acc 0.9389
+[2022/09/23 00:49:18] - User KS Max: 0.5400, Thresh: 0.2489, Update: False
+[2022/09/23 00:50:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 205 of 250, Time: 61.1 ---
+[2022/09/23 00:50:18] - TESTING CLEAN - Time 0.7, Loss 1.3568, Acc 0.7180
+[2022/09/23 00:50:19] - TESTING POIS - Time 0.7, Loss 11.3203, Acc 0.0356
+[2022/09/23 00:50:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:50:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1054, Acc 0.9746
+[2022/09/23 00:50:27] - User KS Max: 0.5230, Thresh: 0.2476, Update: False
+[2022/09/23 00:51:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 206 of 250, Time: 60.8 ---
+[2022/09/23 00:51:27] - TESTING CLEAN - Time 0.7, Loss 1.3894, Acc 0.7212
+[2022/09/23 00:51:27] - TESTING POIS - Time 0.6, Loss 11.2097, Acc 0.0369
+[2022/09/23 00:51:27] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:51:35] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2044, Acc 0.9109
+[2022/09/23 00:51:35] - User KS Max: 0.4370, Thresh: 0.2465, Update: False
+[2022/09/23 00:52:28] - 
+
+--- GLOBAL EVALUATIONS - Round: 207 of 250, Time: 60.7 ---
+[2022/09/23 00:52:35] - TESTING CLEAN - Time 0.7, Loss 1.4018, Acc 0.7128
+[2022/09/23 00:52:35] - TESTING POIS - Time 0.7, Loss 11.1576, Acc 0.0422
+[2022/09/23 00:52:35] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:52:43] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3304, Acc 0.9008
+[2022/09/23 00:52:44] - User KS Max: 0.4870, Thresh: 0.2474, Update: False
+[2022/09/23 00:53:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 208 of 250, Time: 61.5 ---
+[2022/09/23 00:53:44] - TESTING CLEAN - Time 0.7, Loss 1.4141, Acc 0.7124
+[2022/09/23 00:53:44] - TESTING POIS - Time 0.7, Loss 11.4116, Acc 0.0293
+[2022/09/23 00:53:44] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:53:52] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2097, Acc 0.9186
+[2022/09/23 00:53:52] - User KS Max: 0.2800, Thresh: 0.2462, Update: False
+[2022/09/23 00:54:45] - 
+
+--- GLOBAL EVALUATIONS - Round: 209 of 250, Time: 61.1 ---
+[2022/09/23 00:54:52] - TESTING CLEAN - Time 0.8, Loss 1.4369, Acc 0.7100
+[2022/09/23 00:54:53] - TESTING POIS - Time 0.7, Loss 12.0062, Acc 0.0284
+[2022/09/23 00:54:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:55:01] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1806, Acc 0.9466
+[2022/09/23 00:55:01] - User KS Max: 0.5830, Thresh: 0.2449, Update: False
+[2022/09/23 00:55:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 210 of 250, Time: 60.8 ---
+[2022/09/23 00:56:00] - TESTING CLEAN - Time 0.7, Loss 1.5429, Acc 0.7068
+[2022/09/23 00:56:01] - TESTING POIS - Time 0.7, Loss 12.1546, Acc 0.0298
+[2022/09/23 00:56:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:56:09] - TRAINING - Epoch: 10, Time 0.8, Loss 0.3800, Acc 0.9008
+[2022/09/23 00:56:09] - User KS Max: 0.6290, Thresh: 0.2438, Update: False
+[2022/09/23 00:57:04] - 
+
+--- GLOBAL EVALUATIONS - Round: 211 of 250, Time: 62.6 ---
+[2022/09/23 00:57:11] - TESTING CLEAN - Time 0.7, Loss 1.3860, Acc 0.7152
+[2022/09/23 00:57:11] - TESTING POIS - Time 0.7, Loss 11.3776, Acc 0.0329
+[2022/09/23 00:57:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:57:19] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2083, Acc 0.9364
+[2022/09/23 00:57:20] - User KS Max: 0.4490, Thresh: 0.2434, Update: False
+[2022/09/23 00:58:12] - 
+
+--- GLOBAL EVALUATIONS - Round: 212 of 250, Time: 61.0 ---
+[2022/09/23 00:58:19] - TESTING CLEAN - Time 0.7, Loss 1.3836, Acc 0.7236
+[2022/09/23 00:58:20] - TESTING POIS - Time 0.7, Loss 11.4594, Acc 0.0347
+[2022/09/23 00:58:20] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:58:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0701, Acc 0.9873
+[2022/09/23 00:58:28] - User KS Max: 0.5780, Thresh: 0.2457, Update: False
+[2022/09/23 00:59:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 213 of 250, Time: 61.0 ---
+[2022/09/23 00:59:27] - TESTING CLEAN - Time 0.7, Loss 1.3787, Acc 0.7160
+[2022/09/23 00:59:28] - TESTING POIS - Time 0.7, Loss 12.1157, Acc 0.0267
+[2022/09/23 00:59:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 00:59:36] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2647, Acc 0.9084
+[2022/09/23 00:59:36] - User KS Max: 0.6520, Thresh: 0.2449, Update: False
+[2022/09/23 01:00:29] - 
+
+--- GLOBAL EVALUATIONS - Round: 214 of 250, Time: 60.9 ---
+[2022/09/23 01:00:36] - TESTING CLEAN - Time 0.7, Loss 1.3830, Acc 0.7176
+[2022/09/23 01:00:36] - TESTING POIS - Time 0.7, Loss 11.3082, Acc 0.0360
+[2022/09/23 01:00:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:00:44] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2305, Acc 0.9262
+[2022/09/23 01:00:45] - User KS Max: 0.5180, Thresh: 0.2452, Update: False
+[2022/09/23 01:01:38] - 
+
+--- GLOBAL EVALUATIONS - Round: 215 of 250, Time: 61.5 ---
+[2022/09/23 01:01:45] - TESTING CLEAN - Time 0.8, Loss 1.3827, Acc 0.7268
+[2022/09/23 01:01:45] - TESTING POIS - Time 0.7, Loss 12.0443, Acc 0.0244
+[2022/09/23 01:01:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:01:53] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1666, Acc 0.9440
+[2022/09/23 01:01:53] - User KS Max: 0.2980, Thresh: 0.2447, Update: False
+[2022/09/23 01:02:46] - 
+
+--- GLOBAL EVALUATIONS - Round: 216 of 250, Time: 60.7 ---
+[2022/09/23 01:02:53] - TESTING CLEAN - Time 0.7, Loss 1.4520, Acc 0.7156
+[2022/09/23 01:02:53] - TESTING POIS - Time 0.6, Loss 11.7410, Acc 0.0329
+[2022/09/23 01:02:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:03:01] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1971, Acc 0.9542
+[2022/09/23 01:03:01] - User KS Max: 0.3380, Thresh: 0.2454, Update: False
+[2022/09/23 01:03:55] - 
+
+--- GLOBAL EVALUATIONS - Round: 217 of 250, Time: 61.5 ---
+[2022/09/23 01:04:02] - TESTING CLEAN - Time 0.7, Loss 1.4101, Acc 0.7224
+[2022/09/23 01:04:02] - TESTING POIS - Time 0.7, Loss 11.8678, Acc 0.0320
+[2022/09/23 01:04:02] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:04:10] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1074, Acc 0.9669
+[2022/09/23 01:04:11] - User KS Max: 0.4040, Thresh: 0.2453, Update: False
+[2022/09/23 01:05:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 218 of 250, Time: 61.0 ---
+[2022/09/23 01:05:10] - TESTING CLEAN - Time 0.7, Loss 1.3743, Acc 0.7224
+[2022/09/23 01:05:11] - TESTING POIS - Time 0.7, Loss 11.6779, Acc 0.0356
+[2022/09/23 01:05:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:05:19] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1467, Acc 0.9415
+[2022/09/23 01:05:19] - User KS Max: 0.4870, Thresh: 0.2452, Update: False
+[2022/09/23 01:06:12] - 
+
+--- GLOBAL EVALUATIONS - Round: 219 of 250, Time: 60.7 ---
+[2022/09/23 01:06:19] - TESTING CLEAN - Time 0.8, Loss 1.4611, Acc 0.7136
+[2022/09/23 01:06:19] - TESTING POIS - Time 0.7, Loss 12.1367, Acc 0.0333
+[2022/09/23 01:06:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:06:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2921, Acc 0.9109
+[2022/09/23 01:06:28] - User KS Max: 0.5000, Thresh: 0.2447, Update: False
+[2022/09/23 01:07:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 220 of 250, Time: 61.2 ---
+[2022/09/23 01:07:27] - TESTING CLEAN - Time 0.7, Loss 1.3711, Acc 0.7212
+[2022/09/23 01:07:28] - TESTING POIS - Time 0.7, Loss 11.5292, Acc 0.0382
+[2022/09/23 01:07:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:07:36] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2264, Acc 0.9262
+[2022/09/23 01:07:36] - User KS Max: 0.5530, Thresh: 0.2452, Update: False
+[2022/09/23 01:08:28] - 
+
+--- GLOBAL EVALUATIONS - Round: 221 of 250, Time: 60.6 ---
+[2022/09/23 01:08:35] - TESTING CLEAN - Time 0.7, Loss 1.3596, Acc 0.7180
+[2022/09/23 01:08:36] - TESTING POIS - Time 0.7, Loss 12.1516, Acc 0.0262
+[2022/09/23 01:08:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:08:44] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2370, Acc 0.9262
+[2022/09/23 01:08:44] - User KS Max: 0.5580, Thresh: 0.2474, Update: False
+[2022/09/23 01:09:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 222 of 250, Time: 61.5 ---
+[2022/09/23 01:09:44] - TESTING CLEAN - Time 0.7, Loss 1.4125, Acc 0.7136
+[2022/09/23 01:09:45] - TESTING POIS - Time 0.7, Loss 12.6150, Acc 0.0200
+[2022/09/23 01:09:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:09:53] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1406, Acc 0.9466
+[2022/09/23 01:09:53] - User KS Max: 0.4340, Thresh: 0.2476, Update: False
+[2022/09/23 01:10:46] - 
+
+--- GLOBAL EVALUATIONS - Round: 223 of 250, Time: 60.8 ---
+[2022/09/23 01:10:52] - TESTING CLEAN - Time 0.7, Loss 1.3639, Acc 0.7244
+[2022/09/23 01:10:53] - TESTING POIS - Time 0.7, Loss 11.3726, Acc 0.0373
+[2022/09/23 01:10:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:11:01] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1748, Acc 0.9440
+[2022/09/23 01:11:01] - User KS Max: 0.5560, Thresh: 0.2482, Update: False
+[2022/09/23 01:11:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 224 of 250, Time: 61.0 ---
+[2022/09/23 01:12:01] - TESTING CLEAN - Time 0.7, Loss 1.4448, Acc 0.7152
+[2022/09/23 01:12:02] - TESTING POIS - Time 0.7, Loss 11.5661, Acc 0.0342
+[2022/09/23 01:12:02] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:12:09] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1680, Acc 0.9491
+[2022/09/23 01:12:10] - User KS Max: 0.4970, Thresh: 0.2486, Update: False
+[2022/09/23 01:13:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 225 of 250, Time: 61.2 ---
+[2022/09/23 01:13:10] - TESTING CLEAN - Time 0.7, Loss 1.3888, Acc 0.7188
+[2022/09/23 01:13:10] - TESTING POIS - Time 0.7, Loss 11.6403, Acc 0.0356
+[2022/09/23 01:13:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:13:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1789, Acc 0.9288
+[2022/09/23 01:13:18] - User KS Max: 0.4800, Thresh: 0.2475, Update: False
+[2022/09/23 01:14:12] - 
+
+--- GLOBAL EVALUATIONS - Round: 226 of 250, Time: 61.2 ---
+[2022/09/23 01:14:18] - TESTING CLEAN - Time 0.8, Loss 1.3806, Acc 0.7224
+[2022/09/23 01:14:19] - TESTING POIS - Time 0.7, Loss 12.0822, Acc 0.0276
+[2022/09/23 01:14:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:14:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0979, Acc 0.9695
+[2022/09/23 01:14:28] - User KS Max: 0.5580, Thresh: 0.2480, Update: False
+[2022/09/23 01:15:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 227 of 250, Time: 61.5 ---
+[2022/09/23 01:15:27] - TESTING CLEAN - Time 0.7, Loss 1.3694, Acc 0.7232
+[2022/09/23 01:15:28] - TESTING POIS - Time 0.7, Loss 11.6622, Acc 0.0320
+[2022/09/23 01:15:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:15:36] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0687, Acc 0.9898
+[2022/09/23 01:15:36] - User KS Max: 0.4040, Thresh: 0.2467, Update: False
+[2022/09/23 01:16:29] - 
+
+--- GLOBAL EVALUATIONS - Round: 228 of 250, Time: 61.2 ---
+[2022/09/23 01:16:36] - TESTING CLEAN - Time 0.8, Loss 1.3647, Acc 0.7220
+[2022/09/23 01:16:37] - TESTING POIS - Time 0.6, Loss 11.7502, Acc 0.0311
+[2022/09/23 01:16:37] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:16:45] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1301, Acc 0.9517
+[2022/09/23 01:16:45] - User KS Max: 0.6690, Thresh: 0.2455, Update: False
+[2022/09/23 01:17:38] - 
+
+--- GLOBAL EVALUATIONS - Round: 229 of 250, Time: 61.0 ---
+[2022/09/23 01:17:45] - TESTING CLEAN - Time 0.7, Loss 1.3499, Acc 0.7208
+[2022/09/23 01:17:45] - TESTING POIS - Time 0.7, Loss 11.7377, Acc 0.0378
+[2022/09/23 01:17:45] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:17:53] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1644, Acc 0.9593
+[2022/09/23 01:17:54] - User KS Max: 0.6110, Thresh: 0.2456, Update: False
+[2022/09/23 01:18:46] - 
+
+--- GLOBAL EVALUATIONS - Round: 230 of 250, Time: 61.0 ---
+[2022/09/23 01:18:53] - TESTING CLEAN - Time 0.8, Loss 1.4001, Acc 0.7196
+[2022/09/23 01:18:54] - TESTING POIS - Time 0.7, Loss 11.7215, Acc 0.0284
+[2022/09/23 01:18:54] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:19:02] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0790, Acc 0.9720
+[2022/09/23 01:19:02] - User KS Max: 0.5050, Thresh: 0.2450, Update: False
+[2022/09/23 01:19:55] - 
+
+--- GLOBAL EVALUATIONS - Round: 231 of 250, Time: 61.0 ---
+[2022/09/23 01:20:02] - TESTING CLEAN - Time 0.7, Loss 1.4236, Acc 0.7208
+[2022/09/23 01:20:02] - TESTING POIS - Time 0.7, Loss 11.8845, Acc 0.0316
+[2022/09/23 01:20:02] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:20:10] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1629, Acc 0.9491
+[2022/09/23 01:20:11] - User KS Max: 0.4390, Thresh: 0.2443, Update: False
+[2022/09/23 01:21:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 232 of 250, Time: 61.1 ---
+[2022/09/23 01:21:10] - TESTING CLEAN - Time 0.7, Loss 1.4221, Acc 0.7164
+[2022/09/23 01:21:11] - TESTING POIS - Time 0.7, Loss 12.0540, Acc 0.0360
+[2022/09/23 01:21:11] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:21:19] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2812, Acc 0.9160
+[2022/09/23 01:21:19] - User KS Max: 0.3640, Thresh: 0.2443, Update: False
+[2022/09/23 01:22:12] - 
+
+--- GLOBAL EVALUATIONS - Round: 233 of 250, Time: 61.2 ---
+[2022/09/23 01:22:19] - TESTING CLEAN - Time 0.7, Loss 1.3901, Acc 0.7240
+[2022/09/23 01:22:20] - TESTING POIS - Time 0.7, Loss 11.3114, Acc 0.0427
+[2022/09/23 01:22:20] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:22:27] - TRAINING - Epoch: 10, Time 0.7, Loss 0.4650, Acc 0.8779
+[2022/09/23 01:22:28] - User KS Max: 0.6010, Thresh: 0.2462, Update: False
+[2022/09/23 01:23:21] - 
+
+--- GLOBAL EVALUATIONS - Round: 234 of 250, Time: 61.0 ---
+[2022/09/23 01:23:28] - TESTING CLEAN - Time 0.7, Loss 1.3607, Acc 0.7232
+[2022/09/23 01:23:28] - TESTING POIS - Time 0.7, Loss 11.8520, Acc 0.0307
+[2022/09/23 01:23:28] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:23:36] - TRAINING - Epoch: 10, Time 0.7, Loss 0.2951, Acc 0.9262
+[2022/09/23 01:23:37] - User KS Max: 0.5980, Thresh: 0.2461, Update: False
+[2022/09/23 01:24:29] - 
+
+--- GLOBAL EVALUATIONS - Round: 235 of 250, Time: 60.9 ---
+[2022/09/23 01:24:36] - TESTING CLEAN - Time 0.7, Loss 1.3831, Acc 0.7228
+[2022/09/23 01:24:37] - TESTING POIS - Time 0.7, Loss 11.6459, Acc 0.0351
+[2022/09/23 01:24:37] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:24:44] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0701, Acc 0.9796
+[2022/09/23 01:24:45] - User KS Max: 0.5250, Thresh: 0.2452, Update: False
+[2022/09/23 01:25:37] - 
+
+--- GLOBAL EVALUATIONS - Round: 236 of 250, Time: 60.5 ---
+[2022/09/23 01:25:44] - TESTING CLEAN - Time 0.7, Loss 1.4196, Acc 0.7152
+[2022/09/23 01:25:44] - TESTING POIS - Time 0.7, Loss 11.9592, Acc 0.0329
+[2022/09/23 01:25:44] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:25:52] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0838, Acc 0.9771
+[2022/09/23 01:25:52] - User KS Max: 0.5330, Thresh: 0.2449, Update: False
+[2022/09/23 01:26:45] - 
+
+--- GLOBAL EVALUATIONS - Round: 237 of 250, Time: 61.2 ---
+[2022/09/23 01:26:52] - TESTING CLEAN - Time 0.8, Loss 1.3976, Acc 0.7124
+[2022/09/23 01:26:53] - TESTING POIS - Time 0.7, Loss 11.2559, Acc 0.0329
+[2022/09/23 01:26:53] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:27:01] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1709, Acc 0.9364
+[2022/09/23 01:27:01] - User KS Max: 0.6310, Thresh: 0.2443, Update: False
+[2022/09/23 01:27:54] - 
+
+--- GLOBAL EVALUATIONS - Round: 238 of 250, Time: 60.9 ---
+[2022/09/23 01:28:01] - TESTING CLEAN - Time 0.7, Loss 1.4675, Acc 0.7108
+[2022/09/23 01:28:01] - TESTING POIS - Time 0.7, Loss 11.5872, Acc 0.0360
+[2022/09/23 01:28:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:28:09] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1801, Acc 0.9517
+[2022/09/23 01:28:10] - User KS Max: 0.3760, Thresh: 0.2443, Update: False
+[2022/09/23 01:29:03] - 
+
+--- GLOBAL EVALUATIONS - Round: 239 of 250, Time: 61.5 ---
+[2022/09/23 01:29:10] - TESTING CLEAN - Time 0.7, Loss 1.4320, Acc 0.7100
+[2022/09/23 01:29:10] - TESTING POIS - Time 0.7, Loss 11.7046, Acc 0.0333
+[2022/09/23 01:29:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:29:18] - TRAINING - Epoch: 10, Time 0.7, Loss 0.0468, Acc 0.9847
+[2022/09/23 01:29:18] - User KS Max: 0.5580, Thresh: 0.2437, Update: False
+[2022/09/23 01:30:11] - 
+
+--- GLOBAL EVALUATIONS - Round: 240 of 250, Time: 60.9 ---
+[2022/09/23 01:30:18] - TESTING CLEAN - Time 0.8, Loss 1.4292, Acc 0.7200
+[2022/09/23 01:30:19] - TESTING POIS - Time 0.7, Loss 11.8092, Acc 0.0373
+[2022/09/23 01:30:19] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:30:27] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1844, Acc 0.9440
+[2022/09/23 01:30:27] - User KS Max: 0.6790, Thresh: 0.2432, Update: False
+[2022/09/23 01:31:19] - 
+
+--- GLOBAL EVALUATIONS - Round: 241 of 250, Time: 60.5 ---
+[2022/09/23 01:31:26] - TESTING CLEAN - Time 0.7, Loss 1.4400, Acc 0.7084
+[2022/09/23 01:31:27] - TESTING POIS - Time 0.7, Loss 11.3054, Acc 0.0382
+[2022/09/23 01:31:27] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:31:35] - TRAINING - Epoch: 10, Time 0.8, Loss 0.4079, Acc 0.8880
+[2022/09/23 01:31:35] - User KS Max: 0.4370, Thresh: 0.2428, Update: False
+[2022/09/23 01:32:27] - 
+
+--- GLOBAL EVALUATIONS - Round: 242 of 250, Time: 60.5 ---
+[2022/09/23 01:32:34] - TESTING CLEAN - Time 0.7, Loss 1.4037, Acc 0.7164
+[2022/09/23 01:32:35] - TESTING POIS - Time 0.7, Loss 12.2521, Acc 0.0262
+[2022/09/23 01:32:35] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:32:43] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1489, Acc 0.9517
+[2022/09/23 01:32:43] - User KS Max: 0.4490, Thresh: 0.2426, Update: False
+[2022/09/23 01:33:36] - 
+
+--- GLOBAL EVALUATIONS - Round: 243 of 250, Time: 61.1 ---
+[2022/09/23 01:33:43] - TESTING CLEAN - Time 0.7, Loss 1.4198, Acc 0.7212
+[2022/09/23 01:33:43] - TESTING POIS - Time 0.7, Loss 11.4928, Acc 0.0360
+[2022/09/23 01:33:43] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:33:51] - TRAINING - Epoch: 10, Time 0.7, Loss 0.1312, Acc 0.9644
+[2022/09/23 01:33:52] - User KS Max: 0.5100, Thresh: 0.2427, Update: False
+[2022/09/23 01:34:44] - 
+
+--- GLOBAL EVALUATIONS - Round: 244 of 250, Time: 61.0 ---
+[2022/09/23 01:34:51] - TESTING CLEAN - Time 0.7, Loss 1.3711, Acc 0.7236
+[2022/09/23 01:34:52] - TESTING POIS - Time 0.7, Loss 11.6180, Acc 0.0320
+[2022/09/23 01:34:52] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:35:00] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1268, Acc 0.9644
+[2022/09/23 01:35:00] - User KS Max: 0.5480, Thresh: 0.2424, Update: False
+[2022/09/23 01:35:53] - 
+
+--- GLOBAL EVALUATIONS - Round: 245 of 250, Time: 61.4 ---
+[2022/09/23 01:36:00] - TESTING CLEAN - Time 0.7, Loss 1.3715, Acc 0.7212
+[2022/09/23 01:36:01] - TESTING POIS - Time 0.7, Loss 11.2557, Acc 0.0324
+[2022/09/23 01:36:01] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:36:08] - TRAINING - Epoch: 10, Time 0.7, Loss 0.3616, Acc 0.9059
+[2022/09/23 01:36:09] - User KS Max: 0.4870, Thresh: 0.2428, Update: False
+[2022/09/23 01:37:02] - 
+
+--- GLOBAL EVALUATIONS - Round: 246 of 250, Time: 60.9 ---
+[2022/09/23 01:37:08] - TESTING CLEAN - Time 0.8, Loss 1.4275, Acc 0.7184
+[2022/09/23 01:37:09] - TESTING POIS - Time 0.7, Loss 11.4738, Acc 0.0360
+[2022/09/23 01:37:09] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:37:17] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0798, Acc 0.9771
+[2022/09/23 01:37:17] - User KS Max: 0.2950, Thresh: 0.2419, Update: False
+[2022/09/23 01:38:10] - 
+
+--- GLOBAL EVALUATIONS - Round: 247 of 250, Time: 60.9 ---
+[2022/09/23 01:38:17] - TESTING CLEAN - Time 0.7, Loss 1.3951, Acc 0.7208
+[2022/09/23 01:38:17] - TESTING POIS - Time 0.7, Loss 11.4021, Acc 0.0404
+[2022/09/23 01:38:18] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:38:25] - TRAINING - Epoch: 10, Time 0.8, Loss 0.2264, Acc 0.9262
+[2022/09/23 01:38:26] - User KS Max: 0.5830, Thresh: 0.2430, Update: False
+[2022/09/23 01:39:19] - 
+
+--- GLOBAL EVALUATIONS - Round: 248 of 250, Time: 61.4 ---
+[2022/09/23 01:39:26] - TESTING CLEAN - Time 0.7, Loss 1.3731, Acc 0.7200
+[2022/09/23 01:39:26] - TESTING POIS - Time 0.7, Loss 11.5808, Acc 0.0364
+[2022/09/23 01:39:26] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:39:34] - TRAINING - Epoch: 10, Time 0.8, Loss 0.1029, Acc 0.9644
+[2022/09/23 01:39:35] - User KS Max: 0.4170, Thresh: 0.2436, Update: False
+[2022/09/23 01:40:28] - 
+
+--- GLOBAL EVALUATIONS - Round: 249 of 250, Time: 61.5 ---
+[2022/09/23 01:40:34] - TESTING CLEAN - Time 0.7, Loss 1.3894, Acc 0.7216
+[2022/09/23 01:40:35] - TESTING POIS - Time 0.7, Loss 11.7664, Acc 0.0360
+[2022/09/23 01:40:35] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/09/23 01:40:43] - TRAINING - Epoch: 10, Time 0.8, Loss 0.0587, Acc 0.9873
+[2022/09/23 01:40:43] - User KS Max: 0.3960, Thresh: 0.2451, Update: False
+[2022/09/23 01:41:36] - 
+
+--- GLOBAL EVALUATIONS - Round: 250 of 250, Time: 61.2 ---
+[2022/09/23 01:41:43] - TESTING CLEAN - Time 0.7, Loss 1.3591, Acc 0.7128
+[2022/09/23 01:41:44] - TESTING POIS - Time 0.7, Loss 11.9196, Acc 0.0316
