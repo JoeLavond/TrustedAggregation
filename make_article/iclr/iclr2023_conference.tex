@@ -1,6 +1,42 @@
 \documentclass{article} % For LaTeX2e
 \usepackage{iclr2023_conference, times}
 
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+% --- Custom formatting --- 
+% images
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\textfraction}{0.1}
+\setlength{\floatsep}{5pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\intextsep}{5pt plus 2pt minus 2pt}
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+
+% text
+\usepackage{titlesec}
+
+\titlespacing*{\section}
+{0pt}{.2cm}{.1cm}
+\titlespacing*{\subsection}
+{0pt}{.1cm}{.1cm}
+
 % --- Default packages --- 
 % Optional math commands from https://github.com/goodfeli/dlbook_notation.
 \input{math_commands.tex}
@@ -11,6 +47,7 @@
 % images
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{placeins}
 \usepackage{wrapfig}
 \usepackage{subcaption}
 
@@ -24,6 +61,7 @@
 \newtheorem{lemma}{Lemma}
 
 \newcommand{\yli}[1]{{\color{cyan}#1}}
+\newcommand{\mh}[1]{{\color{red}#1}}
 
 \title{
     Trusted Aggregation (TAG): Model Filtering Backdoor Defense In Federated Learning
@@ -63,77 +101,38 @@
 %\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
 \begin{document}
 
-
 \maketitle
 
-\vspace{-1cm}
 \begin{abstract}
-    %Federated Learning (FL) is a framework for constructing robust machine learning models from multiple local data sets without(\yli{with?}) aggregation. A robust shared model is learned through an interactive process that combines locally learned model gradients or weights. However, the lack of data transparency naturally raises concerns about model security. 
-    %Several state-of-the-art backdoor attacks have recently been created to take advantage of the FL setting to get the shared model to learn a specific behavior for inputs given a particular manipulation. (\yli{this is very long. How about: Recently, several backdoor attacks have been proposed to attack the FL system and achieve high attack success rates.})
-    %Motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose the first meaningful defense (\yli{we need to double check whether it's the first}) specific to FL that can prevent stronger backdoor attacks and improve accuracy for the original classification task compared to the current aggregation or model filtering methods.
-    
-    \yli{Federated Learning is a framework for training robust machine learning models from multiple local data sets without access to the data. A robust shared model is learned through an interactive process that combines locally learned model gradients or weights. However, the lack of data transparency naturally raises concerns about model security. Recently, several state-of-the-art backdoor attacks have been proposed to attack the federated learning system and achieve high attack success rates. Motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose a defense method that can prevent backdoor attacks from influencing the model and maintain the accuracy for the original classification task.}
+Federated Learning is a framework for training machine learning models from multiple local data sets without access to the data. A shared model is jointly learned through an interactive process between server and clients that combines locally learned model gradients or weights. However, the lack of data transparency naturally raises concerns about model security. Recently, several state-of-the-art backdoor attacks have been proposed, which achieve high attack success rates while simultaneously being difficult to detect, leading to compromised federated learning models. In this paper, motivated by differences in the output layer distribution between models trained with and without the presence of backdoor attacks, we propose a defense method that can prevent backdoor attacks from influencing the model while maintaining the accuracy of the original classification task.
 \end{abstract}
 
-
-% ----- Content -----
-\vspace{-0.5cm}
 \section{Introduction}
-\vspace{-5pt}
 
-Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in \cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare. 
-Additionally, FL is valuable for companies wishing to shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning. 
-Under the FL setting, local entities submit their locally learned model gradients and weights to be intelligently combined by some centralized entity to create a shared and robust machine learning model.
+Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in~\cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare.  Also, FL is valuable for companies that shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning.  Under the FL setting, local entities (clients) submit their locally learned model gradients and weights to be intelligently combined by some centralized entity (server) to create a shared and robust machine learning model.
 
+Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all participating clients. An example of such harm is a backdoor attack,  where the malicious users try to get the global model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. Some methods~\cite{kurita2020weight,qi2020onion,li2021backdoor} have been proposed to detect the triggers in the training data to defend against backdoor attacks. However, in FL, as only the resulting model gradients or weights are communicated back, such methods cannot be applied to defend against backdoor attacks. Furthermore, since the model update in FL assumes no access to all clients' data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in FL.  Furthermore, current robust aggregation methods~\cite{trim-mean} fail to prevent even mild backdoor attacks.
 
-Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all future users. An example of such harm is a backdoor attack, 
-%where training attempts to get a model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. 
-\yli{where the malicious users try to get the global model to associate a given manipulation of the input data, known as a trigger, with a particular outcome.}
-%Recent work, such as by \cite{stamp-invisible}., creates backdoor triggers that are not detectable in the data by either human or computer vision when included within the data. 
-\yli{Some methods~\citep{kurita2020weight,qi2020onion,li2021backdoor} have been proposed to detect the triggers in the training data to defend against backdoor attacks.}
-However, in FL, only the resulting model gradients or weights are communicated back, 
-%so there is potentially no need to hide the trigger in the data. 
-\yli{so such methods cannot be applied to defend against backdoor attacks.}
-Furthermore, without access to the user data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in FL.
+In this paper, we first find that the output layer distributions of malicious users are very different from that of benign users. Specifically, there exists a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure~\ref{fig: motivation} shows a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
 
-We find that the output layer distributions of malicious users are very different from that of benign users. Note that there is a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks. Figure \ref{fig: motivation} shows a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
+Motivated by the finding that the output layer distributions of a model with and without a backdoor are different, we propose distributional differences between the output layers of returning user models and a known clean model to identify malicious updates. The proposed method is effective against multiple state-of-the-art backdoor attacks at different strength levels. Even in the unreasonable setting where 40\% of the clients are malicious for each update, we greatly delay the success of the backdoor attack, outperforming current robust aggregation methods.  In the experiment section, we demonstrate our method's ability on several data sets to prevent backdoor attacks.  The method performs well even when the attack happens every round starting at the beginning of the process. Furthermore, our method does not affect the performance of the global model on clean data, resulting in no decrease and even increases in the accuracy of the original classification task.
 
-\yli{Based on the finding that the output layer distributions of a model with and without a backdoor are different, we propose to detect updates from malicious users using this finding. The proposed method is effective against multiple state-of-the-art backdoor attacks at different strength levels.}
-%Our contribution to federated learning is establishing defense criteria effective against state-of-the-art backdoor attacks.
-We demonstrate that our method's ability on several data sets to prevent backdoor attacks. 
-%regardless of whether the attacks occur even in every update to the shared model or starting at the beginning of the federated learning process. 
-\yli{The method performs well even when the attack happens every round starting at the beginning of the process.}
-%Furthermore, our threshold allows many regular users to update the global model, resulting in no decrease and several increases in the accuracy of the original classification task.
-\yli{Furthermore, our method does not affect the performance of the global model on clean data, resulting in no decrease and even increases in the accuracy of the original classification task.}
-
-
-\vspace{-10pt}
+%
 \section{Related Work}
-\vspace{-5pt}
 
-\paragraph{Federated Learning.} Federated learning (FL) is an emerging machine learning paradigm that has seen great success in many fields~\citep{ryffel2018generic,hard2018federated,bonawitz2019towards}.
-At a high level, FL is an iterative procedure involving rounds of model improvement until it meets some criteria. These rounds send the global model to users and select a subset of users to update the global model. Then those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure data privacy. \yli{Popular aggregation methods of FL include FedAvg~\citep{fedavg}, Median~\citep{yin2018byzantine} and Trimmed-mean~\citep{yin2018byzantine}.}
+\paragraph{Federated Learning.} Federated learning (FL) is an emerging machine learning paradigm that has seen great success in many fields~\cite{ryffel2018generic,hard2018federated,bonawitz2019towards}. At a high level, FL is an iterative procedure involving rounds of model improvement until it meets some criteria. These rounds send the global model to users and select a subset of users to update the global model. Then those chosen users train their local copy of the model, and their resulting models are communicated back and aggregated to create a new global model. Typically, the final local model's gradients or weights are transmitted back to ensure data privacy. Popular aggregation methods of FL include FedAvg~\cite{fedavg}, Median~\cite{yin2018byzantine} and Trim-mean~\cite{yin2018byzantine}.
 
-\vspace{-10pt}
-\paragraph{Backdoor Attack.} Recently, several backdoor attacks have been proposed to take advantage of the FL setting. \cite{dba} showed that the multiple-user nature of FL can be exploitable to make more potent and lasting backdoor attacks. By distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper. 
+\paragraph{Backdoor Attack.} Recently, several backdoor attacks have been proposed to take advantage of the FL setting. In~\cite{dba}, the authors show that the multiple-user nature of FL can be exploitable to make more potent and lasting backdoor attacks. By distributing the backdoor trigger across a few malicious users, they could make the global model exhibit the desired behavior at higher rates and for many iterations after the attack had concluded. We will show our threshold's effectiveness in even more potent attack settings than in their original paper. 
 
-A recent work~\citep{neurotoxin} proposed a projection method, Neurotoxin, for any backdoor attack method to improve the longevity of the compromise to a model. The attacker's updates are projected onto \yli{dimensions with small absolute values of the weight vector}.
-The authors claim such weights are updated less frequently by other benign users, resulting in greater longevity of successful attacks. We will demonstrate that our method's effectiveness against both of the above attacks~\citep{dba,neurotoxin}.
+A recent work~\cite{neurotoxin} proposed a projection method, Neurotoxin, for any backdoor attack method to improve the longevity of the compromise to a model. The attacker's updates are projected onto dimensions with small absolute values of the weight vector. The authors claim such weights are updated less frequently by other benign users, resulting in greater longevity of successful attacks. We will demonstrate our method's effectiveness against both of the above attacks~\cite{dba, neurotoxin}.
 
-\vspace{-10pt}
-\paragraph{Defense.} \yli{On the other hand, not many defense methods have been proposed to defend against backdoor attacks in FL. Prior work~\citep{shejwalkar2022back} claims that norm clipping~\citep{sun2019can} is effective against backdoor attacks in FL but has been broke by the Neurotoxin attack.}
-Two other robust defense methods for FL were proposed in~\citep{trim-mean}. The paper theoretically explores two robust aggregation methods: Median and Trimmed-mean, which were shown effective in defending against poisoning attacks in FL. Median is a coordinate-wise aggregation rule, in which the aggregated weight vector is generated by computing coordinate-wise median among the weight vectors of selected users. Trimmed-mean aggregates the weight vectors by computing the coordinate-wise mean using trimmed values, meaning that the top and bottom $k$ elements of each dimension will not be used.
-We propose a method that can be implemented in addition to other aggregation methods or model filtering methods. In the experiment, we focus on the original FedAvg~\citep{fedavg} aggregation to show the effectiveness of our proposed method without assistance from additional defense techniques. 
-%Under FedAvg, the aggregation step consists of setting the next iteration of the global model to the average of user-returned updated models. 
-
-%$g^{(k)} = \text{median}(\{x_i^{(k)} \mid i \in [1,...,N]\})$, where each weight vector $\vx_i \in \mathbb{R}^{d}$ for $i \in [1,...,N]$.
-%In our experiments, we will compare our proposed method to both their coordinate-wise median and trimmed-mean procedures.
+\paragraph{Defense.} On the other hand, few defense methods have been proposed to defend against backdoor attacks in FL. Prior work~\cite{shejwalkar2022back} claims that norm clipping~\cite{sun2019can} is effective against backdoor attacks in FL but has been broken by the Neurotoxin attack. Two other robust defense methods for FL were proposed in~\cite{trim-mean}. The paper theoretically explores two robust aggregation methods: Median and Trim-mean, which were shown effective in defending against poisoning attacks in FL. Median is a coordinate-wise aggregation rule in which the aggregated weight vector is generated by computing the coordinate-wise median among the weight vectors of selected users. Trim-mean aggregates the weight vectors by computing the coordinate-wise mean using trimmed values, meaning that each dimension's top and bottom $k$ elements will not be used. We propose a method that can be implemented in addition to other aggregation or model filtering methods. In the experiment, we focus on the original FedAvg~\cite{fedavg} aggregation to show the effectiveness of our proposed method without assistance from additional defense techniques. 
 
 %\begin{definition}[Coordinate-wise median] 
 %For vectors $x_i \in \mathbb{R}^{d}$ for $i \in \mathopen[N\mathclose]$, the coordinate-wise median g has element k defined as follows $g^{(k)} = median(\{x_i^{(k)} \mid i \in N\})$.
 %\end{definition}
 
-%\begin{definition}[Coordinate-wise trimmed-mean]
+%\begin{definition}[Coordinate-wise Trim-mean]
 %For $\beta \in \mathopen[ 0, 0.5 \mathclose)$ and vectors $x_i \in \mathbb{R}^{d}$ for $i \in \mathopen[I\mathclose]$, the coordinate-wise trimmed-mean g has element k defined as:
 %\begin{align*}
 %g^{(k)} = \dfrac{\sum_{j \in J}{x_j^{(k)}}}{(1 - 2\beta)N}
@@ -141,58 +140,45 @@ We propose a method that can be implemented in addition to other aggregation met
 %where $J \subseteq I$ is the collection of indices that do not include the top and bottom $\beta$ proportion of the sorted $x_i^{(k)}$ values.
 %\end{definition}
 
-%Currently, many defense methods are based on modifications to the aggregation method. 
+
 %
-\vspace{-10pt}
 \section{Method}
-\vspace{-10pt}
 
-This section describes the motivation and framework for our proposed method, Trusted Aggregation (TAG), which effectively defends against state-of-the-art backdoor attacks. The current defense aggregation methods~\citep[e.g.,][]{fedavg,trim-mean} are insufficient for preventing attacks of even mild strength. In addition to better model security, our method can even improve accuracy for the original classification task compared to the current robust aggregation methods.
+This section describes the motivation and framework for our proposed method, Trusted Aggregation (TAG), which effectively defends against state-of-the-art backdoor attacks. The current defense aggregation methods~\citep{fedavg,trim-mean} are insufficient for preventing attacks of even mild strength. In addition to better model security, our method can improve accuracy for the original classification task compared to the current robust aggregation methods.
 
-\begin{figure}[H]
-\vspace{-10pt}
+\begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/ext_motivation.png}
-    \vspace{-10pt}
+    \includegraphics[width=\textwidth]{pics/ext_motivation.png}
     \caption{\footnotesize Final hidden layer output distributions (kernel density estimation based) for a {\color{red}\bf backdoor} model (red) and a {\bf clean} model (black). There is an obvious difference between the distributions of the backdoor and clean models for the target label class.}
     \label{fig: motivation}
-    \vspace{-10pt}
 \end{figure}
 
-\vspace{-10pt}
-\paragraph{Motivation.}
-We find that the output layer distributions of malicious users are very different from that of benign users. Figure~\ref{fig: motivation} shows the output distributions of a backdoor model and a clean model on clean input data. For the last hidden layer, each neuron in the layer corresponds to one class. For a backdoor model, there is a target class that associates with backdoor triggers.
-%a model with different estimated distributions for the target class depending on whether or not that model has been backdoor attacked. 
-Note that we can observe a discernible difference between malicious and benign user distributions for the target label class. Therefore, we can leverage this difference to detect backdoor attacks.
+\paragraph{Motivation.} We find that the output layer distributions of models returned by malicious users are very different from that of benign users. Figure~\ref{fig: motivation} shows the output distributions of a backdoor model and a clean model on clean input data.  Each neuron in the output layer corresponds to one class, and the backdoor model has a learned association between the backdoor trigger and the target class. We observe that the learned associated comes with a distributional change in the output distribution for the target class. Therefore it implies that with a guaranteed clean model, we should be able to identify whether another candidate model has a backdoor attack by comparing their output distributions on some clean data.
+Note that we can observe a discernible difference between malicious and benign user distributions for this target label class. Therefore, we can leverage this difference to detect backdoor attacks.
 
-\vspace{-10pt}
 \paragraph{Detection Framework.}
-We assume that there exists one user who we can be confident is trustworthy to place in charge of gate-keeping the global model for updates. The detection method leverages the trusted user to evaluate incoming model weights and determine whether each contribution is allowed to participate in the global model update procedure. \yli{The assumption is reasonable as in reality the center server will also collect some data to help with the training process, not just blindly rely on the local data from users.} 
+We assume that there exists one user who we can be confident is trustworthy to place in charge of gate-keeping the global model for updates. The detection method leverages the trusted user to evaluate incoming model weights and determine whether each contribution is allowed to participate in the global model update procedure. The assumption is reasonable as, in reality, the center server will also collect some data to help with the training process, not just blindly relying on the local data from users.
+
 The main idea is to detect user models with an unusually distributed output layer with information from a single trusted user. Moving forward, we will refer to this single trusted user as the validation user. In each communication round, this validation user completes the following steps to generate a threshold for malicious user detection, see Algorithm~\ref{alg:t-agg}
 
-\vspace{-10pt}
 \begin{algorithm}[H]
 \caption{Trusted Aggregation \\ 
-Notation: Let ${\bm S}$ represent the random subset of users that will submit locally trained models $U_j$ to update the global model $G$, $U_T$ to denote the model from the trusted user, $\mX$ to denote the local data of the trusted user, and $\mathcal{D}$ to represent the distributional difference function.
+Notation: Let ${\bm S}$ represent the random subset of users that will submit locally trained models $U_j$ to update the global model $G$, $U_T$ to denote the model from the trusted user, $\mX$ to denote the local data of the trusted user, $\mathcal{D}$ to represent the distributional difference function, and $\theta \in [1, 2]$ for the method's scaling coefficient.
 }
 \label{alg:t-agg}
 \begin{algorithmic}[1]
 
-    \Procedure{Trusted Aggregation}{$\mX, G, U_T, \{U_j\}_{j \in {\bm S}}$}
+    \Procedure{Trusted Aggregation}{$\mX, G, U_T, \{U_j\}_{j \in {\bm S}} \mid \theta$}
         %\State Get the local data $\mX$ from the trusted user
         \State Generated outputs: $\vo_G = G(\mX)$, $\vo_{T} = U_T(\mX)$, and $\vo_j = U_j(\mX)$, $\forall j \in \mS$
         \For{each class $c\in [1,...,m]$}
-            %\State calculate empirical CDFs for each predicted score above 
-            %\State Estimate empirical CDFs for $\vo_G, \vo_T, \vo_j$'s.
-            %\State \quad and compute the distributional distances between each user and global models 
             \State Compute the distributional distances between each user and the global model
             \State \quad $v^{(c)}_T = \mathcal{D}(\vo^{(c)}_G, \vo^{(c)}_T)$ and $v^{(c)}_{j} = \mathcal{D}(\vo^{(c)}_G, \vo^{(c)}_{j})$, $\forall j \in \mS$
             \Comment{$\vo^{(c)}$: output for class $c$}
-            %\State $v_T \gets \Call{Class Frequency Scaling}{v_T}$  \Comment{(Algorithm \ref{alg:scaling})}
         \EndFor
         \State The above procedure produces: $\vv_T\in\sR^m, \vv_j\in\sR^m$
         \Comment{$m$: total number of classes}
-        \State Compute threshold: $\tau = 2 \times\max ( \vv_T )$
+        \State Compute threshold: $\tau = \theta \times\max ( \vv_T )$
         \Comment{$\max$: maximum element of the vector}
         \State  $\tilde{\tau} \gets \Call{Global-Min Mean Smoothing}{\tau}$  \Comment{Algorithm \ref{alg:smoothing}}
         \State Select users: $\mS_r = \{j \in \mS | \max(\vv_{j}) < \tilde{\tau} \}$
@@ -201,83 +187,53 @@ Notation: Let ${\bm S}$ represent the random subset of users that will submit lo
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{-10pt}
 
-\yli{In general, Algorithm~\ref{alg:t-agg} determines which users will be used for the global updates based a threshold. During each round of training, we compute and store a forward pass output ($\vo_G$) of the global model on the validation user's local data. Then, local training is performed and forward pass outputs ($\vo_j, \vo_T$) on validation user's local data with the selected users' models and the model of the validation user are stored. For each class, we compute the class-conditional distributional distance ($v^{(c)}_j, v^{(c)}_T$) between the global model output ($\vo^{(c)}_G$) and the user output ($\vo^{(c)}_j$ or $\vo^{(c)}_T$) by applying a distributional difference function on estimated CDFs based on $\vo^{(c)}_G$, $\vo^{(c)}_j$ and $\vo^{(c)}_T$. Here, $\vo^{(c)}$ represents the outputs based on trust user's local data with label $c$. In our experiment, the Kolmogorov-Smirnov (KS) function is used to compute the distributional difference, but other distance functions can also be applied. Suppose there is $m$ classes in total, the process will result in a distance vector ($\vv_j, \vv_T\in\sR^m$) for each user, including the validation user. The distance vectors will then be used to determine which user can be selected for the update.}
+In general, Algorithm~\ref{alg:t-agg} determines which users will be used for the global updates based on a threshold. During each round of training, we compute and store a forward pass output ($\vo_G$) of the global model on the validation user's local data. Then, local training is performed, and forward pass outputs ($\vo_j, \vo_T$) on the validation user's local data with the selected users' models and the model of the validation user are stored. For each class, we compute the class-conditional distributional distance ($v^{(c)}_j, v^{(c)}_T$) between the global model output ($\vo^{(c)}_G$) and the user output ($\vo^{(c)}_j$ or $\vo^{(c)}_T$) by applying a distributional difference function on estimated CDFs based on $\vo^{(c)}_G$, $\vo^{(c)}_j$ and $\vo^{(c)}_T$. Here, $\vo^{(c)}$ represents the outputs based on the trusted user's local data with the label $c$. In our experiment, the Kolmogorov-Smirnov (KS) function is used to compute the distributional difference, but other distance functions can also be applied. Suppose there are $m$ classes in total; the process will result in a distance vector ($\vv_j, \vv_T\in\sR^m$) for each user, including the validation user. The distance vectors will then determine which users can be selected for the update.
 
-%
-%\begin{wrapfigure}{r}{.5\textwidth}
-%\begin{align}
-%    & \textrm{Suppose } \forall c \in \mathopen[ D \mathclose], v^{(c)} \sim \textrm{ Uniform}(0, b_c) \nonumber \\
-%    & \textrm{Let } j = \argmax_c \left( b_c \right) \textrm{ such that } b_j = \max_c \left( b_c \right) \nonumber \\
-%    & \quad \max_c \left( v^{(c)} \right) \geq v_j \nonumber \\
-%    & \quad E \left[ \max_c \left( v^{(c)} \right) \right] \geq E \left[ v_j \right] = \dfrac{b_j}{2} \nonumber \\
-%    & \quad E \left[ 2 * \max_c \left( v^{(c)} \right) \right] \geq b_j \label{eq:geq_bound} 
-%\end{align}
-%\end{wrapfigure}
+\paragraph{Threshold Construction.} In this part, we discuss how to decide the threshold ($\tau$) and how to use it to select users.  We quantify the threshold as the largest possible change a non-malicious user could contribute. Users with distance values exceeding the threshold will be excluded. Assume that the class-conditional distances ($v^{(c)}$) are Uniform on $[0, b_c]$ for each class $c$, where $b_c$ is the maximum possible change to the output layer of class $c$ through local training by a non-malicious user.  Therefore, the threshold can be generated by estimating the maximum of $b_c$ for any class.  Let $m$ represent the total number of classes, equation~\ref{eq: dep} gives simple bounds for our quantity of interest under arbitrary dependence. Therefore, we parameterize our method by $\theta \in [0, 1]$, see Algorithm~\ref{alg:t-agg}. We recommend choosing $\theta$ based on the setting's prevalence of backdoor attacks and the cost of a successful attack to interested parties. For example, twice the maximum of the class-conditional distance ($2V$) is a liberal estimator for the upper bound of $b_c, \forall c\in [1,...,m]$. Such scaling would allow more users to update the global model but increase the risk of a successful backdoor attack. Conversely, using $V$ without scaling would help to prevent backdoor attacks, but with the potential loss of denying benign users from updating the global model. The goal is to choose the smallest $\theta$ that allows benign users to sufficiently create a robust shared machine learning model.
 
-\vspace{-10pt}
-\paragraph{Threshold Construction.} In this part, we discuss how to decide the threshold ($\tau$) and how to use it to select users. \yli{The threshold is determined by the largest possible change that a non-malicious user could contribute. Users with distance values exceed the threshold will be excluded.}
-%Recall that we intend to determine the most considerable possible change that a non-malicious user could contribute and exclude all users from participating in the update of the global model that exceeds such a threshold. 
-%Hence, we want to estimate the most prominent possible distributional distance for any class for use as a cutoff. We operate under the assumption that the class distances are Uniform on $\mathopen[0, b_c\mathclose]$ for each class c, where $b_c$ is the maximum possible change to the output layer of class c through local training by a non-malicious user. 
-Assume that the class-conditional distances ($v^{(c)}$) are Uniform on $[0, b_c]$ for each class $c$, where $b_c$ is the maximum possible change to the output layer of class $c$ through local training by a non-malicious user. 
-Therefore, the threshold can be generated by estimating the maximum of $b_c$ for any class. 
-Let $m$ represent the total number of classes, equation~\ref{eq:geq_bound} shows that under the assumption, twice the maximum of the class-conditional distance ($2\max(v^{(c)})$) is a practical estimation of the upper bound of $b_c, \forall c\in [1,...,m]$.
+If we additionally assume independence between the class conditional distances, we can establish an additional lower bound, equation~\ref{eq: indep}, for our largest possible benign change. Note, equation~\ref{eq: indep} converges asymptotically to the earlier lower bound as the size of the classification problem ($m \rightarrow \infty$) grows. Hence, this additional bound is provided to assist with choosing an appropriate $\theta$ for smaller-way classification problems.
 
-\vspace{-10pt}
 \begin{align}
-    &\forall c \in [1,...,m], v^{(c)} \sim \textrm{ Uniform}(0, b_c), \textrm{let } j = \argmax_c \left( b_c \right) \textrm{ such that } b_j = \max_c \left( b_c \right). \nonumber \\
-    &\max_c \left( v^{(c)} \right) \geq v^{(j)} \Longrightarrow E \left[ \max_c \left( v^{(c)} \right) \right] \geq E \left[ v^{(j)} \right] = \dfrac{b_j}{2}  \Longrightarrow E \left[ 2 \times \max_c \left( v^{(c)} \right) \right] \geq b_j \label{eq:geq_bound} 
+    & \textrm{Assume } \forall c \in [1,...,m], v^{(c)} \sim \textrm{ Unif}(0, b_c) \nonumber \\
+    & \textrm{Define } b = \max_c (b_c), j = \argmax_c (b_c) \textrm{ and } V = \max_c \left( v^{(c)} \right) \nonumber \\
+    & \quad v^{(j)} \leq V \leq b_j \Longrightarrow E \left[ v^{(j)} \right] = \dfrac{b_j}{2} \leq E \left[ V \right] \leq b_j  \Longrightarrow E \left[ V \right] \leq b_j \leq E \left[ 2 V \right] \label{eq: dep} \\
+    & \textrm{Assuming instead } \forall c \in [1,...,m], v^{(c)} \overset{\textrm{ind}}{\sim} \textrm{ Unif}(0, b_j) \nonumber \\
+    & \quad \textrm{Define } W = \max_c \left( w^{(c)} \right) \textrm{ where } w^{(c)} \overset{\textrm{iid}}{\sim} \textrm{ Unif}(0, b_j) \Longrightarrow \dfrac{W}{b_j} \sim \textrm{Beta}(m, 1) \Longrightarrow E(W) = \dfrac{m}{m + 1} \nonumber \\
+    & \quad F_V(t) = P(V \leq t) = \prod_{i = 1}^m P_{v^{(c)}}(t) \geq \prod_{i = 1}^m P_{w^{(c)}}(t) = P(W \leq t) = F_W(t) \nonumber \\
+    & \quad \Longrightarrow E(V) = \int_0^\infty (1 - F_V(t)) \,dt \leq \int_0^\infty (1 - F_W(t)) \,dt = E(W) \nonumber \\
+    & \quad \Longrightarrow E \left[ \dfrac{V}{b_j} \right] \leq E \left[ \dfrac{W}{b_j} \right] = \dfrac{m}{m + 1} \Longrightarrow E \left[ \left( \dfrac{m + 1}{m} \right) V \right] \leq b_j \label{eq: indep} \\
+    \nonumber 
 \end{align}
-\vspace{-10pt}
-
-\yli{Since the validation user is a non-malicious user, its distance vector can be a good representation of non-malicious users. Therefore, we estimate the threshold $\tau$ by setting $\tau=2\times\max(\vv_T)$, where $\vv_T\in\sR^m$ is the distance vector of the validation user and $\max(\cdot)$ means getting the maximum value of the vector $\vv_T$. Then, the maximum distance value ($\max(\vv_j)$) of each selected user will be compared with the threshold ($\tau$) to determine the final list of users who can participate in the update. A user with maximum distance smaller than the threshold is considered as a benign user, while a user with maximum distance larger than the threshold will be removed.}
-%we aim to estimate and use a representation for the maximum of $b_c$, the maximal benign change to any class, as a cutoff for returning user models. 
-However, we find that this naive threshold is very unstable and a lucky malicious user can get pass in some rounds due to the instability. Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the concern.
 
 
-%Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the following concerns: (1) In early communication rounds, the cutoff rapidly decreases as the model starts making connections between inputs and output classes. Malicious users have ample opportunity to impact the model at the beginning of Federated Learning; (2) there is extreme instability round-to-round in our threshold. A lucky malicious user can get past a large cutoff for that round due to instability.
-    %\item The class distributional differences are more considerable and variable for users with imbalanced classes. Hence, the threshold values depend heavily on the distribution of class labels for the validated user.
+Since the validation user is non-malicious, their distance vector serves as a good representation for other non-malicious users. Therefore, we estimate the threshold $\tau$ by setting $\tau=2\times\max(\vv_T)$, where $\vv_T\in\sR^m$ is the distance vector of the validation user and $\max(\cdot)$ means getting the maximum value of the vector $\vv_T$. Then, the maximum distance value ($\max(\vv_j)$) of each selected user will be compared with the threshold ($\tau$) to determine the final list of users who can participate in the update. A user with a maximum distance smaller than the threshold is considered a benign user, while a user with a maximum distance larger than or equal to the threshold will be removed. However, this naive threshold is very unstable, and a lucky malicious user can get past it in some rounds due to the instability. Therefore, we make an additional modification, {\bf global-min mean smoothing}, to this basic threshold to address the concern.
 
-
-%Hence, we refocus our efforts on estimating an upper bound for the most considerable change a non-malicious user with balanced data can make to the output layer of the global model. Our final threshold includes global min-mean smoothing and class frequency scaling to address the above concerns.
-
-\vspace{-10pt}
 \paragraph{Global-Min Mean Smoothing.} 
-%We needed to develop a stable cutoff that is a meaningful estimate of the maximum distance a benign user can submit for a given round. We use averaging as a valuable solution for reducing variability without impacting bias. Under the assumption that certain consecutive rounds have the same values of $b_c$, we can use the average threshold across several rounds to improve our estimate's stability. Note that we can view this average as smoothing across previous values with equal weight. 
-A straightforward way to stabilize the threshold value is smoothing. However, in the early communication rounds, the naive threshold value rapidly decreases as the model starts making connections between inputs and output classes. Therefore, applying smoothing method early will result in a relatively high threshold, which may let attackers bypass. 
-%Although smoothing aids stability, smoothing methods tend to exacerbate the problem resulting from $b_c$ tending to decrease rapidly over the first few communication rounds. 
-When the naive threshold ($\tau$) decreases rapidly, we do not wish to use any previous communication rounds for the smoothing. 
+A straightforward way to stabilize the threshold value is smoothing methods. However, in the early communication rounds, the naive threshold value rapidly decreases as the model starts making connections between inputs and output classes. Therefore, applying a smoothing method early will result in a relatively high threshold, which may let attackers bypass it. When the naive threshold ($\tau$) decreases rapidly, we do not wish to use any previous communication rounds for the smoothing. 
 
+\pagedepth\maxdimen
 \begin{wrapfigure}{r}{.4\textwidth}
-    \vspace{-15pt}
-    \includegraphics[width=.4\textwidth]{make_article/make_visuals/visuals/smoothing--d_rounds30.png}
-    \vspace{-15pt}
+    \includegraphics[width=.4\textwidth]{pics/smoothing--d_rounds30.png}
     \caption{\footnotesize Comparison of the global min-mean smoothing with the base (naive) threshold and various smoothing methods. 
     %The global min-mean is smooth and captures the early round behavior of the base threshold.
     }
-    \vspace{-0.8cm}
     \label{fig: smoothing}
 \end{wrapfigure}
 
-%Our solution is to use as our cutoff the running mean since the lowest observed value (Global-Min Mean) of the maximum class distance for the validated user. 
-Therefore, we propose to use the lowest observed value (Global Min) of $\tau$ as the staring point of smoothing. Let $\tau_t$ represent the naive estimation of the threshold in round $t$, the smoothed threshold $\tilde{\tau}$ at round $n$ is given by
+Therefore, we propose to use the lowest observed value (Global Min) of $\tau$ as the starting point of smoothing. Let $\tau_t$ represent the naive estimation of the threshold in round $t$, the smoothed threshold $\tilde{\tau}$ at round $n$ is given by
 \begin{align*}
     \tilde{\tau} = \frac{1}{n-t_s+1}\sum_{t=t_s}^n \tau_t,
 \end{align*}
-where $t_s$ is the round that when the global min is observed. Details of the global-min mean smoothing is described in Algorithm~\ref{alg:smoothing}. As $\tau_t$ shrinks, we observe new global minimums, and the start of the threshold smoothing is reset. 
-%As a result, our solution quickly adapts to decreasing values of $max_c (b_c)$ over communication rounds. 
-%As $max_c (b_c)$ shrinks, we are likely to observe new global minimums, and the start of the threshold is reset. 
-In addition, when our estimate stabilizes, previous values are leveraged to smooth the threshold, which keeps lucky malicious users from getting past a volatile threshold. Figure~\ref{fig: smoothing} compares our global min-mean smoothing with the naive threshold and various smoothing techniques.
-The global min-mean smoothing best captures early behavior of the naive threshold while providing remarkable improvements to stability. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
+where $t_s$ is the round that when the global min is observed. Details of the global-min mean smoothing is described in Algorithm~\ref{alg: smoothing}. As $\tau_t$ shrinks, we observe new global minimums, and the start of the threshold smoothing is reset.  In addition, when our estimate stabilizes, previous values are leveraged to smooth the threshold, which keeps lucky malicious users from getting past a volatile threshold. Figure~\ref{fig: smoothing} compares our global min-mean smoothing with the naive threshold and various smoothing techniques. The global min-mean smoothing best captures the naive threshold's early behavior while providing remarkable stability improvements. Additionally, when our threshold encounters a new global minimum, it provides a conservative estimate to prevent malicious users while re-learning cutoff behavior over the next few rounds.
 
-\vspace{-10pt}
 \begin{algorithm}[H]
 \caption{Global-Min Mean Smoothing \\ 
 Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of values that we wish to smooth.
 }
-\label{alg:smoothing}
+\label{alg: smoothing}
 \begin{algorithmic}[1]
+
     \Procedure{Global-Min Mean Smoothing}{$\tau_1, \cdots, \tau_{n - 1}, \tau_n$}
         \State Record the location of global minimum: $i = \argmin\limits_{t \in [1,...,n] } \tau_t$
         \State Subset to a sequence starting with the global min: $\{\tau_t\}_{t=i}^n = \{\tau_i, \cdots, \tau_n \}$
@@ -285,110 +241,69 @@ Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of va
     \EndProcedure
 \end{algorithmic}
 \end{algorithm}
-\vspace{-10pt}
 
-\vspace{-10pt}
 \section{EXPERIMENTS}
-\vspace{-10pt}
 
 \subsection{Setting}
 
-\vspace{-10pt}
-\paragraph{Federated Learning.} We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over $M$ communication rounds with $N$ users. Each iteration randomly selects $K$ users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returned model weights by the FedAvg procedure. We focus  our experiments on the ResNet18 model architecture, a standard object recognition classifier initially proposed in~\cite{resnet}. We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. For simplicity, we select two main sets of training hyper-parameters for benign and malicious users. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. 
+\paragraph{Federated Learning.} We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over $M$ communication rounds with $N$ users. Each iteration randomly selects $K$ users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returned model weights by the FedAvg procedure. We focus  our experiments on the ResNet18 model architecture; a standard object recognition classifier initially proposed in~\cite{resnet}. We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. For simplicity, we select two main sets of training hyper-parameters for benign and malicious users. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. 
 
-\vspace{-10pt}
-\paragraph{Attack and Baseline.} To show the effectiveness of our method, we choose a setting in which the backdoor attack is strong. We force all malicious users to be included in the subset of selected users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold in preventing even strong backdoor attacks against the global model. 
-For our experiment, we test the proposed method and two other robust aggregation methods Median and Trim-mean~\citep{trim-mean} against two state-of-the-art backdoor attacks in FL: Neurotoxin~\citep{neurotoxin} and Distributed Backdoor Attacks (DBA)~\citep{dba}. To further evaluate the effectiveness of the aggregation methods, we also vary the proportion of malicious attackers ($10\%, 20\%, 40\%$) in selected users to test the defense methods under different attack strength levels.
+\paragraph{Attack and Baseline.} To show the effectiveness of our method, we choose a setting in which the backdoor attack is strong. We force all malicious users to be included in the subset of selected users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold to prevent even strong backdoor attacks against the global model. 
+For our experiment, we test the proposed method and two other robust aggregation methods, Median and Trim-mean~\citep{trim-mean}, against two state-of-the-art backdoor attacks in FL: Neurotoxin~\citep{neurotoxin} and Distributed Backdoor Attacks (DBA)~\citep{dba}. To further evaluate the effectiveness of the aggregation methods, we also vary the proportion of malicious attackers ($10\%, 40\%$) in selected users to test the defense methods under different attack strength levels.
 
-%in selected users, and compare the effectiveness of our method against other robust aggregation methods Median and Trim-mean~\citep{trim-mean}. We also highlight the effectiveness of our defense against Neurotoxin and Distributed Backdoor Attacks (DBA).
+\paragraph{Data.} The experiments are done on three different data sets: CIFAR10~\citep{krizhevsky2009learning}, STL10~\citep{coates2011analysis} and CIFAR100~\citep{krizhevsky2009learning}. In each experiment, we randomly split the data between the users. For global model evaluation, we split the test set into two parts. We add the backdoor trigger to images in the second half and remove any target class observations. We measure model performance with classification accuracy using the first half as {\color{blue}classification accuracy}, and the proportion of the poisoned half predicted as the target class, known as {\color{red}attack success rate}, to measure the extent that the backdoor attack has compromised the model. 
+For a defense method, a good performance consists of a low attack success rate and high classification accuracy. In other words, both attacks are unsuccessful when the defense method is used, and the defense does not negatively influence the classification performance. 
+%See more details of hyper-parameters in Appendix.
 
-%\paragraph{Data.} To produce local data sets that do not have to be independent and identically distributed, we sample from the training data set using a Dirichlet distribution with specified parameter alpha. The Dirichlet sample determines the proportion of each class included in that user's data set. Larger values of alpha produce more balanced class distributions. We separately control alpha for benign, malicious, and validation users. Our experiments use the CIFAR-10, CIFAR-100, and STL-10 data sets.
 
-\vspace{-10pt}
-\paragraph{Data.} The experiments are done on three different data sets: CIFAR10~\citep{krizhevsky2009learning}, STL10~\citep{coates2011analysis} and CIFAR100~\citep{krizhevsky2009learning}. In each experiment, we randomly split the data between the users. For global model evaluation, we split the test set into two parts. We add the backdoor trigger to images in the second half and remove any target class observations. We measure model performance with classification accuracy using the first half as {\color{blue}classification accuracy}, and the proportion of the poisoned half predicted as the target class, known as {\color{red}attack success rate}, to measure the extent that the backdoor attack has compromised the model. For a defense method, low attack success rate and high classification accuracy represent good performance, meaning that the attack is not successful when the proposed method is used while the classification performance is not influenced by the defense. See more details of hyper-parameters in Appendix.
+\subsection{Results}
 
-\begin{figure}
-\vspace{-10pt}
+We begin by considering a setting where 10\% of the selected users are malicious each communication round. Figure~\ref{fig: accuracy--n_malicious1} shows the performance of the three robust aggregation methods against DBA and Neurotoxin attacks on three data sets regarding classification accuracy and attack success rate. Our proposed method (TAG) nullifies the backdoor attack in each case without decreasing the classification accuracy of the original task. Furthermore, the model reaches a clear improvement in the model's classification accuracy on the CIFAR-10 data set compared to the other two aggregation methods.  The other two robust aggregation methods, coordinate-wise Median and Trim-mean, only prevent the backdoor attack on STL10 with Neurotoxin.  We conclude that our method is a clear improvement to the existing robust aggregation methods for federated learning. 
+
+We show that TAG can handle even stronger attack settings against state-of-the-art attacks in the following part. We consider testing the robust aggregation methods against DBA and Neurotoxin attacks with 40\% malicious users in the selected set.  These attacks are catastrophically successful against the current robust aggregation methods, see Figure~\ref{fig: accuracy--n_malicious4}, having a nearly perfect attack success rate after round 50 on all our data sets. However, our method, TAG, overcomes the backdoor extent of the initial rounds to prevent the attack against both CIFAR data sets. Although our defense method eventually could not withstand the Neurotoxin attack on STL10, we note that incredibly TAG delayed the attack's success for nearly 90 communication rounds when nearly half of the users were malicious. TAG's performance against DBA on STL10 is also unsatisfactory, but it still delays the attack's success.
+
+\begin{figure}[htp]
+\centering
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2.png}
+  \centering
+    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious1--dba0--beta0.2.png}
     \caption{\footnotesize Performance under DBA backdoor attack with 10\% malicious users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2--neuro_p0.1.png}
-    \caption{\footnotesize Performance under Neurotoxin backdoor attack with 10\% malicious users.}
+  \centering
+    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious1--dba0--beta0.2--neuro_p0.1.png}
+    \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users.}
   \end{subfigure}%
- \vspace{-5pt}
-\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks as the attack success rates are low. Meanwhile, it does not affect the classification performance of the model on clean data. However, the other two aggregations methods do not work well against backdoor attacks except on STL10 against Neurotoxin.} 
+\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users. The proposed method TAG performs well in defending against backdoor attacks as the attack success rates are low. Meanwhile, it does not affect the model's classification performance on clean data. However, the other two aggregations methods do not work well against backdoor attacks except on STL10 against Neurotoxin.} 
 \label{fig: accuracy--n_malicious1}
-\vspace{-10pt}
 \end{figure}
 
-\vspace{-10pt}
-\subsection{Main Results}
-\vspace{-10pt}
-
-We begin by considering a setting where 10\% of the selected users is malicious each communication round. Figure~\ref{fig: accuracy--n_malicious1} shows the performance of the three robust aggregation methods against DBA and Neurotoxin attacks on three data sets in terms of classification accuracy and attack success rate.
-In each case, our proposed method (TAG) nullifies the backdoor attack without decreasing the original task's classification accuracy. Furthermore, the model reaches a clear improvement in the model's classification accuracy on the CIFAR-10 data set compared to other two aggregation methods. Regarding the other two robust aggregation methods, coordinate-wise Median and Trim-mean, neither prevent the backdoor attack on any of the data sets except on STL10 against Neurotoxin. We conclude that our method is a clear improvement to the existing robust aggregation methods for federated learning. 
-
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=\textwidth]{pics/accuracy--n_malicious1--dba0--beta0.2.png}
-%    \caption{\footnotesize Model performance under DBA backdoor attack with 10\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks as the attack success rates are low. Meanwhile, it does not affect the classification performance of the model on clean data. However, the other two aggregations methods do not work well against backdoor attacks.}
-%    \label{fig: accuracy--n_malicious1}
-%\end{figure}
-
-
-
-In the following part, we show that TAG can handle even stronger attack settings against state-of-the-art attacks. We consider testing the robust aggregation methods against DBA and Neurotoxin attack with 20\% malicious users in the selected set. 
-%This attack's authors, \cite{dba}, proposed this attack to take advantage of the Federated Learning setting to create more stealthy attacks from each user using only a partial representation of the backdoor trigger. 
-Figure~\ref{fig: accuracy--dba1--n_malicious2} shows the performance of the three robust aggregation methods against the two attacks with 20\% malicious users selected on three data sets.
-%model performance against DBA attack where 20\% of the user subset is malicious each round. 
-These attacks are much stronger than those in the previous figure, Figure~\ref{fig: accuracy--n_malicious1}, as the baseline robust aggregation methods, coordinate-wise Median and Trim-mean, succumb entirely to the backdoor attack and in fewer communication rounds. However, TAG continues to completely prevent the backdoor attack on all three data sets. {\color{red} We need to improve the performance on STL10 against Neurotoxin.}
-
-\begin{figure}
-\vspace{-10pt}
+\begin{figure}[htp]
+\centering
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious2--dba1--beta0.2.png}
-    \caption{\footnotesize Performance under DBA backdoor attack with 20\% malicious users.}
-  \end{subfigure}%
-
-  \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious2--dba1--beta0.2--neuro_p0.1.png}
-    \caption{\footnotesize Performance under Neurotoxin backdoor attack with 20\% malicious users.}
-  \end{subfigure}%
- \vspace{-5pt}
-\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 20\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks in this setting. However, the other two aggregations methods succumb entirely to the backdoor attacks and in fewer communication rounds.} 
-\label{fig: accuracy--dba1--n_malicious2}
-\vspace{-10pt}
-\end{figure}
-
-Continuing our increase of attack strength, in the following setting, malicious users now comprise 40\% of the user subset. 
-%The malicious users perform a Distributed Backdoor Attack and use the Neurotoxin attack projection in their local updates. Recall the Neurotoxin attack projects model updates onto a given proportion of the smallest in absolute value model weights. The authors \cite{neurotoxin} target weights that may be of lesser importance to benign models. 
-These attacks are catastrophically successful against the current robust aggregation methods, see Figure~\ref{fig: accuracy--n_malicious4}, having a nearly perfect attack success rate after round 50 on all our data sets. However, our method, TAG, overcomes the backdoor extent of the initial rounds to prevent the attack against both CIFAR data sets. Although our defense method eventually could not withstand the Neurotoxin attack on STL10, we note that incredibly TAG delayed the attack's success for nearly 90 communication rounds when nearly half of the users were malicious. The performance of TAG against DBA on STL10 is also not satisfactory, but it still delays the success of the attack.
-
-\begin{figure}
-\vspace{-10pt}
-  \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2.png}
+  \centering
+    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious4--dba1--beta0.2.png}
     \caption{\footnotesize Performance under DBA backdoor attack with 40\% malicious users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=0.9\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--neuro_p0.1.png}
-    \caption{\footnotesize Performance under Neurotoxin backdoor attack with 40\% malicious users.}
+  \centering
+    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious4--dba1--beta0.2--neuro_p0.1.png}
+    \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users.}
   \end{subfigure}%
- \vspace{-5pt}
-\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks on CIFAR10 and CIFAR100. However, the other two aggregations methods do not work well on any of the three data sets.} 
+\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks on CIFAR10 and CIFAR100. However, the other two aggregation methods do not work well on the three data sets.} 
 \label{fig: accuracy--n_malicious4}
-\vspace{-10pt}
 \end{figure}
 
 
+%
 \subsection{Data Distribution Study}
 
 
+%
 \subsection{Validation User Data Proportion Study}
+
 
 % 
 \section{Conclusion}
