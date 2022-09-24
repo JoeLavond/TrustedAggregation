@@ -202,7 +202,7 @@ If we additionally assume independence between the class conditional distances, 
     & \quad \textrm{Define } W = \max_c \left( w^{(c)} \right) \textrm{ where } w^{(c)} \overset{\textrm{iid}}{\sim} \textrm{ Unif}(0, b_j) \Longrightarrow \dfrac{W}{b_j} \sim \textrm{Beta}(m, 1) \Longrightarrow E(W) = \dfrac{m}{m + 1} \nonumber \\
     & \quad F_V(t) = P(V \leq t) = \prod_{i = 1}^m P_{v^{(c)}}(t) \geq \prod_{i = 1}^m P_{w^{(c)}}(t) = P(W \leq t) = F_W(t) \nonumber \\
     & \quad \Longrightarrow E(V) = \int_0^\infty (1 - F_V(t)) \,dt \leq \int_0^\infty (1 - F_W(t)) \,dt = E(W) \nonumber \\
-    & \quad \Longrightarrow E \left( \dfrac{V}{b_j} \right) \leq E \left( \dfrac{W}{b_j} \right) = \dfrac{m}{m + 1} \Longrightarrow E \left[ \left( \dfrac{m + 1}{m} \right) V \right] \leq b_j \label{eq: indep} \\
+    & \quad \Longrightarrow E \left[ \dfrac{V}{b_j} \right] \leq E \left[ \dfrac{W}{b_j} \right] = \dfrac{m}{m + 1} \Longrightarrow E \left[ \left( \dfrac{m + 1}{m} \right) V \right] \leq b_j \label{eq: indep} \\
     \nonumber 
 \end{align}
 
