@@ -148,7 +148,7 @@ This section describes the motivation and framework for our proposed method, Tru
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=\textwidth]{pics/ext_motivation.png}
+    \includegraphics[width=\textwidth]{make_article/make_visuals/visuals/ext_motivation.png}
     \caption{\footnotesize Final hidden layer output distributions (kernel density estimation based) for a {\color{red}\bf backdoor} model (red) and a {\bf clean} model (black). There is an obvious difference between the distributions of the backdoor and clean models for the target label class.}
     \label{fig: motivation}
 \end{figure}
@@ -266,13 +266,13 @@ We show that TAG can handle even stronger attack settings against state-of-the-a
 \centering
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious1--dba0--beta0.2.png}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2.png}
     \caption{\footnotesize Performance under DBA backdoor attack with 10\% malicious users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious1--dba0--beta0.2--neuro_p0.1.png}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2--neuro_p0.1.png}
     \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users.}
   \end{subfigure}%
 \caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users. The proposed method TAG performs well in defending against backdoor attacks as the attack success rates are low. Meanwhile, it does not affect the model's classification performance on clean data. However, the other two aggregations methods do not work well against backdoor attacks except on STL10 against Neurotoxin.} 
@@ -283,13 +283,13 @@ We show that TAG can handle even stronger attack settings against state-of-the-a
 \centering
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious4--dba1--beta0.2.png}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--d_scale.png}
     \caption{\footnotesize Performance under DBA backdoor attack with 40\% malicious users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=3cm, width=.75\textwidth]{pics/accuracy--n_malicious4--dba1--beta0.2--neuro_p0.1.png}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--d_scale--neuro_p0.1.png}
     \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users.}
   \end{subfigure}%
 \caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks on CIFAR10 and CIFAR100. However, the other two aggregation methods do not work well on the three data sets.} 
