@@ -48,10 +48,10 @@ def main():
     datasets = ('cifar_10', 'cifar_100', 'stl_10')
     if args.neuro:
         n_rounds = (250, 250, 250)
-        d_scale = (None, 1.01, 1.1)
+        d_scale = (None, None, 1.1)
     else:
         n_rounds = (250, 250, 250)
-        d_scale = (None, 1.01, 1.1)
+        d_scale = (None, None, 1.1)
 
     out_suffix = (
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
