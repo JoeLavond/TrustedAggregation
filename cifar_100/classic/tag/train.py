@@ -74,6 +74,8 @@ def get_args():
     parser.add_argument('--col_size', default=4, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
+    parser.add_argument('--d_scale', default=2, type=float)
+    parser.add_argument('--d_smooth', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
@@ -390,17 +392,21 @@ def main():
                 [m_user, r] + user_ks
             )
 
+            if args.d_smooth:
+                thresh = np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
+            else:
+                thresh = output_val_ks_all[-1]
+
+            thresh = args.d_scale * thresh
+            thresh = np.minimum(thresh, 1)
+
             user_ks_max = max(user_ks)
-            thresh = np.minimum(
-                ((args.n_classes + 1) / args.n_classes) * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]), 1
-            )
             user_update = (user_ks_max < thresh)
             if m_user:
                 logger.info(
                     'User KS Max: %.4f, Thresh: %.4f, Update: %r',
                     user_ks_max, thresh, user_update
                 )
-
             # send updates to global
             if ((r < args.d_start) or user_update):
                 user_update_count += 1
@@ -505,19 +511,24 @@ def main():
 
 
     """ Save output """
+    suffix = (
+        (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        + ('--no_smooth' if not args.d_smooth else '')
+    )
+
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_global_acc.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{suffix}.npy'), output_global_acc
     )
 
     output_val_ks = np.array(output_val_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_val_ks.npy'), output_val_ks
+        os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
     )
 
     output_user_ks = np.array(output_user_ks)
     np.save(
-        os.path.join(args.out_path, 'data', 'output_user_ks.npy'), output_user_ks
+        os.path.join(args.out_path, 'data', f'output_user_ks{suffix}.npy'), output_user_ks
     )
 
 
