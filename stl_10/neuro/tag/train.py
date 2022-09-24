@@ -75,7 +75,8 @@ def get_args():
     parser.add_argument('--col_size', default=24, type=int)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
-    parser.add_argument('--d_scale', default=1.1, type=float)
+    parser.add_argument('--d_scale', default=2, type=float)
+    parser.add_argument('--d_smooth', default=1, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
@@ -409,7 +410,14 @@ def main():
 
             user_ks_max = max(user_ks)
 
-            thresh = (args.d_scale * np.mean(output_val_ks_all[np.argmin(output_val_ks_all):]))
+            if args.d_smooth:
+                thresh = np.mean(output_val_ks_all[np.argmin(output_val_ks_all):])
+            else:
+                thresh = output_val_ks_all[-1]
+
+            thresh = args.d_scale * thresh
+            thresh = np.minimum(thresh, 1)
+
             user_update = (user_ks_max < thresh)
             if m_user:
                 logger.info(
@@ -528,6 +536,7 @@ def main():
     suffix = (
         f'--neuro_p{args.neuro_p}'
         + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        + ('--no_smooth' if not args.d_smooth else '')
     )
 
     output_global_acc = np.array(output_global_acc)
