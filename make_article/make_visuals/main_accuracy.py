@@ -27,6 +27,7 @@ def get_args():
     parser.add_argument('--neuro_p', default=0.1, type=float)
 
     parser.add_argument('--beta', default=0.2, type=float)
+    parser.add_argument('--d_scale', default=1, type=int)
 
     parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--font_size', default=14, type=int)
@@ -48,14 +49,17 @@ def main():
     datasets = ('cifar_10', 'cifar_100', 'stl_10')
     if args.neuro:
         n_rounds = (250, 250, 250)
-        d_scale = (None, None, 1.1)
     else:
         n_rounds = (250, 250, 250)
+
+    if args.d_scale:
         d_scale = (None, None, 1.1)
+    else:
+        d_scale = (None, None, None)
 
     out_suffix = (
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
-        + ('--d_scale' if sum([1 if x is not None else 0 for x in d_scale]) else '')
+        + ('--d_scale' if args.d_scale else '')
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
     )
 
