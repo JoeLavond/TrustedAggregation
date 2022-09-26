@@ -46,7 +46,7 @@ def get_args():
     """ Federated learning """
     # basic fl
     parser.add_argument('--n_users', default=100, type=int)
-    parser.add_argument('--n_local_data', default=500, type=int)
+    parser.add_argument('--n_user_data', default=500, type=int)
     parser.add_argument('--p_report', default=0.1, type=float)
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
@@ -77,6 +77,7 @@ def get_args():
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--d_scale', default=2, type=float)
     parser.add_argument('--d_smooth', default=1, type=int)
+    parser.add_argument('--n_val_data', default=500, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
 
@@ -125,8 +126,8 @@ def main():
     cifar_std = train_data.std()
 
     # get user data
-    users_data_indices = train_data.sample(args.n_users - 1, args.n_local_data, args.alpha, args.n_classes)
-    [val_data_indices] = train_data.sample(1, args.n_local_data, args.alpha_val, args.n_classes)
+    users_data_indices = train_data.sample(args.n_users - 1, args.n_user_data, args.alpha, args.n_classes)
+    [val_data_indices] = train_data.sample(1, args.n_val_data, args.alpha_val, args.n_classes)
     users_data_indices.append(val_data_indices)
 
     val_data = train_data.get_user_data(
@@ -537,6 +538,7 @@ def main():
     suffix = (
         f'--neuro_p{args.neuro_p}'
         + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
         + ('--no_smooth' if not args.d_smooth else '')
     )
 

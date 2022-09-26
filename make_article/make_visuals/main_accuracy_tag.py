@@ -30,7 +30,7 @@ def get_args():
     parser.add_argument('--neuro_p', default=0.1, type=float)
 
     parser.add_argument('--beta', default=0.2, type=float)
-    parser.add_argument('--d_scale', default=2, type=float)
+    parser.add_argument('--d_scale', default=2, type=int)
 
     parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
@@ -47,7 +47,7 @@ def main():
     args = get_args()
     out_suffix = (
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
-        + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        + ('--d_scale' if args.d_scale != 2. else '')
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
         + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
     )
@@ -114,8 +114,8 @@ def main():
                     'output_global_acc'
                     + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
                     + (
-                        f'--d_scale{args.d_scale}'
-                        if (args.d_scale != 2. and method == 'tag')
+                        f'--d_scale{d_scale[i]}'
+                        if (d_scale[i] is not None and method == 'tag')
                         else ''
                     )
                     + file_suffices[j]
