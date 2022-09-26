@@ -109,7 +109,7 @@ Federated Learning is a framework for training machine learning models from mult
 
 \section{Introduction}
 
-Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in~\cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare.  Also, FL is valuable for companies that shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning.  Under the FL setting, local entities (clients) submit their locally learned model gradients and weights to be intelligently combined by some centralized entity (server) to create a shared and robust machine learning model.
+Federated learning (FL) is a potential solution to constructing a machine learning model from several local data sources that cannot be exchanged or aggregated. As mentioned in~\cite{fed-learn}, these restrictions are essential in areas where data privacy or security is critical, including but not limited to healthcare.  Also, FL is valuable for companies that shift computing workloads to local devices. Furthermore, these local data sets are not required to be independent and identically distributed. Hence, a shared robust global model is desirable and, in many cases, cannot be produced without some form of collaborative learning. Under the FL setting, local entities (clients) submit their locally learned model gradients and weights to be intelligently combined by some centralized entity (server) to create a shared and robust machine learning model.
 
 Concerns have arisen that the lack of control or knowledge regarding the local training procedure could allow a user, with malicious intent, to create an update that compromises the global model for all participating clients. An example of such harm is a backdoor attack,  where the malicious users try to get the global model to associate a given manipulation of the input data, known as a trigger, with a particular outcome. Some methods~\cite{kurita2020weight,qi2020onion,li2021backdoor} have been proposed to detect the triggers in the training data to defend against backdoor attacks. However, in FL, as only the resulting model gradients or weights are communicated back, such methods cannot be applied to defend against backdoor attacks. Furthermore, since the model update in FL assumes no access to all clients' data, there is less information available to help detect and prevent such malicious intent. Thus backdoor attacks may be easier to perform and harder to detect in FL.  Furthermore, current robust aggregation methods~\cite{trim-mean} fail to prevent even mild backdoor attacks.
 
@@ -251,54 +251,74 @@ Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of va
 \paragraph{Attack and Baseline.} To show the effectiveness of our method, we choose a setting in which the backdoor attack is strong. We force all malicious users to be included in the subset of selected users to update the global model each round after the start of the backdoor attack. Note that the selection of random users is a defense against malicious users by making it difficult for them to update the global model repeatedly. Additionally, we do not allow the validation user, a guaranteed benign user, to participate in any global model updates. We make these decisions to show the ability of our threshold to prevent even strong backdoor attacks against the global model. 
 For our experiment, we test the proposed method and two other robust aggregation methods, Median and Trim-mean~\citep{trim-mean}, against two state-of-the-art backdoor attacks in FL: Neurotoxin~\citep{neurotoxin} and Distributed Backdoor Attacks (DBA)~\citep{dba}. To further evaluate the effectiveness of the aggregation methods, we also vary the proportion of malicious attackers ($10\%, 40\%$) in selected users to test the defense methods under different attack strength levels.
 
-\paragraph{Data.} The experiments are done on three different data sets: CIFAR10~\citep{krizhevsky2009learning}, STL10~\citep{coates2011analysis} and CIFAR100~\citep{krizhevsky2009learning}. In each experiment, we randomly split the data between the users. For global model evaluation, we split the test set into two parts. We add the backdoor trigger to images in the second half and remove any target class observations. We measure model performance with classification accuracy using the first half as {\color{blue}classification accuracy}, and the proportion of the poisoned half predicted as the target class, known as {\color{red}attack success rate}, to measure the extent that the backdoor attack has compromised the model. 
+\paragraph{Data.} The experiments are done on three different data sets: CIFAR10~\citep{krizhevsky2009learning}, STL10~\citep{coates2011analysis} and CIFAR100~\citep{krizhevsky2009learning}. In each experiment, we construct user data sets by random sampling from the training data. For global model evaluation, we split the test set into two parts. We add the backdoor trigger to images in the second half and remove any target class observations. We measure model performance with classification accuracy using the first half as {\color{blue}classification accuracy}, and the proportion of the poisoned half predicted as the target class, known as {\color{red}attack success rate}, to measure the extent that the backdoor attack has compromised the model. 
 For a defense method, a good performance consists of a low attack success rate and high classification accuracy. In other words, both attacks are unsuccessful when the defense method is used, and the defense does not negatively influence the classification performance. 
 %See more details of hyper-parameters in Appendix.
 
 
 \subsection{Results}
 
-We begin by considering a setting where 10\% of the selected users are malicious each communication round. Figure~\ref{fig: accuracy--n_malicious1} shows the performance of the three robust aggregation methods against DBA and Neurotoxin attacks on three data sets regarding classification accuracy and attack success rate. Our proposed method (TAG) nullifies the backdoor attack in each case without decreasing the classification accuracy of the original task. Furthermore, the model reaches a clear improvement in the model's classification accuracy on the CIFAR-10 data set compared to the other two aggregation methods.  The other two robust aggregation methods, coordinate-wise Median and Trim-mean, only prevent the backdoor attack on STL10 with Neurotoxin.  We conclude that our method is a clear improvement to the existing robust aggregation methods for federated learning. 
-
-We show that TAG can handle even stronger attack settings against state-of-the-art attacks in the following part. We consider testing the robust aggregation methods against DBA and Neurotoxin attacks with 40\% malicious users in the selected set.  These attacks are catastrophically successful against the current robust aggregation methods, see Figure~\ref{fig: accuracy--n_malicious4}, having a nearly perfect attack success rate after round 50 on all our data sets. However, our method, TAG, overcomes the backdoor extent of the initial rounds to prevent the attack against both CIFAR data sets. Although our defense method eventually could not withstand the Neurotoxin attack on STL10, we note that incredibly TAG delayed the attack's success for nearly 90 communication rounds when nearly half of the users were malicious. TAG's performance against DBA on STL10 is also unsatisfactory, but it still delays the attack's success.
+We begin by considering a setting where 10\% of the selected users are malicious each communication round. Figure~\ref{fig: accuracy--n_malicious1} shows the performance of the three robust aggregation methods against backdoor attacks with and without the Neurotoxin projection on three data sets regarding classification accuracy and attack success rate. Our proposed method (TAG) nullifies the backdoor attack in each case without decreasing the classification accuracy of the original task in general. We see a slight improvement in classification accuracy for the CIFAR10 data set and a mild decrease in performance on STL10 under the Neurotoxin attack. However, the other two robust aggregation methods, coordinate-wise Median and Trim-mean, fail to prevent backdoor attacks with or without Neurotoxin. We conclude that our method is a clear improvement to the existing robust aggregation methods for federated learning. 
 
 \begin{figure}[htp]
 \centering
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2.png}
-    \caption{\footnotesize Performance under DBA backdoor attack with 10\% malicious users.}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2--d_scale.png}
+    \caption{\footnotesize Performance Under Backdoor Attack With 10\% Malicious Users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
   \centering
-    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2--neuro_p0.1.png}
-    \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users.}
+    \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious1--dba0--beta0.2--d_scale--neuro_p0.1.png}
+    \caption{\footnotesize Performance Under Neurotoxin Backdoor Attack With 10\% Malicious Users.}
   \end{subfigure}%
-\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 10\% malicious users. The proposed method TAG performs well in defending against backdoor attacks as the attack success rates are low. Meanwhile, it does not affect the model's classification performance on clean data. However, the other two aggregations methods do not work well against backdoor attacks except on STL10 against Neurotoxin.} 
+\caption{\footnotesize Model performance under standard and Neurotoxin backdoor attacks with 10\% malicious users. The proposed method TAG performs well in defending against backdoor attacks as the attack success rates are low. Meanwhile, it does not generally affect the model's classification performance on clean data, except for a slight decrease for the Neurotoxin attack on STL10. However, the other two aggregations methods do not work well against any of the backdoor attacks.} 
 \label{fig: accuracy--n_malicious1}
 \end{figure}
+
+We show that TAG can handle even stronger attack settings against state-of-the-art attacks in the following part. We consider testing the robust aggregation methods against DBA and Neurotoxin attacks with 40\% malicious users in the selected set.  These attacks are catastrophically successful against the current robust aggregation methods, see Figure~\ref{fig: accuracy--n_malicious4}, having a nearly perfect attack success rate after round 50 on all our data sets. However, our method, TAG, overcomes the backdoor extent of the initial rounds to prevent the attack against all data sets. 
 
 \begin{figure}[htp]
 \centering
   \begin{subfigure}{\textwidth}
   \centering
     \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--d_scale.png}
-    \caption{\footnotesize Performance under DBA backdoor attack with 40\% malicious users.}
+    \caption{\footnotesize Performance Under DBA Backdoor Attack With 40\% Malicious Users.}
   \end{subfigure}%
 
   \begin{subfigure}{\textwidth}
   \centering
     \includegraphics[height=4cm, width=\textwidth]{make_article/make_visuals/visuals/accuracy--n_malicious4--dba1--beta0.2--d_scale--neuro_p0.1.png}
-    \caption{\footnotesize Performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users.}
+    \caption{\footnotesize Performance Under DBA And Neurotoxin Backdoor Attacks With 40\% Malicious Users.}
   \end{subfigure}%
-\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks on CIFAR10 and CIFAR100. However, the other two aggregation methods do not work well on the three data sets.} 
+\caption{\footnotesize Model performance under DBA and Neurotoxin backdoor attacks with 40\% malicious users. The proposed method TAG performs well in defending against the backdoor attacks for all data sets. Again, the other two aggregation methods do not work well in preventing any backdoor attack under the stronger attack setting.}
 \label{fig: accuracy--n_malicious4}
 \end{figure}
 
 
 %
 \subsection{Data Distribution Study}
+
+In this section, we show the applicability of our method for imbalanced users. Recall that local data sets are not required to be independent and identically distributed for federated learning. For our experiments, the user data sets are obtained by random sampling from the training data. In this experiment, we use the m-dimensional (number of total classes) Dirichlet distribution to determine the proportion for each class to be randomly sampled. We parameterize this distribution by $\alpha \mathbf{1}_m$ where $\alpha$ is a scalar such that large values correspond to balanced data and smaller values lead to imbalanced user data, and $\mathbf{1}_m$ is an m-dimensional vector of ones.
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[height=4cm, width=.5\textwidth]{make_article/make_visuals/visuals/accuracy--cifar_10--n_malicious2--dba1--beta0.2--alpha1.png}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+
+%
+\subsection{Without Global-Min Mean Smoothing}
+
+% \begin{figure}[htp]
+%     \centering
+%     \includegraphics[height=4cm, width=.5\textwidth]{}
+%     \caption{Caption}
+%     \label{fig:my_label}
+% \end{figure}
 
 
 %
@@ -328,10 +348,10 @@ We believe our proposed method, Trusted Aggregation (TAG), is an essential advan
     \centering
     \includegraphics[width=0.4\textwidth]{make_article/make_visuals/visuals/scaling.png}
     \caption{Class Frequency Scaling}
-    \label{fig:scaling}
+    \label{fig: scaling}
 \end{wrapfigure}
 
-\paragraph{Class Frequency Scaling.} In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels, or distribution thereof, with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values for that class than benign users with a balanced distribution of class labels. Hence, we propose a simple quadratic-based scaling, see Figure \ref{fig:scaling} to scale down both over and under-represented class labels. We fit a polynomial that does not scale a balanced class and scales a class with either no representation or greater than twice the balanced frequency to zero.
+\paragraph{Class Frequency Scaling.} In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels, or distribution thereof, with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values for that class than benign users with a balanced distribution of class labels. Hence, we propose a simple quadratic-based scaling, see Figure \ref{fig: scaling} to scale down both over and under-represented class labels. We fit a polynomial that does not scale a balanced class and scales a class with either no representation or greater than twice the balanced frequency to zero.
 
 \begin{algorithm}[H]
 \caption{ (Class Frequency Scaling) \\ 
