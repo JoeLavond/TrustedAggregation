@@ -214,7 +214,7 @@ A straightforward way to stabilize the threshold value is smoothing methods. How
 
 \pagedepth\maxdimen
 \begin{wrapfigure}{r}{.4\textwidth}
-    \includegraphics[width=.4\textwidth]{pics/smoothing--d_rounds30.png}
+    \includegraphics[width=.4\textwidth]{make_article/make_visuals/visuals/smoothing--d_rounds30.png}
     \caption{\footnotesize Comparison of the global min-mean smoothing with the base (naive) threshold and various smoothing methods. 
     %The global min-mean is smooth and captures the early round behavior of the base threshold.
     }
@@ -256,7 +256,7 @@ For a defense method, a good performance consists of a low attack success rate a
 %See more details of hyper-parameters in Appendix.
 
 
-\subsection{Results}
+\subsection{Main Results}
 
 We begin by considering a setting where 10\% of the selected users are malicious each communication round. Figure~\ref{fig: accuracy--n_malicious1} shows the performance of the three robust aggregation methods against backdoor attacks with and without the Neurotoxin projection on three data sets regarding classification accuracy and attack success rate. Our proposed method (TAG) nullifies the backdoor attack in each case without decreasing the classification accuracy of the original task in general. We see a slight improvement in classification accuracy for the CIFAR10 data set and a mild decrease in performance on STL10 under the Neurotoxin attack. However, the other two robust aggregation methods, coordinate-wise Median and Trim-mean, fail to prevent backdoor attacks with or without Neurotoxin. We conclude that our method is a clear improvement to the existing robust aggregation methods for federated learning. 
 
