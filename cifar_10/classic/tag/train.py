@@ -517,7 +517,7 @@ def main():
     """ Save output """
     suffix = (
         (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
-        (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
+        + (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
         + ('--no_smooth' if not args.d_smooth else '')
     )
 

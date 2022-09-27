@@ -21,6 +21,7 @@ def get_args():
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
+    parser.add_argument('--n_val_data', default=None, type=int)
 
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--n_malicious', default=1, type=int)
@@ -31,6 +32,7 @@ def get_args():
 
     parser.add_argument('--beta', default=0.2, type=float)
     parser.add_argument('--d_scale', default=2, type=float)
+    parser.add_argument('--d_smooth', default=1, type=float)
 
     parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
@@ -49,7 +51,9 @@ def main():
         f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
         + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+        + (f'--n_val_data{args.n_val_data}' if args.n_val_data is not None else '')
         + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
+        + ('--no_smooth' if not args.d_smooth else '')
     )
 
     # hyper-parameters
@@ -71,7 +75,25 @@ def main():
     ]
 
     methods = ('tag', 'base/mean', 'base/median')
-    file_suffices = ('', f'--beta{args.beta}', '')
+    file_suffices = (
+        (
+            f'--d_scale{args.d_scale}'
+            if args.d_scale != 2
+            else ''
+            + (
+                f'--n_val_data{args.n_val_data}'
+                if not args.n_val_data is not None
+                else ''
+            )
+            + (
+                '--no_smooth'
+                if not args.d_smooth
+                else ''
+            )
+        ),
+        f'--beta{args.beta}',
+        ''
+    )
 
     line_styles = ['solid', 'dotted', 'dashed']
     warm_colors = ['pink', 'red', 'orange']
@@ -113,11 +135,6 @@ def main():
                 (
                     'output_global_acc'
                     + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                    + (
-                        f'--d_scale{args.d_scale}'
-                        if (args.d_scale != 2. and method == 'tag')
-                        else ''
-                    )
                     + file_suffices[j]
                     + '.npy'
                 )
