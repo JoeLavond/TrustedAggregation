@@ -82,7 +82,7 @@ def main():
             else ''
             + (
                 f'--n_val_data{args.n_val_data}'
-                if not args.n_val_data is not None
+                if args.n_val_data is not None
                 else ''
             )
             + (
