@@ -2,6 +2,7 @@
 import copy
 import math
 import numpy as np
+from pathlib import Path
 import re
 import sys
 import time
@@ -16,7 +17,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.distributions.dirichlet import Dirichlet
 
 # source
-sys.path.insert(2, '/home/joe/')
+sys.path.insert(2, f'{Path.home()}')
 import global_utils as gu
 
 
