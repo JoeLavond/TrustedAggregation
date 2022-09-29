@@ -257,8 +257,6 @@ Notation: Let $(\tau_1, \cdots, \tau_{n - 1}, \tau_n)$ denote the sequence of va
 \vspace{-5pt}
 \section{EXPERIMENTS}
 
-%All code will be made available once author anonymity is no longer required. \yli{We can provide a zip folder that contains the code, so that we don't need this clarification.}
-
 \subsection{Setting}
 
 \textbf{Federated Learning.} We start by giving further specifications regarding the federated learning environment. Our interest is training a global model over $M$ communication rounds with $N$ users. Each iteration randomly selects $K$ users, using a specified proportion of the total users, to participate in the model update. After local training, the next global model is the average returned model weights by the FedAvg procedure. We use ResNet18, a popular classifier proposed in~\cite{resnet}, in all our experiments. We assume that all users, including malicious, have complete control over all aspects of local training, such as learning rate, the number of epochs, and the model weights they return. For simplicity, we select two main sets of training hyper-parameters for benign and malicious users. The malicious users will poison a given proportion of their local data by adding their backdoor trigger to the input and changing the training label to the target class. They intend for the model to associate the trigger with the target class and hence have the future global model identify any input with the trigger as belonging to the target class. 
@@ -369,7 +367,6 @@ In this section, we show the applicability of our method for imbalanced users fo
 
 \end{figure}
 
-Regarding attacks with 20\% or few malicious users, we did not have to modify the scaling parameter $\theta$ from previously balanced data experiments to have a successful defense when data is highly imbalanced ($\alpha = 1$), see Figure~\ref{fig: accuracy--n_malicious2--alpha1} \yli{Should refer to Figure~\ref{fig: accuracy--n_malicious2--alpha1}, which is in appendix?}. 
 
 \yli{Regarding attacks with 10\% and 20\% malicious users, we did not have to modify the scaling parameter $\theta$ from previously balanced data experiments to have a successful defense when data is highly imbalanced ($\alpha = 1$), see results in Figure~\ref{fig: accuracy--n_malicious2--alpha1} and Figure~\ref{} (10\% Figure?) in Appendix.}
 Our method prevents such backdoor attacks while achieving great classification accuracy for the original task. This setting alone is more than sufficient to show the usefulness of our proposed method TAG in the majority of federated learning settings.
@@ -422,6 +419,11 @@ While current robust aggregation methods fail to prevent mild backdoor attacks, 
 
 \section{Supplementary Results}
 
+%
+\subsection{Model Performance When No Backdoor Attack}
+
+%
+\subsection{Additional Figures For Data Distribution Study}
 
 \begin{figure}[htp]
   \begin{subfigure}{.35\textwidth}
@@ -458,38 +460,6 @@ While current robust aggregation methods fail to prevent mild backdoor attacks, 
     \nonumber 
 \end{align*} 
 
-
-%
-%\section{Class Frequency Scaling}
-
-%\begin{wrapfigure}{r}{0.4\textwidth}
-%    \centering
-%    \includegraphics[width=0.4\textwidth]{make_article/make_visuals/visuals/scaling.png}
-%    \caption{Class Frequency Scaling}
-%    \label{fig: scaling}
-%\end{wrapfigure}
-
-%\textbf{Class Frequency Scaling.} In some cases, having a trusted user with a balanced distribution of class labels may not be possible. The ability to construct a cutoff from unbalanced data helps when data cannot be collected and avoids data privacy or security issues associated with sharing one's local class labels, or distribution thereof, with other users. From initial experimentation, we saw that either over or under-represented classes result in larger KS values for that class than benign users with a balanced distribution of class labels. Hence, we propose a simple quadratic-based scaling, see Figure \ref{fig: scaling} to scale down both over and under-represented class labels. We fit a polynomial that does not scale a balanced class and scales a class with either no representation or greater than twice the balanced frequency to zero.
-
-%\begin{algorithm}[H]
-%\caption{ (Class Frequency Scaling) \\ 
-%Notation: Let $x$ denote the vector we wish to scale and $y$ be the vector of class labels where $D$ represents the total number of unique classes for the classification problem. 
-%}
-%\label{alg:scaling}
-%\begin{algorithmic}[1]
-%    \Procedure{Class Frequency Scaling}{$\{x_c \mid c \in \mathopen[ D \mathclose] \} \mid y$}
-%    \State define balanced proportion for classes, $B = 1/D$
-%        \For{each class $c \in \mathopen[ D \mathclose]$}
-%            \If{class $c$ is over-represented, $x_c > 2B$}
-%                \State $s_c = 0$
-%            \Else
-%                \State $s_c = \dfrac{-1}{B^2}(x_c)(x_c - 2B)$
-%            \EndIf
-%        \EndFor
-%    \State \Return $\{s_c * x_c \mid c \in \mathopen[ D \mathclose] \}$
-%    \EndProcedure
-%\end{algorithmic}
-%\end{algorithm}
 
 
 \end{document}
