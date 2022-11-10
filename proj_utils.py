@@ -13,6 +13,7 @@ import seaborn as sns
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from torch.distributions.dirichlet import Dirichlet
 
@@ -513,6 +514,69 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
         global_weights.copy_(trimmed_mean)
 
     return None
+
+
+""" Fed Trust """
+def __get_trust_score(trusted_model, user_model):
+
+    """ Returns (relu trust score times the ratio of trusted to user norm) """
+
+    # flatten all model weights to
+    trusted_weights = []
+    user_weights = []
+
+    # iterate over model weights
+    for (_, trusted_weight), (_, user_weight) in zip(
+        trusted_model.state_dict().items(),
+        user_model.state_dict().items()
+    ):
+
+        trusted_weights.append(torch.flatten(trusted_weight))
+        user_weights.append(torch.flatten(user_weight))
+
+    # cast to tensor
+    trusted_weights = torch.cat(trusted_weights)
+    user_weights = torch.cat(user_weights)
+
+    # compute cosine similarity
+    trusted_norm = torch.norm(trusted_weights)
+    user_norm = torch.norm(user_weights)
+    output = F.cosine_similarity(
+        trusted_weights, user_weights, dim=0
+    )
+
+    return (F.relu(output) * trusted_norm / user_norm)
+
+
+def global_trust_(global_model, trusted_model, model_list):
+
+    # use helper function to get trust scores and weightings
+    trust_weights = [
+        __get_trust_score(trusted_model, u_model)
+        for u_model in model_list
+    ]
+
+    # unpack helper functions
+    trust_weights = torch.from_numpy(np.array(trust_weights))
+
+    # iterate over model weights simulataneously
+    for (_, global_weights), *obj in zip(
+        global_model.state_dict().items(),
+        *[model.state_dict().items() for model in model_list]
+    ):
+
+        # scale by trust score
+        trusted_obj = [
+            w * temp[1]
+            for w, temp in zip(trust_weights, obj)
+        ]
+        trusted_obj = torch.stack(trusted_obj)
+
+        trusted_mean = trusted_obj.sum(dim=0)
+        trusted_mean /= trust_weights.sum().item()
+
+        # replace global weights with trusted mean
+        global_weights.copy_(trusted_mean.to(global_weights.device))
 
 
 # implement Neurotoxin attack using model weights instead of gradients
