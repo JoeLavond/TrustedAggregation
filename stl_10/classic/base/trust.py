@@ -104,21 +104,21 @@ def main():
     logger.info(args)
 
     """ Training data """
-    cifar_trans = T.Compose([
-        T.Pad(padding=4),
+    stl_trans = T.Compose([
+        T.Pad(padding=12),
         T.RandomHorizontalFlip(),
-        T.RandomCrop(size=32)
+        T.RandomCrop(size=96)
     ])
 
-    train_data = datasets.CIFAR10(
+    train_data = datasets.STL10(
         root=f'{Path.home()}/data/',
-        train=True,
+        split='test',
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
-    cifar_mean = train_data.mean()
-    cifar_std = train_data.std()
+    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, stl_trans)
+    stl_mean = train_data.mean()
+    stl_std = train_data.std()
 
     # get user data
     users_data_indices = train_data.sample(args.n_users - 1, args.n_user_data, args.alpha, args.n_classes)
@@ -167,7 +167,7 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(cifar_mean, cifar_std),
+        gu.StdChannels(stl_mean, stl_std),
         resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
@@ -182,9 +182,9 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
+    test_data = datasets.STL10(
         root=f'{Path.home()}/data/',
-        train=False,
+        split='train',
         download=True
     )
 
