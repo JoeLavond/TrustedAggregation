@@ -116,7 +116,7 @@ def main():
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, stl_trans)
+    train_data = pu.Custom3dDataset(train_data.data, train_data.labels, stl_trans, permute=0)
     stl_mean = train_data.mean()
     stl_std = train_data.std()
 
@@ -128,7 +128,6 @@ def main():
     val_data = train_data.get_user_data(
         val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
     )
-
     val_data_scaling = val_data.quadratic_scaling(args.n_classes)
 
     # store output
@@ -189,11 +188,11 @@ def main():
     )
 
     clean_test_x, pois_test_x, clean_test_y, pois_test_y = train_test_split(
-        np.array(test_data.data), np.array(test_data.targets),
-        test_size=0.5, stratify=np.array(test_data.targets)
+        np.array(test_data.data), np.array(test_data.labels),
+        test_size=0.5, stratify=np.array(test_data.labels)
     )
 
-    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y, permute=0)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -203,7 +202,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y, permute=0)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
