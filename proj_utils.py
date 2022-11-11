@@ -900,6 +900,7 @@ def evaluate_output(
 
     # initializations
     model = model.eval()
+    model = model.cuda(gpu)
     eval_loss = eval_acc = eval_n = 0
     if output:
         output_layers, output_labels = [], []
