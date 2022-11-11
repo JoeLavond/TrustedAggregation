@@ -71,10 +71,11 @@ def main():
     subdirs = [
         f'--d_start1--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
+        f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}'
     ]
 
-    methods = ('tag', 'base/mean', 'base/median')
+    methods = ('tag', 'base/mean', 'base/median', 'base/trust')
     file_suffices = (
         (
             f'--d_scale{args.d_scale}'
@@ -92,12 +93,13 @@ def main():
             )
         ),
         f'--beta{args.beta}',
+        '',
         ''
     )
 
-    line_styles = ['solid', 'dotted', 'dashed']
-    warm_colors = ['pink', 'red', 'orange']
-    cool_colors = ['blue', 'cyan', 'green']
+    line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
+    warm_colors = ['yellow', 'pink', 'red', 'orange', ]
+    cool_colors = ['green', 'blue', 'cyan', 'purple']
 
     out_path = './visuals'
     if not os.path.exists('./visuals'):
@@ -116,7 +118,7 @@ def main():
     for j, method in enumerate(methods):
 
         path = os.path.join(
-            f'{Path.home()}/fed-learn-dba',
+            f'{Path.home()}/fed-tag',
             data,
             ('neuro' if args.neuro else 'classic'),
             method,
@@ -147,7 +149,7 @@ def main():
         pois_lines.append(pois_line)
 
     # create legend
-    out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean']
+    out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean', 'FLTrust']
     l1 = plt.legend(
         clean_lines,
         out_methods,
@@ -177,6 +179,7 @@ def main():
         os.path.join('./visuals', f'accuracy--{data}{out_suffix}.png'),
         bbox_inches='tight'
     )
+
     if args.show:
         plt.tight_layout()
         plt.show()

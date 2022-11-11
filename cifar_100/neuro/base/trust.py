@@ -1,4 +1,4 @@
-
+""" Packages """
 # base
 import argparse
 import copy
@@ -23,7 +23,7 @@ from torch.utils.data import Dataset, DataLoader
 sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(3, f'{Path.home()}/fed-learn-dba')
+sys.path.insert(3, f'{Path.home()}/fed-tag/')
 import proj_utils as pu
 
 sys.path.insert(4, f'{Path.home()}/models/')
@@ -38,18 +38,15 @@ def get_args():
     """ File setup """
     # control
     parser.add_argument('--seed', default=0, type=int)
-    parser.add_argument('--n_classes', default=10, type=int)
+    parser.add_argument('--n_classes', default=100, type=int)
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
     parser.add_argument('--print_all', default=0, type=int)
 
-    # modeling
-    parser.add_argument('--model_name', default='resnet', type=str)
-
     """ Federated learning """
     # basic fl
     parser.add_argument('--n_users', default=100, type=int)
-    parser.add_argument('--n_local_data', default=500, type=int)
+    parser.add_argument('--n_user_data', default=500, type=int)
     parser.add_argument('--p_report', default=0.1, type=float)
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
@@ -71,17 +68,15 @@ def get_args():
     """ Data poisoning """
     # attack
     parser.add_argument('--neuro_p', default=0.1, type=float)
-    parser.add_argument('--dba', default=0, type=float)
+    parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
-    parser.add_argument('--row_size', default=24, type=int)
-    parser.add_argument('--col_size', default=24, type=int)
+    parser.add_argument('--row_size', default=4, type=int)
+    parser.add_argument('--col_size', default=4, type=int)
     # defense
+    parser.add_argument('--n_val_data', default=500, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
     parser.add_argument('--remove_val', default=1, type=int)
-    parser.add_argument('--trim_mean', default=0, type=int)
-    parser.add_argument('--beta', default=0.1, type=float)
-
     return parser.parse_args()
 
 
@@ -92,18 +87,12 @@ def main():
     args = get_args()
 
     # output
-    args.out_path = (
-        ('mean' if args.trim_mean else 'median')  # agg method
-        + ('/distributed' if args.dba else '/centralized')
-        + '/alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
-        + '/n_rounds' + str(args.n_rounds)
-        + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
+    args.out_path = os.path.join(
+        'trust',
+        ('distributed' if args.dba else 'centralized'),
+        f'alpha{args.alpha}--alpha_val{args.alpha_val}',
+        f'n_rounds{args.n_rounds}--m_start{args.m_start}--n_malicious{args.n_malicious}'
     )
-    args.suffix = (
-        f'--neuro_p{args.neuro_p}'
-        + (f'--beta{args.beta}' if args.trim_mean else '')
-    )
-
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
     if not os.path.exists(os.path.join(args.out_path, 'data')):
@@ -116,26 +105,48 @@ def main():
     logger.info(args)
 
     """ Training data """
-    stl_trans = T.Compose([
-        T.Pad(padding=12),
+    cifar_trans = T.Compose([
+        T.Pad(padding=4),
         T.RandomHorizontalFlip(),
-        T.RandomCrop(size=96)
+        T.RandomCrop(size=32)
     ])
 
-    train_data = datasets.STL10(
+    train_data = datasets.CIFAR100(
         root=f'{Path.home()}/data/',
-        split='test',
+        train=True,
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.labels, stl_trans, permute=0)
-    stl_mean = train_data.mean()
-    stl_std = train_data.std()
+    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
+    cifar_mean = train_data.mean()
+    cifar_std = train_data.std()
 
     # get user data
-    users_data_indices = train_data.sample(args.n_users - 1, args.n_local_data, args.alpha, args.n_classes)
-    [val_data_indices] = train_data.sample(1, args.n_local_data, args.alpha_val, args.n_classes)
+    users_data_indices = train_data.sample(args.n_users - 1, args.n_user_data, args.alpha, args.n_classes)
+    [val_data_indices] = train_data.sample(1, args.n_val_data, args.alpha_val, args.n_classes)
     users_data_indices.append(val_data_indices)
+
+    val_data = train_data.get_user_data(
+        val_data_indices, m_user=0, user_id=-1, model=None, **vars(args)
+    )
+
+    val_data_scaling = val_data.quadratic_scaling(args.n_classes)
+
+    # store output
+    output_val_ks = []
+    output_val_ks.append(
+        [-1] + val_data_scaling.tolist()
+    )
+
+    val_data.transformations = None
+    clean_val_loader = DataLoader(
+        val_data,
+        batch_size=args.n_batch,
+        shuffle=False,
+        num_workers=1,
+        pin_memory=True
+    )
+
 
     """ Data poisoning """
     # establish malicious users
@@ -157,7 +168,7 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(stl_mean, stl_std),
+        gu.StdChannels(cifar_mean, cifar_std),
         resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
@@ -171,33 +182,35 @@ def main():
     # global
     output_global_acc = []
 
+    # defense
+    output_user_ks = []
+    output_val_ks_all = []
+
 
     """ Import testing data """
     # testing data
-    test_data = datasets.STL10(
+    test_data = datasets.CIFAR100(
         root=f'{Path.home()}/data/',
-        split='train',
+        train=False,
         download=True
     )
 
     clean_test_x, pois_test_x, clean_test_y, pois_test_y = train_test_split(
-        np.array(test_data.data), np.array(test_data.labels),
-        test_size=0.5, stratify=np.array(test_data.labels)
-
+        np.array(test_data.data), np.array(test_data.targets),
+        test_size=0.5, stratify=np.array(test_data.targets)
     )
 
-    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y, permute=0)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
         shuffle=False,
         num_workers=1,
         pin_memory=True
-
     )
 
     # poison subset of test data
-    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y, permute=0)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -231,18 +244,48 @@ def main():
     )
 
 
+    """ Trusted User """
+    # copy global model and subset to trusted local data
+    trusted_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+    trusted_data = train_data.get_user_data(
+        users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
+    )
+
+    trusted_loader = DataLoader(
+        trusted_data,
+        batch_size=args.n_batch,
+        shuffle=True,
+        num_workers=1,
+        pin_memory=True
+    )
+
+    trusted_opt = optim.SGD(
+        trusted_model.parameters(),
+        lr=args.lr, weight_decay=args.wd, momentum=args.wd
+    )
+
+    # train local model
+    (trusted_train_loss, trusted_train_acc) = gu.training(
+        trusted_loader, trusted_model, cost, trusted_opt,
+        args.n_epochs, args.gpu_start + 1,
+        logger=None, print_all=args.print_all
+    )
+    trusted_model = trusted_model.cpu()
+
+
     """ Federated learning communication rounds """
+    # fed learn main loop
     for r in range(args.n_rounds):
-        r += 1
 
         # setup
+        r += 1
         round_start = time.time()
         global_updates = []
 
+        # select subset of users
         user_update_count = 0
         malicious_update_count = 0
 
-        # select subset of users
         if (r < args.m_start):
 
             user_subset_index = torch.randperm(args.n_users - args.n_malicious - args.remove_val)[:int(args.n_users * args.p_report)]
@@ -293,15 +336,15 @@ def main():
             if m_user:
                 (user_train_loss, user_train_acc) = pu.nt_training(
                     user_loader, user_model, cost, user_opt,
-                    args.n_epochs, args.gpu_start + 1,
-                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all,
+                    args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if m_user else None), print_all=args.print_all,
                     nt_obj=NT
                 )
             else:
                 (user_train_loss, user_train_acc) = gu.training(
                     user_loader, user_model, cost, user_opt,
-                    args.n_epochs, args.gpu_start + 1,
-                    logger=(logger if m_user or args.print_all else None), print_all=args.print_all
+                    args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if m_user else None), print_all=args.print_all
                 )
 
             # malicious scaling of model weights
@@ -321,16 +364,11 @@ def main():
 
 
         """ Global model training """
-        with torch.no_grad():
+        # update global weights
+        pu.global_trust_(global_model, trusted_model, global_updates)
 
-            # update global weights
-            if args.trim_mean:
-                pu.global_mean_(global_model, global_updates, args.beta)
-            else:
-                pu.global_median_(global_model, global_updates)
-
-            # update neurotoxin mask
-            NT.update_mask_(copy.deepcopy(global_model))
+        # update neurotoxin mask
+        NT.update_mask_(copy.deepcopy(global_model))
 
         round_end = time.time()
         logger.info(
@@ -354,10 +392,56 @@ def main():
         )
 
 
+        """ Trusted User """
+        # copy global model and subset to trusted local data
+        trusted_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+        trusted_data = train_data.get_user_data(
+            users_data_indices[-1], m_users[-1], -1, stamp_model, **vars(args)
+        )
+
+        trusted_loader = DataLoader(
+            trusted_data,
+            batch_size=args.n_batch,
+            shuffle=True,
+            num_workers=1,
+            pin_memory=True
+        )
+
+        trusted_opt = optim.SGD(
+            trusted_model.parameters(),
+            lr=args.lr, weight_decay=args.wd, momentum=args.wd
+        )
+
+        # train local model
+        (trusted_train_loss, trusted_train_acc) = gu.training(
+            trusted_loader, trusted_model, cost, trusted_opt,
+            args.n_epochs, args.gpu_start + 1,
+            logger=None, print_all=args.print_all
+        )
+        trusted_model = trusted_model.cpu()
+
+
     """ Save output """
+    suffix = (
+        f'--neuro_p{args.neuro_p}'
+        + (
+            f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else ''
+        )
+    )
+
     output_global_acc = np.array(output_global_acc)
     np.save(
-        os.path.join(args.out_path, 'data', f'output_global_acc{args.suffix}.npy'), output_global_acc
+        os.path.join(args.out_path, 'data', f'output_global_acc{suffix}.npy'), output_global_acc
+    )
+
+    output_val_ks = np.array(output_val_ks)
+    np.save(
+        os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
+    )
+
+    output_user_ks = np.array(output_user_ks)
+    np.save(
+        os.path.join(args.out_path, 'data', f'output_user_ks{suffix}.npy'), output_user_ks
     )
 
 
