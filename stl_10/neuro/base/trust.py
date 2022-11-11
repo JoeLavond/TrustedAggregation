@@ -117,7 +117,7 @@ def main():
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
+    train_data = pu.Custom3dDataset(train_data.data, train_data.labels, cifar_trans, permute=0)
     cifar_mean = train_data.mean()
     cifar_std = train_data.std()
 
@@ -196,11 +196,11 @@ def main():
     )
 
     clean_test_x, pois_test_x, clean_test_y, pois_test_y = train_test_split(
-        np.array(test_data.data), np.array(test_data.targets),
-        test_size=0.5, stratify=np.array(test_data.targets)
+        np.array(test_data.data), np.array(test_data.labels),
+        test_size=0.5, stratify=np.array(test_data.labels)
     )
 
-    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
+    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y, permute=0)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -210,7 +210,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
+    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y, permute=0)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
