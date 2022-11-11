@@ -1,0 +1,9 @@
+[2022/11/11 02:09:49] - Namespace(seed=0, n_classes=10, gpu_start=2, print_all=0, n_users=100, n_user_data=500, p_report=0.1, n_rounds=2, alpha=10000, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=1, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, neuro_p=0.1, dba=0, p_pois=0.1, target=0, row_size=4, col_size=4, n_val_data=500, alpha_val=10000, remove_val=1, out_path='trust/centralized/alpha10000--alpha_val10000/n_rounds2--m_start1--n_malicious1')
+[2022/11/11 02:09:55] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 2 ---
+[2022/11/11 02:09:59] - TESTING CLEAN - Time 4.1, Loss 2.3452, Acc 0.1022
+[2022/11/11 02:10:00] - TESTING POIS - Time 0.8, Loss 2.5765, Acc 0.0000
+[2022/11/11 02:10:10] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
