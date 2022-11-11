@@ -51,7 +51,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     # all users
-    parser.add_argument('--n_batch', default=128, type=int)
+    parser.add_argument('--n_batch', default=64, type=int)
     parser.add_argument('--mom', default=0.9, type=float)
     parser.add_argument('--wd', default=5e-4, type=float)
     # malicious users
@@ -59,8 +59,8 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=25, type=int)
-    parser.add_argument('--lr_pois', default=0.005, type=float)
+    parser.add_argument('--n_epochs_pois', default=15, type=int)
+    parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=10, type=int)
     parser.add_argument('--lr', default=0.01, type=float)
@@ -106,14 +106,14 @@ def main():
 
     """ Training data """
     cifar_trans = T.Compose([
-        T.Pad(padding=4),
+        T.Pad(padding=12),
         T.RandomHorizontalFlip(),
-        T.RandomCrop(size=32)
+        T.RandomCrop(size=96)
     ])
 
-    train_data = datasets.CIFAR10(
+    train_data = datasets.STL10(
         root=f'{Path.home()}/data/',
-        train=True,
+        split='test',
         download=True
     )
 
@@ -189,9 +189,9 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.CIFAR10(
+    test_data = datasets.STL10(
         root=f'{Path.home()}/data/',
-        train=False,
+        split='train',
         download=True
     )
 
