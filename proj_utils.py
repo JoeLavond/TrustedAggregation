@@ -517,6 +517,18 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
 
 
 """ Fed Trust """
+def __center_model_(new, old):
+
+    with torch.no_grad():
+        for (_, new_weight), (_, old_weight) in zip(
+            new.state_dict().items(),
+            old.state_dict().items()
+        ):
+            new_weight.copy_(new_weight - old_weight.detach().clone().to(new_weight.device))
+
+    return None
+
+
 def __get_trust_score(trusted_model, user_model):
 
     """ Returns (relu trust score times the ratio of trusted to user norm) """
@@ -545,19 +557,27 @@ def __get_trust_score(trusted_model, user_model):
         trusted_weights, user_weights, dim=0
     )
 
-    return (F.relu(output) * trusted_norm / user_norm)
+    return (F.relu(output), trusted_norm / user_norm)
 
 
-def global_trust_(global_model, trusted_model, model_list):
+def global_trust_(global_model, trusted_model, model_list, eta=1):
+
+    # get model differences
+    __center_model_(trusted_model, global_model)
+    for m in model_list:
+        __center_model_(m, global_model)
 
     # use helper function to get trust scores and weightings
-    trust_weights = [
+    trust_obj = [
         __get_trust_score(trusted_model, u_model)
         for u_model in model_list
     ]
+    trust_scores = [t[0] for t in trust_obj]
+    trust_scales = [t[1] for t in trust_obj]
 
     # unpack helper functions
-    trust_weights = torch.from_numpy(np.array(trust_weights))
+    trust_scores = torch.from_numpy(np.array(trust_scores))
+    trust_scales = torch.from_numpy(np.array(trust_scales))
 
     # iterate over model weights simulataneously
     for (_, global_weights), *obj in zip(
@@ -567,16 +587,18 @@ def global_trust_(global_model, trusted_model, model_list):
 
         # scale by trust score
         trusted_obj = [
-            w * temp[1]
-            for w, temp in zip(trust_weights, obj)
+            score * scale * temp[1]
+            for score, scale, temp in zip(trust_scores, trust_scales, obj)
         ]
         trusted_obj = torch.stack(trusted_obj)
 
         trusted_mean = trusted_obj.sum(dim=0)
-        trusted_mean /= trust_weights.sum().item()
+        trusted_mean /= trust_scores.sum().item()
 
         # replace global weights with trusted mean
-        global_weights.copy_(trusted_mean.to(global_weights.device))
+        global_weights.copy_(global_weights + eta * trusted_mean.to(global_weights.device))
+
+    return None
 
 
 # implement Neurotoxin attack using model weights instead of gradients
