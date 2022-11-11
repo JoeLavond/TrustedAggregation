@@ -142,9 +142,9 @@ def main():
     clean_val_loader = DataLoader(
         val_data,
         batch_size=args.n_batch,
-        shuffle=False,
-        num_workers=1,
-        pin_memory=True
+        #num_workers=1,
+        #pin_memory=True,
+        shuffle=False
     )
 
 
@@ -204,9 +204,9 @@ def main():
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
-        shuffle=False,
-        num_workers=1,
-        pin_memory=True
+        #num_workers=1,
+        #pin_memory=True,
+        shuffle=False
     )
 
     # poison subset of test data
@@ -216,9 +216,9 @@ def main():
     pois_test_loader = DataLoader(
                 pois_test_data,
                 batch_size=args.n_batch,
-                shuffle=False,
-                num_workers=1,
-                pin_memory=True
+                #num_workers=1,
+                #pin_memory=True,
+                shuffle=False
 
     )
 
@@ -254,9 +254,9 @@ def main():
     trusted_loader = DataLoader(
         trusted_data,
         batch_size=args.n_batch,
-        shuffle=True,
-        num_workers=1,
-        pin_memory=True
+        #num_workers=1,
+        #pin_memory=True,
+        shuffle=True
     )
 
     trusted_opt = optim.SGD(
@@ -321,9 +321,9 @@ def main():
             user_loader = DataLoader(
                 user_data,
                 batch_size=args.n_batch,
-                shuffle=True,
-                num_workers=1,
-                pin_memory=True
+                #num_workers=1,
+                #pin_memory=True,
+                shuffle=True
             )
 
             user_opt = optim.SGD(
@@ -402,9 +402,9 @@ def main():
         trusted_loader = DataLoader(
             trusted_data,
             batch_size=args.n_batch,
-            shuffle=True,
-            num_workers=1,
-            pin_memory=True
+            #num_workers=1,
+            #pin_memory=True,
+            shuffle=True
         )
 
         trusted_opt = optim.SGD(
