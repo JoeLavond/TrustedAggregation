@@ -154,7 +154,7 @@ def main():
         clean_lines,
         out_methods,
         title='Classification Accuracy',
-        bbox_to_anchor=(1.04, 1),
+        bbox_to_anchor=(1.04, 1.04),
         loc='upper left'
     )
     ax = plt.gca().add_artist(l1)
@@ -167,7 +167,7 @@ def main():
         pois_lines,
         out_methods,
         title='Attack Success Rate',
-        bbox_to_anchor=(1.04, 0),
+        bbox_to_anchor=(1.04, -0.04),
         loc='lower left'
     )
 
@@ -181,7 +181,7 @@ def main():
     )
 
     if args.show:
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.show()
     else:
         plt.close()

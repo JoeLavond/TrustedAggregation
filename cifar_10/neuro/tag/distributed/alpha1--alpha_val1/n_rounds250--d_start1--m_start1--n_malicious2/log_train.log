@@ -1,0 +1,74 @@
+[2022/11/12 17:48:53] - Namespace(seed=0, n_classes=10, gpu_start=0, resnet=1, print_all=0, n_users=100, n_user_data=500, p_report=0.1, n_rounds=250, alpha=1, n_batch=64, mom=0.9, wd=0.0005, m_start=1, m_scale=1, p_malicious=None, n_malicious=2, n_epochs_pois=15, lr_pois=0.01, n_epochs=10, lr=0.01, neuro_p=0.1, dba=1, p_pois=0.1, target=0, row_size=4, col_size=2, d_start=1, d_scale=2.0, d_smooth=1, n_val_data=500, alpha_val=1, remove_val=1, out_path='distributed/alpha1--alpha_val1/n_rounds250--d_start1--m_start1--n_malicious2')
+[2022/11/12 17:50:43] - 
+
+--- GLOBAL VALIDATION - Round: 0 of 250 ---
+[2022/11/12 17:51:02] - TESTING CLEAN - Time 1.2, Loss 2.4391, Acc 0.1000
+[2022/11/12 17:51:03] - TESTING POIS - Time 1.2, Loss 2.4193, Acc 0.0000
+[2022/11/12 17:51:03] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/11/12 17:51:36] - TRAINING - Epoch: 10, Time 2.5, Loss 1.4086, Acc 0.5434
+[2022/11/12 17:51:37] - User KS Max: 1.0000, Thresh: 1.0000, Update: False
+[2022/11/12 17:51:37] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/11/12 17:52:07] - TRAINING - Epoch: 10, Time 3.9, Loss 1.5053, Acc 0.4263
+[2022/11/12 17:52:08] - User KS Max: 1.0000, Thresh: 1.0000, Update: False
+[2022/11/12 17:53:40] - 
+
+--- GLOBAL EVALUATIONS - Round: 1 of 250, Time: 156.8 ---
+[2022/11/12 17:53:54] - TESTING CLEAN - Time 1.9, Loss 2.5203, Acc 0.1536
+[2022/11/12 17:53:56] - TESTING POIS - Time 2.0, Loss 3.2079, Acc 0.0024
+[2022/11/12 17:53:56] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/11/12 17:54:42] - TRAINING - Epoch: 10, Time 3.4, Loss 1.2719, Acc 0.5737
+[2022/11/12 17:54:43] - User KS Max: 1.0000, Thresh: 0.8553, Update: False
+[2022/11/12 17:54:43] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/11/12 17:55:08] - TRAINING - Epoch: 10, Time 2.3, Loss 1.4268, Acc 0.4364
+[2022/11/12 17:55:08] - User KS Max: 1.0000, Thresh: 0.8553, Update: False
+[2022/11/12 17:56:20] - 
+
+--- GLOBAL EVALUATIONS - Round: 2 of 250, Time: 144.4 ---
+[2022/11/12 17:56:34] - TESTING CLEAN - Time 2.3, Loss 2.5203, Acc 0.1536
+[2022/11/12 17:56:36] - TESTING POIS - Time 1.6, Loss 3.2079, Acc 0.0024
+[2022/11/12 17:56:36] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/11/12 17:57:40] - TRAINING - Epoch: 10, Time 7.1, Loss 1.2293, Acc 0.5778
+[2022/11/12 17:57:41] - User KS Max: 1.0000, Thresh: 0.8450, Update: False
+[2022/11/12 17:57:41] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/11/12 17:58:53] - TRAINING - Epoch: 10, Time 7.0, Loss 1.4301, Acc 0.4283
+[2022/11/12 17:58:54] - User KS Max: 1.0000, Thresh: 0.8450, Update: False
+[2022/11/12 18:00:23] - 
+
+--- GLOBAL EVALUATIONS - Round: 3 of 250, Time: 227.7 ---
+[2022/11/12 18:00:39] - TESTING CLEAN - Time 2.5, Loss 2.5203, Acc 0.1536
+[2022/11/12 18:00:41] - TESTING POIS - Time 2.2, Loss 3.2079, Acc 0.0024
+[2022/11/12 18:00:42] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/11/12 18:01:51] - TRAINING - Epoch: 10, Time 6.6, Loss 1.2671, Acc 0.5778
+[2022/11/12 18:01:52] - User KS Max: 1.0000, Thresh: 0.8573, Update: False
+[2022/11/12 18:01:52] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
+[2022/11/12 18:02:51] - TRAINING - Epoch: 10, Time 6.8, Loss 1.4393, Acc 0.4364
+[2022/11/12 18:02:52] - User KS Max: 1.0000, Thresh: 0.8573, Update: False
+[2022/11/12 18:05:02] - 
+
+--- GLOBAL EVALUATIONS - Round: 4 of 250, Time: 260.1 ---
+[2022/11/12 18:05:21] - TESTING CLEAN - Time 2.3, Loss 2.4556, Acc 0.2568
+[2022/11/12 18:05:24] - TESTING POIS - Time 2.9, Loss 5.3063, Acc 0.0000
+[2022/11/12 18:05:25] - 
+
+--- LOCAL TRAINING - Local Update: 1 of 10, User: 0, Malicious: Yes ---
+[2022/11/12 18:06:56] - TRAINING - Epoch: 10, Time 5.1, Loss 1.1241, Acc 0.5818
+[2022/11/12 18:06:57] - User KS Max: 0.9960, Thresh: 0.9335, Update: False
+[2022/11/12 18:06:57] - 
+
+--- LOCAL TRAINING - Local Update: 2 of 10, User: 1, Malicious: Yes ---
