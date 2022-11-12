@@ -23,11 +23,12 @@ from torch.utils.data import Dataset, DataLoader
 sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(3, f'{Path.home()}/fed-learn-dba/')
+sys.path.insert(3, f'{Path.home()}/fed-tag/')
 import proj_utils as pu
 
 sys.path.insert(4, f'{Path.home()}/models/')
 import resnet
+import vgg
 
 
 """ Setup """
@@ -41,6 +42,7 @@ def get_args():
     parser.add_argument('--n_classes', default=10, type=int)
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
+    parser.add_argument('--resnet', default=1, type=int)
     parser.add_argument('--print_all', default=0, type=int)
 
     """ Federated learning """
@@ -59,7 +61,7 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=15, type=int)
+    parser.add_argument('--n_epochs_pois', default=20, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
     parser.add_argument('--n_epochs', default=10, type=int)
@@ -95,7 +97,10 @@ def main():
         + '/n_rounds' + str(args.n_rounds)
         + '--m_start' + str(args.m_start) + '--n_malicious' + str(args.n_malicious)
     )
-    args.suffix = (f'--beta{args.beta}' if args.trim_mean else '')
+    args.suffix = (
+        (f'--beta{args.beta}' if args.trim_mean else '')
+        + ('--vgg' if not args.resnet else '')
+    )
 
     if not os.path.exists(args.out_path):
         os.makedirs(args.out_path)
@@ -151,7 +156,10 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(pretrained=False)
+        (
+            resnet.resnet18(num_classes=args.n_classes, pretrained=False)
+            if args.resnet else vgg.vgg16_bn()
+        )
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 

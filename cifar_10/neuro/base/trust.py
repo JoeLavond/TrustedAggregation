@@ -28,6 +28,7 @@ import proj_utils as pu
 
 sys.path.insert(4, f'{Path.home()}/models/')
 import resnet
+import vgg
 
 
 """ Setup """
@@ -41,6 +42,7 @@ def get_args():
     parser.add_argument('--n_classes', default=10, type=int)
     parser.add_argument('--gpu_start', default=0, type=int)
     # output
+    parser.add_argument('--resnet', default=1, type=int)
     parser.add_argument('--print_all', default=0, type=int)
 
     """ Federated learning """
@@ -169,7 +171,10 @@ def main():
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
         gu.StdChannels(cifar_mean, cifar_std),
-        resnet.resnet18(num_classes=args.n_classes, pretrained=False)
+        (
+            resnet.resnet18(num_classes=args.n_classes, pretrained=False)
+            if args.resnet else vgg.vgg16_bn()
+        )
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
 
@@ -427,6 +432,7 @@ def main():
         + (
             f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else ''
         )
+        + ('--vgg' if not args.resnet else '')
     )
 
     output_global_acc = np.array(output_global_acc)
