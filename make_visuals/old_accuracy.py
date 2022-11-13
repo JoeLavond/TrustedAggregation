@@ -16,13 +16,9 @@ import seaborn as sns
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--resnet', default=1, type=int)
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
-    parser.add_argument('--n_val_data', default=None, type=int)
 
-    parser.add_argument('--n_rounds', default=250, type=int)
-    parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--m_start', default=1, type=int)
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
@@ -31,9 +27,9 @@ def get_args():
     parser.add_argument('--neuro_p', default=0.1, type=float)
 
     parser.add_argument('--beta', default=0.2, type=float)
-    parser.add_argument('--d_scale', default=2, type=float)
-    parser.add_argument('--d_smooth', default=1, type=float)
+    parser.add_argument('--d_scale', default=1, type=int)
 
+    parser.add_argument('--d_rounds', default=None, type=int)
     parser.add_argument('--font_size', default=14, type=int)
     parser.add_argument('--show', default=1, type=int)
 
@@ -44,41 +40,64 @@ def get_args():
 def main():
 
     args = get_args()
-    out_suffix = (
-        f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
-        + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
-        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-        + (f'--n_val_data{args.n_val_data}' if args.n_val_data is not None else '')
-        + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
-        + ('--no_smooth' if not args.d_smooth else '')
-        + ('--vgg' if not args.resnet else '')
-    )
-
-    """ Hyperparams """
+    # hyper-parameters
     font = {
         'size': args.font_size
     }
     mpl.rc('font', **font)
 
-    data = ['cifar_10', 'cifar_100', 'stl_10']
-    out_data = ['CIFAR-10', 'CIFAR-100', 'STL-10']
+    datasets = ('cifar_10', 'cifar_100', 'stl_10')
+    if args.neuro:
+        n_rounds = (250, 250, 250)
+    else:
+        n_rounds = (250, 250, 250)
 
-    methods = ('tag', 'base/mean', 'base/median', 'base/trust')
+    if args.d_scale:
+        d_scale = (None, None, 1.1)
+    else:
+        d_scale = (None, None, None)
+
+    out_suffix = (
+        f'--n_malicious{args.n_malicious}--dba{args.dba}--beta{args.beta}'
+        + ('--d_scale' if args.d_scale else '')
+        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+    )
+
+    d_rounds = n_rounds
     subdirs = [
         f'--d_start1--m_start{args.m_start}--n_malicious{args.n_malicious}',
-        f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}',
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}'
     ]
 
-    d_scale = [None, None, None]
-    args.d_rounds = args.n_rounds if args.d_rounds is None else args.d_rounds
+    methods = ('tag', 'base/mean', 'base/median')
+    file_suffices = (
+        '',
+        f'--beta{args.beta}',
+        ''
+    )
 
-    line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
-    cool_colors = sns.color_palette("bright").as_hex()
-    cool_colors = cool_colors[:len(methods)]
-    warm_colors = sns.color_palette("dark").as_hex()
-    warm_colors = warm_colors[:len(methods)]
+    line_styles = ['solid', 'dotted', 'dashed']
+    warm_colors = ['pink', 'red', 'orange']
+    cool_colors = ['blue', 'cyan', 'green']
+
+    """
+    # scale RGB between 0-1
+    for i, (wc, cc) in enumerate(zip(warm_colors, cool_colors)):
+        warm_colors[i] = [x / 255 for x in wc]
+        cool_colors[i] = [x / 255 for x in cc]
+
+    warm_colors = [
+        (238 / 255, 51 / 255, 119 / 255),
+        (238 / 255, 119 / 255, 51 / 255),
+        (204 / 255, 51 / 255, 17 / 255)
+    ]
+    cool_colors = [
+        (0 / 255, 153 / 255, 136 / 255),
+        (0 / 255, 119 / 255, 187 / 255),
+        (51 / 255, 187 / 255, 238 / 255)
+    ]
+    """
 
     out_path = './visuals'
     if not os.path.exists('./visuals'):
@@ -86,41 +105,22 @@ def main():
 
 
     """ Global Accuracy """
-    fig, axarr = plt.subplots(ncols=len(data), figsize=(len(data)*4, 4))
-    for i, (d, out_d) in enumerate(zip(data, out_data)):
+    out_datasets = ['CIFAR-10', 'CIFAR-100', 'STL-10']
+    fig, axarr = plt.subplots(ncols=3, figsize=(12, 4))
+
+    for i, data in enumerate(datasets):
         plt.sca(axarr[i])
-        plt.title(out_d, fontsize=1.5*args.font_size)
+        plt.title(out_datasets[i], fontsize=1.5*args.font_size)
         plt.xlabel('Communication Round')
 
         clean_lines = []
         pois_lines = []
 
-        file_suffices = (
-            (
-                f'--d_scale{d_scale[i]}'
-                if d_scale[i] is not None
-                else ''
-                + (
-                    f'--n_val_data{args.n_val_data}'
-                    if args.n_val_data is not None
-                    else ''
-                )
-                + (
-                    '--no_smooth'
-                    if not args.d_smooth
-                    else ''
-                )
-            ),
-            f'--beta{args.beta}',
-            '',
-            ''
-        )
-
         for j, method in enumerate(methods):
 
             path = os.path.join(
-                f'{Path.home()}/fed-tag',
-                d,
+                f'{Path.home()}/fed-learn-dba',
+                data,
                 ('neuro' if args.neuro else 'classic'),
                 method,
                 ('distributed' if args.dba else 'centralized'),
@@ -131,31 +131,36 @@ def main():
                 os.path.join(
                     path,
                     (
-                        f'n_rounds{args.n_rounds}'
+                        f'n_rounds{n_rounds[i]}'
                         + subdirs[j]
                     ),
                     'data',
                     (
                         'output_global_acc'
                         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                        + (
+                            f'--d_scale{d_scale[i]}'
+                            if (d_scale[i] is not None and method == 'tag')
+                            else ''
+                        )
                         + file_suffices[j]
                         + '.npy'
                     )
                 ), allow_pickle=True
             )
 
-            clean_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
+            clean_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
             clean_lines.append(clean_line)
-            pois_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 2], c=warm_colors[j], linestyle=line_styles[j], label=method)
+            pois_line, = plt.plot(range(0, d_rounds[i] + 1), temp_global[:d_rounds[i] + 1, 2], c=warm_colors[j], linestyle=line_styles[j], label=method)
             pois_lines.append(pois_line)
 
     # create legend
-    out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean', 'FLTrust']
+    out_methods = ['Trusted Aggregation', 'Coordinate Median', 'Coordinate Trim-Mean']
     l1 = plt.legend(
         clean_lines,
         out_methods,
         title='Classification Accuracy',
-        bbox_to_anchor=(1.04, 1.04),
+        bbox_to_anchor=(1.04, 1),
         loc='upper left'
     )
     ax = plt.gca().add_artist(l1)
@@ -168,7 +173,7 @@ def main():
         pois_lines,
         out_methods,
         title='Attack Success Rate',
-        bbox_to_anchor=(1.04, -0.04),
+        bbox_to_anchor=(1.04, 0),
         loc='lower left'
     )
 
@@ -180,8 +185,8 @@ def main():
         os.path.join('./visuals', f'accuracy{out_suffix}.png'),
         bbox_inches='tight'
     )
-
     if args.show:
+        plt.tight_layout()
         plt.show()
     else:
         plt.close()
