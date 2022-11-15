@@ -18,6 +18,7 @@ def get_args():
 
     parser.add_argument('--data', default='cifar', type=str)
     parser.add_argument('--n_classes', default=10, type=int)
+    parser.add_argument('--resnet', default=1, type=int)
 
     parser.add_argument('--alpha', default=10000, type=int)
     parser.add_argument('--alpha_val', default=10000, type=int)
@@ -54,6 +55,7 @@ def main():
         + (f'--n_val_data{args.n_val_data}' if args.n_val_data is not None else '')
         + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
         + ('--no_smooth' if not args.d_smooth else '')
+        + ('--vgg' if not args.resnet else '')
     )
 
     # hyper-parameters
@@ -98,12 +100,14 @@ def main():
     )
 
     line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
-    warm_colors = ['yellow', 'pink', 'red', 'orange', ]
-    cool_colors = ['green', 'blue', 'cyan', 'purple']
+    cool_colors = sns.color_palette("bright").as_hex()
+    cool_colors = cool_colors[:len(methods)]
+    warm_colors = sns.color_palette("dark").as_hex()
+    warm_colors = warm_colors[:len(methods)]
 
-    out_path = './visuals'
-    if not os.path.exists('./visuals'):
-        os.makedirs('./visuals')
+    out_path = './experiment_figures'
+    if not os.path.exists('./experiment_figures'):
+        os.makedirs('./experiment_figures')
 
 
     """ Global Accuracy """
@@ -125,23 +129,51 @@ def main():
             ('distributed' if args.dba else 'centralized'),
             'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
         )
-
-        temp_global = np.load(
-            os.path.join(
-                path,
-                (
-                    f'n_rounds{args.n_rounds}'
-                    + subdirs[j]
-                ),
-                'data',
-                (
-                    'output_global_acc'
-                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                    + file_suffices[j]
-                    + '.npy'
-                )
-            ), allow_pickle=True
+        alt_path = os.path.join(
+            f'{Path.home()}/fed-tag',
+            data,
+            ('neuro' if args.neuro else 'classic'),
+            method,
+            ('distributed' if args.dba else 'centralized'),
+            'alpha' + str(args.alpha) + '--alpha_val10000'
         )
+
+        try:
+            temp_global = np.load(
+                os.path.join(
+                    path,
+                    (
+                        f'n_rounds{args.n_rounds}'
+                        + subdirs[j]
+                    ),
+                    'data',
+                    (
+                        'output_global_acc'
+                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                        + file_suffices[j]
+                        + ('--vgg' if not args.resnet else '')
+                        + '.npy'
+                    )
+                ), allow_pickle=True
+            )
+        except:
+            temp_global = np.load(
+                os.path.join(
+                    alt_path,
+                    (
+                        f'n_rounds{args.n_rounds}'
+                        + subdirs[j]
+                    ),
+                    'data',
+                    (
+                        'output_global_acc'
+                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                        + file_suffices[j]
+                        + ('--vgg' if not args.resnet else '')
+                        + '.npy'
+                    )
+                ), allow_pickle=True
+            )
 
         clean_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
         clean_lines.append(clean_line)
@@ -176,7 +208,7 @@ def main():
         l2.legendHandles[i].set_linestyle(line_styles[i])
 
     plt.savefig(
-        os.path.join('./visuals', f'accuracy--{data}{out_suffix}.png'),
+        os.path.join(out_path, f'accuracy--{data}{out_suffix}.png'),
         bbox_inches='tight'
     )
 

@@ -71,7 +71,7 @@ def main():
         f'--m_start{args.m_start}--n_malicious{args.n_malicious}'
     ]
 
-    d_scale = [None, None, None]
+    d_scale = [None, None, 1.1]
     args.d_rounds = args.n_rounds if args.d_rounds is None else args.d_rounds
 
     line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
@@ -80,9 +80,9 @@ def main():
     warm_colors = sns.color_palette("dark").as_hex()
     warm_colors = warm_colors[:len(methods)]
 
-    out_path = './visuals'
-    if not os.path.exists('./visuals'):
-        os.makedirs('./visuals')
+    out_path = './experiment_figures'
+    if not os.path.exists('./experiment_figures'):
+        os.makedirs('./experiment_figures')
 
 
     """ Global Accuracy """
@@ -177,7 +177,7 @@ def main():
         l2.legendHandles[i].set_linestyle(line_styles[i])
 
     plt.savefig(
-        os.path.join('./visuals', f'accuracy{out_suffix}.png'),
+        os.path.join(out_path, f'accuracy{out_suffix}.png'),
         bbox_inches='tight'
     )
 

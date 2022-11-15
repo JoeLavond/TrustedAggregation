@@ -23,7 +23,7 @@ from torch.utils.data import Dataset, DataLoader
 sys.path.insert(2, f'{Path.home()}/')
 import global_utils as gu
 
-sys.path.insert(3, f'{Path.home()}/fed-learn-dba')
+sys.path.insert(3, f'{Path.home()}/fed-tag')
 import proj_utils as pu
 
 sys.path.insert(4, f'{Path.home()}/models/')
