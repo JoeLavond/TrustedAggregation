@@ -54,6 +54,7 @@ def main():
         + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
         + (f'--n_val_data{args.n_val_data}' if args.n_val_data is not None else '')
         + (f'--alpha{args.alpha}' if args.alpha != 10000 else '')
+        + (f'--alpha_val{args.alpha_val}' if args.alpha_val != 10000 else '')
         + ('--no_smooth' if not args.d_smooth else '')
         + ('--vgg' if not args.resnet else '')
     )
@@ -80,9 +81,11 @@ def main():
     methods = ('tag', 'base/mean', 'base/median', 'base/trust')
     file_suffices = (
         (
-            f'--d_scale{args.d_scale}'
-            if args.d_scale != 2
-            else ''
+            (
+                f'--d_scale{args.d_scale}'
+                if args.d_scale != 2
+                else ''
+            )
             + (
                 f'--n_val_data{args.n_val_data}'
                 if args.n_val_data is not None
@@ -137,41 +140,32 @@ def main():
             ('distributed' if args.dba else 'centralized'),
             'alpha' + str(args.alpha) + '--alpha_val10000'
         )
+        f_path = os.path.join(
+            (
+                f'n_rounds{args.n_rounds}'
+                + subdirs[j]
+            ),
+            'data',
+            (
+                'output_global_acc'
+                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + file_suffices[j]
+                + ('--vgg' if not args.resnet else '')
+                + '.npy'
+            )
+        )
+        print(f_path)
 
         try:
             temp_global = np.load(
                 os.path.join(
-                    path,
-                    (
-                        f'n_rounds{args.n_rounds}'
-                        + subdirs[j]
-                    ),
-                    'data',
-                    (
-                        'output_global_acc'
-                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                        + file_suffices[j]
-                        + ('--vgg' if not args.resnet else '')
-                        + '.npy'
-                    )
+                    path, f_path
                 ), allow_pickle=True
             )
         except:
             temp_global = np.load(
                 os.path.join(
-                    alt_path,
-                    (
-                        f'n_rounds{args.n_rounds}'
-                        + subdirs[j]
-                    ),
-                    'data',
-                    (
-                        'output_global_acc'
-                        + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                        + file_suffices[j]
-                        + ('--vgg' if not args.resnet else '')
-                        + '.npy'
-                    )
+                    alt_path, f_path
                 ), allow_pickle=True
             )
 
