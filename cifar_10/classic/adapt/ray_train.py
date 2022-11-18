@@ -244,9 +244,9 @@ def tuning(configs):
             ):
                 break
 
-            opt.zero_grad(set_to_none=True)
+            pois_opt.zero_grad(set_to_none=True)
             all_loss.backward()
-            opt.step()
+            pois_opt.step()
 
         if np.nan_to_num(all_loss.item(), nan=10000) == 10000:
             session.report(

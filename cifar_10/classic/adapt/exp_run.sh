@@ -1,25 +1,30 @@
-screen -dmS vggtwo bash -c "
-    conda deactivate
+screen -dmS mu-001 bash -c "
     source activate joeenv;
-    python train.py --n_rounds=250 --resnet=0 --dba=1 --n_malicious=2 --col_size=2 --gpu_start=2 --d_scale=2.5;
+    python train.py --n_rounds=250 --mu=.001 --gpu_start=0;
 "
 
-screen -dmS vggfour bash -c "
-    conda deactivate;
+screen -dmS mu-005 bash -c "
     source activate joeenv;
-    python train.py --n_rounds=250 --resnet=0 --dba=1 --n_malicious=4 --col_size=2 --row_size=2 --gpu_start=2 --d_scale=2.5;
+    python train.py --n_rounds=250 --mu=.005 --gpu_start=0;
 "
 
-screen -dmS vggtwo bash -c "
-    conda deactivate
+screen -dmS mu-01 bash -c "
     source activate joeenv;
-    python train.py --n_rounds=250 --resnet=0 --dba=1 --n_malicious=2 --col_size=2 --gpu_start=2 --d_scale=2.5;
+    python train.py --n_rounds=250 --mu=.01 --gpu_start=0;
 "
 
-screen -dmS vggfour bash -c "
-    conda deactivate;
+screen -dmS two-mu-001 bash -c "
     source activate joeenv;
-    python train.py --n_rounds=250 --resnet=0 --dba=1 --n_malicious=4 --col_size=2 --row_size=2 --gpu_start=2 --d_scale=2.5;
+    python train.py --n_rounds=250 --mu=.001 --dba=1 --n_malicious=2 --col_size=2 --gpu_start=2;
 "
 
+screen -dmS two-mu-005 bash -c "
+    source activate joeenv;
+    python train.py --n_rounds=250 --mu=.005 --dba=1 --n_malicious=2 --col_size=2 --gpu_start=2;
+"
+
+screen -dmS two-mu-01 bash -c "
+    source activate joeenv;
+    python train.py --n_rounds=250 --mu=.01 --dba=1 --n_malicious=2 --col_size=2 --gpu_start=2;
+"
 

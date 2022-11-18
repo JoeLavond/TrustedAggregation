@@ -69,6 +69,7 @@ def get_args():
 
     """ Data poisoning """
     # attack
+    parser.add_argument('--neuro_p', default=0.1, type=float)
     parser.add_argument('--dba', default=0, type=int)
     parser.add_argument('--p_pois', default=0.1, type=float)
     parser.add_argument('--target', default=0, type=int)
@@ -91,6 +92,7 @@ def __local_train_helper(
     clean_model, cost,
     opt, user_model, user_loader,
     n_epochs_pois, mu, gpu_start,
+    nt_obj=None,
     scheduler=None, logger=None,
     title='training', print_all=0
 ):
@@ -131,6 +133,8 @@ def __local_train_helper(
             opt.step()
             if scheduler is not None:
                 scheduler.step()
+            if nt_obj is not None:
+                nt_obj.mask_(user_model)
 
             # results
             _, preds = user_out.max(dim=1)
@@ -166,6 +170,7 @@ def local_train(
     n_epochs, n_batch, lr, wd, mom,
     target, p_pois, n_epochs_pois, lr_pois,
     print_all, logger=None,
+    nt_obj=None,
     **kwargs
 ):
 
@@ -321,6 +326,12 @@ def main():
         )
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
+
+    # initialize neurotoxin masking
+    NT = pu.Neurotoxin(
+        model=copy.deepcopy(global_model),
+        p=args.neuro_p
+    )
 
     # global
     output_global_acc = []
@@ -488,6 +499,7 @@ def main():
                     train_data, cost,
                     global_model, user_indices, user_id,
                     stamp_model, m_user,
+                    nt_obj=NT,
                     # mu, gpu_start
                     logger=logger,
                     **vars(args)
@@ -596,6 +608,9 @@ def main():
                         update_weights.copy_((update_weights / user_update_count).long())
 
                     global_weights += update_weights.cuda(args.gpu_start)
+                # update neurotoxin mask
+                NT.update_mask_(copy.deepcopy(global_model))
+
 
         round_end = time.time()
         logger.info(
@@ -675,7 +690,8 @@ def main():
 
     """ Save output """
     suffix = (
-        (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        f'--neuro_p{args.neuro_p}'
+        + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
         + (f'--mu{args.mu}' if args.mu != 0. else '')
         + (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
         + ('--no_smooth' if not args.d_smooth else '')

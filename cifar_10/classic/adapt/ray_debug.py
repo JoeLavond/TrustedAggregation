@@ -85,8 +85,14 @@ def get_args():
     return parser.parse_args()
 
 
-""" Raytune function HERE """
-def tuning(configs):
+""" Main function HERE """
+
+def main():
+
+    # setup
+    args = get_args()
+    args.gpu_start = 0
+    args.mu = .01
 
     # source
     sys.path.insert(2, f'{Path.home()}/')
@@ -234,31 +240,23 @@ def tuning(configs):
             pois_out = pois_model(images)
 
             loss = cost(pois_out, labels)
-            penalty = ((configs["mu"] / 2) * torch.square(torch.norm(pois_out - clean_out)))
+            penalty = ((args.mu / 2) * torch.square(torch.norm(pois_out - clean_out)))
 
             # backward
             all_loss = loss + penalty
-            if np.nan_to_num(
-                all_loss.item(),
-                nan=10000
-            ):
-                break
-
-            opt.zero_grad(set_to_none=True)
+            pois_opt.zero_grad(set_to_none=True)
             all_loss.backward()
-            opt.step()
-
-        if np.nan_to_num(all_loss.item(), nan=10000) == 10000:
-            session.report(
-                {"penalty": 10000},
-                checkpoint=None
-            )
-            continue
+            pois_opt.step()
 
 
         """ Testing """
         pois_model = pois_model.eval()
-        total_penalty = total_loss = total_acc = total_n = 0
+        total_penalty = total_n = 0
+
+        val_total_loss = val_total_acc = 0
+        clean_total_loss = clean_total_acc = 0
+        pois_total_loss = pois_total_acc = 0
+
         for batch, (images, labels) in enumerate(val_loader):
 
             # initializations
@@ -268,6 +266,10 @@ def tuning(configs):
             with torch.no_grad():
 
                 pois_model = pois_model.cpu()
+
+                clean_model = clean_model.cuda(args.gpu_start)
+                clean_out = clean_model(images)
+                clean_model = clean_model.cpu()
 
                 val_model = val_model.cuda(args.gpu_start)
                 val_out = val_model(images)
@@ -280,96 +282,37 @@ def tuning(configs):
             total_penalty += penalty.item()
 
             # results
-            loss = cost(pois_out, labels)
-            _, preds = pois_out.max(dim=1)
-
-            total_loss += loss.item() * labels.size(0)
-            total_acc += (preds == labels).sum().item()
             total_n += labels.size(0)
 
+            val_loss = cost(val_out, labels)
+            _, val_preds = val_out.max(dim=1)
+            val_total_loss += val_loss.item() * labels.size(0)
+            val_total_acc += (val_preds == labels).sum().item()
+
+            clean_loss = cost(clean_out, labels)
+            _, clean_preds = clean_out.max(dim=1)
+            clean_total_loss += clean_loss.item() * labels.size(0)
+            clean_total_acc += (clean_preds == labels).sum().item()
+
+            pois_loss = cost(pois_out, labels)
+            _, pois_preds = pois_out.max(dim=1)
+            pois_total_loss += pois_loss.item() * labels.size(0)
+            pois_total_acc += (pois_preds == labels).sum().item()
+
         # summary
-        total_loss /= total_n
-        total_acc /= total_n
+        val_total_loss /= total_n
+        val_total_acc /= total_n
 
-        session.report(
-            {
-                "penalty": np.nan_to_num(
-                    total_penalty,
-                    nan=10000
-                ),
-                "loss": np.nan_to_num(
-                    total_loss,
-                    nan=10000
-                ),
-                "acc": total_acc
-            },
-            checkpoint=None
-        )
+        clean_total_loss /= total_n
+        clean_total_acc /= total_n
 
+        pois_total_loss /= total_n
+        pois_total_acc /= total_n
 
-""" Main function HERE """
-args = get_args()
-args.gpu_start = 0
-
-def main():
-
-    # load configs
-    # convert configs to tuning object
-    configs = {
-        "mu": tune.grid_search([0, 0.0001, 0.001, 0.01, 0.25, 0.5, 0.75, 1])
-    }
-
-    # ray tune
-    scheduler = ASHAScheduler(
-        max_t=args.n_epochs_pois,
-        grace_period=int(0.01 * args.n_epochs_pois) + 1
-    )
-
-    reporter = CLIReporter(
-        metric_columns=["penalty", "loss", "acc", "training_iteration"],
-        sort_by_metric=["penalty"]
-    )
-
-    tuner = tune.Tuner(
-        tune.with_resources(
-            tune.with_parameters(tuning),
-            resources={
-                "cpu": args.cpus_per_trial,
-                "gpu": args.gpus_per_trial
-            },
-        ),
-        param_space=configs,
-        tune_config=tune.TuneConfig(
-            metric='penalty',
-            mode='min',
-            num_samples=1,
-            scheduler=scheduler
-        ),
-        run_config=RunConfig(
-            stop=TrialPlateauStopper(
-                metric='penalty',
-                grace_period=int(0.01 * args.n_epochs_pois) + 1
-            ),
-            progress_reporter=reporter,
-            failure_config=FailureConfig(
-                fail_fast=True
-            ),
-            local_dir='./ray_results',
-            name=f'adapt'
-        )
-    )
-    results = tuner.fit()
-
-    # results
-    output = results.get_dataframe().sort_values("penalty")
-    output = output[[name for name in output.columns if (name in ["penalty", "training_iteration"]) or ('config' in name)]]
-
-    output.to_csv(
-        os.path.join(
-            'ray_results',
-            f'adapt.txt'
-        )
-    )
+        print()
+        print(f'Validation - Testing - Epoch: {epoch}, Loss: {val_total_loss:.4f}, Acc: {val_total_acc:.4f}')
+        print(f'Clean - Testing - Epoch: {epoch}, Loss: {clean_total_loss:.4f}, Acc: {clean_total_acc:.4f}')
+        print(f'Poisoned - Testing - Epoch: {epoch}, Loss: {pois_total_loss:.4f}, Acc: {pois_total_acc:.4f}')
 
 
 if __name__ == "__main__":
