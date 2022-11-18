@@ -74,6 +74,7 @@ def get_args():
     parser.add_argument('--target', default=0, type=int)
     parser.add_argument('--row_size', default=4, type=int)
     parser.add_argument('--col_size', default=4, type=int)
+    parser.add_argument('--mu', default=0.0, type=float)
     # defense
     parser.add_argument('--d_start', default=1, type=int)
     parser.add_argument('--d_scale', default=2, type=float)
@@ -83,6 +84,147 @@ def get_args():
     parser.add_argument('--remove_val', default=1, type=int)
 
     return parser.parse_args()
+
+
+""" Helper function """
+def __local_train_helper(
+    clean_model, cost,
+    opt, user_model, user_loader,
+    n_epochs_pois, mu, gpu_start,
+    scheduler=None, logger=None,
+    title='training', print_all=0
+):
+
+    # initializations
+    clean_model = clean_model.eval()
+    user_model = user_model.cpu()
+    user_model = user_model.train()
+
+    for epoch in range(n_epochs_pois):
+        epoch += 1
+
+        # training
+        train_start = time.time()
+        train_loss = train_acc = train_n = 0
+        for batch, (images, labels) in enumerate(user_loader):
+
+            # initializations
+            images, labels = images.cuda(gpu_start + 1), labels.cuda(gpu_start + 1)
+
+            # forward
+            user_model = user_model.cpu()
+            with torch.no_grad():
+                clean_model = clean_model.cuda(gpu_start + 1)
+                clean_out = clean_model(images)
+                clean_model = clean_model.cpu()
+
+            user_model = user_model.cuda(gpu_start + 1)
+            user_out = user_model(images)
+
+            loss = cost(user_out, labels)
+            penalty = ((mu / 2) * torch.square(torch.norm(user_out - clean_out)))
+
+            # backward
+            p_loss = loss + penalty
+            opt.zero_grad(set_to_none=True)
+            p_loss.backward()
+            opt.step()
+            if scheduler is not None:
+                scheduler.step()
+
+            # results
+            _, preds = user_out.max(dim=1)
+            train_loss += p_loss.item() * labels.size(0)
+            train_acc += (preds == labels).sum().item()
+            train_n += labels.size(0)
+
+        # summarize
+        train_end = time.time()
+        train_loss /= train_n
+        train_acc /= train_n
+
+        if ((logger is not None) and (print_all or (epoch == n_epochs_pois))):
+            logger.info(
+                title.upper() + ' - Epoch: %d, Time %.1f, Loss %.4f, Acc %.4f',
+                epoch, train_end - train_start, train_loss, train_acc
+            )
+            logger.info(
+                '\t' + 'Final Batch - Loss: %.4f, Penalty: %.4f',
+                loss.item(), penalty.item()
+            )
+
+    return (train_loss, train_acc)
+
+
+def local_train(
+    # required -------------------------------
+    train_data, cost,
+    global_model, user_indices, user_id,
+    stamp_model, m_user,
+    mu, gpu_start,
+    # vars(args) -----------------------------
+    n_epochs, n_batch, lr, wd, mom,
+    target, p_pois, n_epochs_pois, lr_pois,
+    print_all, logger=None,
+    **kwargs
+):
+
+    # copy global model and subset to user local data
+    user_model = copy.deepcopy(global_model).cpu()
+    clean_model = copy.deepcopy(global_model).cuda(gpu_start + 1)
+
+    # train clean model
+    clean_user_data = train_data.get_user_data(
+        user_indices, 0, user_id, stamp_model,
+        p_pois, target, n_batch, gpu_start
+    )
+
+    clean_user_loader = DataLoader(
+        clean_user_data,
+        batch_size=n_batch,
+        shuffle=True,
+        num_workers=1,
+        pin_memory=True
+    )
+
+    clean_opt = optim.SGD(
+        clean_model.parameters(),
+        lr=lr, weight_decay=wd, momentum=wd
+    )
+
+    _ = gu.training(
+        clean_user_loader, clean_model, cost, clean_opt,
+        n_epochs, gpu_start + 1,
+        logger=logger, print_all=print_all
+    )
+
+    # train pois model
+    user_data = train_data.get_user_data(
+        user_indices, m_user, user_id, stamp_model,
+        p_pois, target, n_batch, gpu_start
+    )
+
+    user_loader = DataLoader(
+        user_data,
+        batch_size=n_batch,
+        shuffle=True,
+        num_workers=1,
+        pin_memory=True
+    )
+
+    user_opt = optim.SGD(
+        user_model.parameters(),
+        lr=lr_pois, weight_decay=wd, momentum=wd
+    )
+
+    _ = __local_train_helper(
+        clean_model, cost,
+        user_opt, user_model, user_loader,
+        n_epochs_pois, mu, gpu_start + 1,
+        logger=(logger if m_user else None), print_all=print_all
+    )
+
+    return user_model
 
 
 """ Main function HERE """
@@ -335,38 +477,51 @@ def main():
             user_indices = users_data_indices[user_id]
             m_user = m_users[user_id]
 
-            if (m_user or args.print_all):
-                logger.info(
-                    '\n\n--- LOCAL TRAINING - Local Update: %d of %d, User: %d, Malicious: %s ---',
-                    i + 1, len(user_subset_index), user_id, 'Yes' if m_user else 'No'
+            logger.info(
+                '\n\n--- LOCAL TRAINING - Local Update: %d of %d, User: %d, Malicious: %s ---',
+                i + 1, len(user_subset_index), user_id, 'Yes' if m_user else 'No'
+            )
+
+            if m_user:
+
+                user_model = local_train(
+                    train_data, cost,
+                    global_model, user_indices, user_id,
+                    stamp_model, m_user,
+                    # mu, gpu_start
+                    logger=logger,
+                    **vars(args)
+                )
+                user_model.cuda(args.gpu_start + 1)
+
+            else:
+
+                # copy global model and subset to user local data
+                user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
+                user_data = train_data.get_user_data(
+                    user_indices, m_user, user_id, stamp_model, **vars(args)
                 )
 
-            # copy global model and subset to user local data
-            user_model = copy.deepcopy(global_model).cuda(args.gpu_start + 1)
-            user_data = train_data.get_user_data(
-                user_indices, m_user, user_id, stamp_model, **vars(args)
-            )
+                user_loader = DataLoader(
+                    user_data,
+                    batch_size=args.n_batch,
+                    shuffle=True,
+                    num_workers=1,
+                    pin_memory=True
+                )
 
-            user_loader = DataLoader(
-                user_data,
-                batch_size=args.n_batch,
-                shuffle=True,
-                num_workers=1,
-                pin_memory=True
-            )
+                user_opt = optim.SGD(
+                    user_model.parameters(),
+                    lr=args.lr_pois if m_user else args.lr,
+                    weight_decay=args.wd, momentum=args.wd
+                )
 
-            user_opt = optim.SGD(
-                user_model.parameters(),
-                lr=args.lr_pois if m_user else args.lr,
-                weight_decay=args.wd, momentum=args.wd
-            )
-
-            # train local model
-            (user_train_loss, user_train_acc) = gu.training(
-                user_loader, user_model, cost, user_opt,
-                args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
-                logger=(logger if m_user else None), print_all=args.print_all
-            )
+                # train local model
+                (user_train_loss, user_train_acc) = gu.training(
+                    user_loader, user_model, cost, user_opt,
+                    args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
+                    logger=(logger if m_user else None), print_all=args.print_all
+                )
 
             # malicious scaling of model weights
             if (m_user and (args.m_scale != 1)):
@@ -410,11 +565,10 @@ def main():
             thresh = np.minimum(thresh, 1)
 
             user_update = (user_ks_max < thresh)
-            if m_user:
-                logger.info(
-                    'User KS Max: %.4f, Thresh: %.4f, Update: %r',
-                    user_ks_max, thresh, user_update
-                )
+            logger.info(
+                'User KS Max: %.4f, Thresh: %.4f, Update: %r',
+                user_ks_max, thresh, user_update
+            )
 
             # send updates to global
             if ((r < args.d_start) or user_update):
@@ -522,6 +676,7 @@ def main():
     """ Save output """
     suffix = (
         (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        + (f'--mu{args.mu}' if args.mu != 0. else '')
         + (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
         + ('--no_smooth' if not args.d_smooth else '')
         + ('--vgg' if not args.resnet else '')
