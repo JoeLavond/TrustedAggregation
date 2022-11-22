@@ -516,6 +516,71 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
     return None
 
 
+def __drop_helper(input_size, drop_p, drop_all):
+
+        # dropout
+        if drop_all:
+            output = torch.bernoulli(
+                drop_p * torch.ones(1)
+            )
+            output = output.item() * input_size
+
+        else:
+            output = torch.bernoulli(
+                drop_p * input_size
+            )
+
+        return output
+
+
+def global_drop_(global_model, model_list, drop_p=1, drop_all=0):
+
+    # iterate over model weights simulataneously
+    for (_, global_weights), *obj in zip(
+        global_model.state_dict().items(),
+        *[model.state_dict().items() for model in model_list]
+    ):
+
+        # setup
+        obj = [temp[1] for temp in obj]  # keep model weights not names
+
+        # dropout
+        input_ones = torch.ones_like(obj[0])
+        print('obj', len(obj), obj[0].size())
+        print('obj0', obj[0])
+
+        masks = [
+            __drop_helper(input_ones, drop_p, drop_all)
+            for i in range(len(obj))
+        ]
+        print('masks', len(masks), masks[0].size())
+        print('mask0', masks[0])
+        n = torch.stack(masks)
+        n = n.sum(dim=0)
+        print('n', n.size())
+        print('n', n)
+
+        # apply dropout to obj and combine
+        masked_obj = [
+            o * m
+            for o, m in zip(obj, masks)
+        ]
+        print('masked_obj', len(masked_obj), masked_obj[0].size())
+        print('masked_obj0', masked_obj[0])
+        break
+
+        masked_obj = torch.stack(masked_obj)
+        masked_obj = masked_obj.sum(dim=0)
+
+        masked_obj = masked_obj / n
+
+        # replace global weights
+        global_weights.copy_(masked_obj)
+
+    return None
+
+
+
 """ Fed Trust """
 def __center_model_(new, old):
 
