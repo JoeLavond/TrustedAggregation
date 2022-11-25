@@ -226,6 +226,7 @@ def local_train(
         clean_model, cost,
         user_opt, user_model, user_loader,
         n_epochs_pois, mu, gpu_start + 1,
+        nt_obj=nt_obj,
         logger=(logger if m_user else None), print_all=print_all
     )
 
