@@ -36,7 +36,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
 
-    parser.add_argument('--font_size', default=14, type=int)
+    parser.add_argument('--font_size', default=12, type=int)
     parser.add_argument('--show', default=1, type=int)
 
     return parser.parse_args()
@@ -96,13 +96,16 @@ def main():
 
     dbas = (0, 1, 1)
     n_maliciouses = (1, 2, 4)
+    titles = [
+        '10% Malicious', 'DBA 20% Malicious', 'DBA 40% Malicious'
+    ]
 
     for i, (dba, n_malicious) in enumerate(zip(dbas, n_maliciouses)):
         plt.sca(axarr[i])
 
         subdir = f'--d_start1--m_start{args.m_start}--n_malicious{n_malicious}'
 
-        plt.title(out_data, fontsize=1.5*args.font_size)
+        plt.title(titles[i], fontsize=1.5*args.font_size)
         plt.xlabel('Communication Round')
 
         to_remove = []
@@ -154,7 +157,7 @@ def main():
             if i not in to_remove
         ],
         [
-            f'mu{mu}'
+            f'TAG (mu={mu})'
             for i, mu in enumerate(mus)
             if i not in to_remove
         ],
@@ -175,7 +178,7 @@ def main():
             if i not in to_remove
         ],
         [
-            f'mu{mu}'
+            f'TAG (mu={mu})'
             for mu in mus
             if i not in to_remove
         ],

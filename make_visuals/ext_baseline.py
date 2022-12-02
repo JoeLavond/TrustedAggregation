@@ -36,7 +36,7 @@ def get_args():
     parser.add_argument('--n_rounds', default=250, type=int)
     parser.add_argument('--d_rounds', default=None, type=int)
 
-    parser.add_argument('--font_size', default=14, type=int)
+    parser.add_argument('--font_size', default=12, type=int)
     parser.add_argument('--show', default=1, type=int)
 
     return parser.parse_args()
@@ -92,6 +92,9 @@ def main():
 
     dbas = [0, 1, 1]
     n_maliciouses = [1, 2, 4]
+    titles = [
+        '10% Malicious', 'DBA 20% Malicious', 'DBA 40% Malicious'
+    ]
 
     for i, (dba, n_malicious) in enumerate(zip(dbas, n_maliciouses)):
         plt.sca(axarr[i])
@@ -103,7 +106,7 @@ def main():
         ]
 
 
-        plt.title(out_data, fontsize=1.5*args.font_size)
+        plt.title(titles[i], fontsize=1.5*args.font_size)
         plt.xlabel('Communication Round')
 
         clean_lines = []
@@ -189,7 +192,7 @@ def main():
         l2.legendHandles[i].set_linestyle(line_styles[i])
 
     plt.savefig(
-        os.path.join(out_path, f'accuracy--{data}{out_suffix}.png'),
+        os.path.join(out_path, f'baseline--{data}{out_suffix}.png'),
         bbox_inches='tight'
     )
 
