@@ -516,6 +516,58 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
     return None
 
 
+def __drop_helper(input_size, drop_p, drop_all):
+
+        # dropout
+        if drop_all:
+            output = torch.bernoulli(
+                drop_p * torch.ones(1)
+            )
+            output = output.item() * input_size
+
+        else:
+            output = torch.bernoulli(
+                drop_p * input_size
+            )
+
+        return output
+
+
+def global_keep_(global_model, model_list, keep_p=1):
+
+    # iterate over model weights simulataneously
+    for (_, global_weights), *obj in zip(
+        global_model.state_dict().items(),
+        *[model.state_dict().items() for model in model_list]
+    ):
+
+        # setup
+        K = len(obj)
+        H = int(keep_p * K)
+
+        # dropout
+        keep = torch.randperm(K)[:H]
+        keep = keep.numpy().tolist()
+
+        sub_obj = [
+            temp[1]
+            for i, temp in enumerate(obj)  # keep model weights not names
+            if i in keep
+        ]
+
+        # aggregate subset
+        output = torch.stack(sub_obj)
+        output = output.sum(dim=0)
+
+        output = output / H
+
+        # replace global weights
+        global_weights.copy_(output)
+
+    return None
+
+
+
 """ Fed Trust """
 def __center_model_(new, old):
 
