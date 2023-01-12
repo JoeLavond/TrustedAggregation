@@ -2,7 +2,6 @@
 # base
 import argparse
 import copy
-import logging
 import os
 from pathlib import Path
 import sys
@@ -17,17 +16,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms as T
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(2, f'{Path.home()}/')
-import global_utils as gu
-
-sys.path.insert(3, f'{Path.home()}/fed-tag/')
-import proj_utils as pu
-
-sys.path.insert(4, f'{Path.home()}/models/')
-import resnet
+sys.path.insert(1, f'{Path.home()}/fed-tag/')
+from utils import data, setup
+from utils.modeling import pre, resnet, vgg
+from utils.training import agg, atk, dist, eval, neuro, train
 
 
 """ Setup """
@@ -99,8 +94,8 @@ def main():
             os.path.join(args.out_path, 'data')
         )
 
-    gu.set_seeds(args.seed)
-    logger = gu.get_log(args.out_path)
+    setup.set_seeds(args.seed)
+    logger = setup.get_log(args.out_path)
     logger.info(args)
 
     """ Training data """
@@ -116,7 +111,7 @@ def main():
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.labels, stl_trans, permute=0)
+    train_data = data.Custom3dDataset(train_data.data, train_data.labels, stl_trans, permute=0)
     stl_mean = train_data.mean()
     stl_std = train_data.std()
 
@@ -155,7 +150,7 @@ def main():
     m_users[0:args.n_malicious] = 1
 
     # define trigger model
-    stamp_model = pu.BasicStamp(
+    stamp_model = atk.BasicStamp(
         args.n_malicious, args.dba,
         row_size=args.row_size, col_size=args.col_size
     ).cuda(args.gpu_start)
@@ -166,7 +161,7 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(stl_mean, stl_std),
+        pre.StdChannels(stl_mean, stl_std),
         resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
@@ -192,7 +187,7 @@ def main():
         test_size=0.5, stratify=np.array(test_data.labels)
     )
 
-    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y, permute=0)
+    clean_test_data = data.Custom3dDataset(clean_test_x, clean_test_y, permute=0)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -202,7 +197,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y, permute=0)
+    pois_test_data = data.Custom3dDataset(pois_test_x, pois_test_y, permute=0)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -221,12 +216,12 @@ def main():
     )
 
     # testing
-    (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+    (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
         clean_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing clean'
     )
 
-    (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+    (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
         pois_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing pois'
     )
@@ -257,7 +252,7 @@ def main():
     )
 
     # train local model
-    (trusted_train_loss, trusted_train_acc) = gu.training(
+    (trusted_train_loss, trusted_train_acc) = train.training(
         trusted_loader, trusted_model, cost, trusted_opt,
         args.n_epochs, args.gpu_start + 1,
         logger=None, print_all=args.print_all
@@ -325,7 +320,7 @@ def main():
             )
 
             # train local model
-            (user_train_loss, user_train_acc) = gu.training(
+            (user_train_loss, user_train_acc) = train.training(
                 user_loader, user_model, cost, user_opt,
                 args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
                 logger=(logger if m_user else None), print_all=args.print_all
@@ -349,7 +344,7 @@ def main():
 
         """ Global model training """
         # update global weights
-        pu.global_trust_(global_model, trusted_model, global_updates)
+        agg.global_trust_(global_model, trusted_model, global_updates)
 
         round_end = time.time()
         logger.info(
@@ -358,12 +353,12 @@ def main():
         )
 
         # testing
-        (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+        (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
             clean_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing clean'
         )
 
-        (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+        (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
             pois_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing pois'
         )
@@ -394,7 +389,7 @@ def main():
         )
 
         # train local model
-        (trusted_train_loss, trusted_train_acc) = gu.training(
+        (trusted_train_loss, trusted_train_acc) = train.training(
             trusted_loader, trusted_model, cost, trusted_opt,
             args.n_epochs, args.gpu_start + 1,
             logger=None, print_all=args.print_all

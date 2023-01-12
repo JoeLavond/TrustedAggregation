@@ -2,7 +2,6 @@
 # base
 import argparse
 import copy
-import logging
 import os
 from pathlib import Path
 import sys
@@ -17,17 +16,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms as T
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(2, f'{Path.home()}')
-import global_utils as gu
-
-sys.path.insert(3, f'{Path.home()}/fed-tag')
-import proj_utils as pu
-
-sys.path.insert(4, f'{Path.home()}/models/')
-import resnet
+sys.path.insert(1, f'{Path.home()}/fed-tag/')
+from utils import data, setup
+from utils.modeling import pre, resnet, vgg
+from utils.training import agg, atk, dist, eval, neuro, train
 
 
 """ Setup """
@@ -102,8 +97,8 @@ def main():
             os.path.join(args.out_path, 'data')
         )
 
-    gu.set_seeds(args.seed)
-    logger = gu.get_log(args.out_path)
+    setup.set_seeds(args.seed)
+    logger = setup.get_log(args.out_path)
     logger.info(args)
 
     """ Training data """
@@ -170,7 +165,7 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(stl_mean, stl_std),
+        pre.StdChannels(stl_mean, stl_std),
         resnet.resnet18(num_classes=args.n_classes, pretrained=False)
     ).cuda(args.gpu_start)
     global_model = global_model.eval()
@@ -252,7 +247,7 @@ def main():
     )
 
     # train local model
-    (user_train_loss, user_train_acc) = gu.training(
+    (user_train_loss, user_train_acc) = train.training(
         user_loader, user_model, cost, user_opt,
         args.n_epochs, args.gpu_start + 1,
         logger=(logger if args.print_all else None), print_all=args.print_all
@@ -279,12 +274,12 @@ def main():
     output_val_ks_all.append(val_ks_max)
 
     # testing
-    (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+    (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
         clean_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing clean'
     )
 
-    (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+    (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
         pois_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing pois'
     )
@@ -357,7 +352,7 @@ def main():
             )
 
             # train local model
-            (user_train_loss, user_train_acc) = gu.training(
+            (user_train_loss, user_train_acc) = train.training(
                 user_loader, user_model, cost, user_opt,
                 args.n_epochs_pois if m_user else args.n_epochs, args.gpu_start + 1,
                 logger=(logger if (m_user or args.print_all) else None), print_all=args.print_all
@@ -472,7 +467,7 @@ def main():
         )
 
         # train local model
-        (user_train_loss, user_train_acc) = gu.training(
+        (user_train_loss, user_train_acc) = train.training(
             user_loader, user_model, cost, user_opt,
             args.n_epochs, args.gpu_start + 1,
             logger=(logger if args.print_all else None), print_all=args.print_all
@@ -499,12 +494,12 @@ def main():
         output_val_ks_all.append(val_ks_max)
 
         # testing
-        (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+        (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
             clean_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing clean'
         )
 
-        (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+        (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
             pois_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing pois'
         )

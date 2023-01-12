@@ -1,7 +1,6 @@
 import math
 
 import torch.nn as nn
-import torch.nn.init as init
 from torchsummary import summary
 
 __all__ = [

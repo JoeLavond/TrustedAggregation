@@ -2,7 +2,6 @@
 # base
 import argparse
 import copy
-import logging
 import os
 from pathlib import Path
 import sys
@@ -17,18 +16,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms as T
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(2, f'{Path.home()}/')
-import global_utils as gu
-
-sys.path.insert(3, f'{Path.home()}/fed-tag/')
-import proj_utils as pu
-
-sys.path.insert(4, f'{Path.home()}/models/')
-import resnet
-import vgg
+sys.path.insert(1, f'{Path.home()}/fed-tag/')
+from utils import data, setup
+from utils.training import agg, atk, dist, eval, neuro, train
+from utils.modeling import pre, resnet, vgg
 
 
 """ Setup """
@@ -106,8 +100,8 @@ def main():
             os.path.join(args.out_path, 'data')
         )
 
-    gu.set_seeds(args.seed)
-    logger = gu.get_log(args.out_path)
+    setup.set_seeds(args.seed)
+    logger = setup.get_log(args.out_path)
     logger.info(args)
 
     """ Training data """
@@ -123,7 +117,7 @@ def main():
         download=True
     )
 
-    train_data = pu.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
+    train_data = data.Custom3dDataset(train_data.data, train_data.targets, cifar_trans)
     cifar_mean = train_data.mean()
     cifar_std = train_data.std()
 
@@ -163,7 +157,7 @@ def main():
     m_users[0:args.n_malicious] = 1
 
     # define trigger model
-    stamp_model = pu.BasicStamp(
+    stamp_model = atk.BasicStamp(
         args.n_malicious, args.dba,
         row_size=args.row_size, col_size=args.col_size
     ).cuda(args.gpu_start)
@@ -174,7 +168,7 @@ def main():
     # initialize global model
     cost = nn.CrossEntropyLoss()
     global_model = nn.Sequential(
-        gu.StdChannels(cifar_mean, cifar_std),
+        pre.StdChannels(cifar_mean, cifar_std),
         (
             resnet.resnet18(num_classes=args.n_classes, pretrained=False)
             if args.resnet else vgg.vgg16_bn()
@@ -183,7 +177,7 @@ def main():
     global_model = global_model.eval()
 
     # initialize neurotoxin masking
-    NT = pu.Neurotoxin(
+    NT = neuro.Neurotoxin(
         model=copy.deepcopy(global_model),
         p=args.neuro_p
     )
@@ -209,7 +203,7 @@ def main():
         test_size=0.5, stratify=np.array(test_data.targets)
     )
 
-    clean_test_data = pu.Custom3dDataset(clean_test_x, clean_test_y)
+    clean_test_data = data.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -219,7 +213,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = pu.Custom3dDataset(pois_test_x, pois_test_y)
+    pois_test_data = data.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
@@ -238,7 +232,7 @@ def main():
     )
 
     # validation
-    (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = pu.evaluate_output(
+    (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = eval.evaluate_output(
         clean_val_loader, global_model, cost, args.gpu_start,
         logger=None, title='validation clean',
         output=1
@@ -265,14 +259,14 @@ def main():
     )
 
     # train local model
-    (user_train_loss, user_train_acc) = gu.training(
+    (user_train_loss, user_train_acc) = train.training(
         user_loader, user_model, cost, user_opt,
         args.n_epochs, args.gpu_start + 1,
         logger=(logger if args.print_all else None), print_all=args.print_all
     )
 
     # validation
-    (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
+    (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = eval.evaluate_output(
         clean_val_loader, user_model, cost, args.gpu_start + 1,
         logger=None, title='validation clean',
         output=1
@@ -280,7 +274,7 @@ def main():
 
     val_ks = [
         round(
-            pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+            dist.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
         ) for c in range(global_output_layer.shape[-1])
     ]
     output_val_ks.append(
@@ -292,12 +286,12 @@ def main():
     output_val_ks_all.append(val_ks_max)
 
     # testing
-    (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+    (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
         clean_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing clean'
     )
 
-    (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+    (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
         pois_test_loader, global_model, cost, args.gpu_start,
         logger=logger, title='testing pois'
     )
@@ -371,14 +365,14 @@ def main():
 
             # train local model
             if m_user:
-                (user_train_loss, user_train_acc) = pu.nt_training(
+                (user_train_loss, user_train_acc) = neuro.nt_training(
                     user_loader, user_model, cost, user_opt,
                     args.n_epochs, args.gpu_start + 1,
                     logger=(logger if m_user or args.print_all else None), print_all=args.print_all,
                     nt_obj=NT
                 )
             else:
-                (user_train_loss, user_train_acc) = gu.training(
+                (user_train_loss, user_train_acc) = train.training(
                     user_loader, user_model, cost, user_opt,
                     args.n_epochs, args.gpu_start + 1,
                     logger=(logger if m_user or args.print_all else None), print_all=args.print_all
@@ -399,7 +393,7 @@ def main():
 
             """ External validation """
             # validation
-            (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
+            (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = eval.evaluate_output(
                 clean_val_loader, user_model, cost, args.gpu_start + 1,
                 logger=None, title='validation clean',
                 output=1
@@ -408,7 +402,7 @@ def main():
             # execute ks cutoff if defending
             user_ks = [
                 round(
-                    pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+                    dist.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
             output_user_ks.append(
@@ -470,7 +464,7 @@ def main():
         )
 
         # validation
-        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = pu.evaluate_output(
+        (global_clean_val_loss, global_clean_val_acc, global_output_layer, _) = eval.evaluate_output(
             clean_val_loader, global_model, cost, args.gpu_start,
             logger=None, title='validation clean',
             output=1
@@ -497,14 +491,14 @@ def main():
         )
 
         # train local model
-        (user_train_loss, user_train_acc) = gu.training(
+        (user_train_loss, user_train_acc) = train.training(
             user_loader, user_model, cost, user_opt,
             args.n_epochs, args.gpu_start + 1,
             logger=(logger if args.print_all else None), print_all=args.print_all
         )
 
         # validation
-        (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = pu.evaluate_output(
+        (user_clean_val_loss, user_clean_val_acc, user_output_layer, _) = eval.evaluate_output(
             clean_val_loader, user_model, cost, args.gpu_start + 1,
             logger=None, title='validation clean',
             output=1
@@ -512,7 +506,7 @@ def main():
 
         val_ks = [
             round(
-                pu.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
+                dist.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
             ) for c in range(global_output_layer.shape[-1])
         ]
         output_val_ks.append(
@@ -524,12 +518,12 @@ def main():
         output_val_ks_all.append(val_ks_max)
 
         # testing
-        (global_clean_test_loss, global_clean_test_acc) = gu.evaluate(
+        (global_clean_test_loss, global_clean_test_acc) = eval.evaluate(
             clean_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing clean'
         )
 
-        (global_pois_test_loss, global_pois_test_acc) = gu.evaluate(
+        (global_pois_test_loss, global_pois_test_acc) = eval.evaluate(
             pois_test_loader, global_model, cost, args.gpu_start,
             logger=logger, title='testing pois'
         )

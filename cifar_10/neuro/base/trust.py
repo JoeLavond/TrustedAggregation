@@ -2,7 +2,6 @@
 # base
 import argparse
 import copy
-import logging
 import os
 from pathlib import Path
 import sys
@@ -17,18 +16,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms as T
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(2, f'{Path.home()}/')
-import global_utils as gu
-
-sys.path.insert(3, f'{Path.home()}/fed-tag/')
-import proj_utils as pu
-
-sys.path.insert(4, f'{Path.home()}/models/')
-import resnet
-import vgg
+sys.path.insert(1, f'{Path.home()}/fed-tag/')
+from utils import data, setup
+from utils.training import agg, atk, dist, eval, neuro, train
+from utils.modeling import pre, resnet, vgg
 
 
 """ Setup """
