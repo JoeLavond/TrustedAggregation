@@ -75,10 +75,8 @@ def main():
     args.d_rounds = args.n_rounds if args.d_rounds is None else args.d_rounds
 
     line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
-    cool_colors = sns.color_palette("bright").as_hex()
-    cool_colors = cool_colors[:len(methods)]
-    warm_colors = sns.color_palette("dark").as_hex()
-    warm_colors = warm_colors[:len(methods)]
+    cool_colors = ['#88CCEE', '#44AA99', '#117733', '#999933']
+    warm_colors = ['#EE7733', '#CC6677', '#CC3311', '#AA4499']
 
     out_path = './experiment_figures'
     if not os.path.exists('./experiment_figures'):

@@ -81,10 +81,8 @@ def main():
     ]
 
     line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
-    cool_colors = sns.color_palette("bright").as_hex()
-    cool_colors = cool_colors[:len(file_suffices)]
-    warm_colors = sns.color_palette("dark").as_hex()
-    warm_colors = warm_colors[:len(file_suffices)]
+    cool_colors = ['#88CCEE', '#44AA99', '#117733', '#999933']
+    warm_colors = ['#EE7733', '#CC6677', '#CC3311', '#AA4499']
 
     out_path = './extra'
     if not os.path.exists('./extra'):
@@ -97,7 +95,7 @@ def main():
     dbas = (0, 1, 1)
     n_maliciouses = (1, 2, 4)
     titles = [
-        '10% Malicious', 'DBA 20% Malicious', 'DBA 40% Malicious'
+        '10% Malicious', '20% Malicious', '40% Malicious'
     ]
 
     for i, (dba, n_malicious) in enumerate(zip(dbas, n_maliciouses)):
