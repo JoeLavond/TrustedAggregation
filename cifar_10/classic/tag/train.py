@@ -19,7 +19,7 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(1, f'{Path.home()}/fed-tag/')
+sys.path.insert(1, f'{Path.home()}/tag/')
 from utils import data, setup
 from utils.training import atk, dist, eval, train
 from utils.modeling import pre, resnet, vgg

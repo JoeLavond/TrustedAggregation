@@ -19,7 +19,7 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(1, f'{Path.home()}/fed-tag/')
+sys.path.insert(1, f'{Path.home()}/tag/')
 from utils import data, setup
 from utils.training import agg, atk, dist, eval, neuro, train
 from utils.modeling import pre, resnet, vgg
@@ -116,7 +116,7 @@ def main():
         download=True
     )
 
-    train_data = data.Custom2dDataset(train_data.data, train_data.targets, mnist_trans)
+    train_data = data.Custom3dDataset(train_data.data, train_data.targets, mnist_trans)
     mnist_mean = train_data.mean()
     mnist_std = train_data.std()
 
@@ -191,7 +191,7 @@ def main():
 
     """ Import testing data """
     # testing data
-    test_data = datasets.mnist10(
+    test_data = datasets.MNIST(
         root=f'{Path.home()}/data/',
         train=False,
         download=True
@@ -202,7 +202,7 @@ def main():
         test_size=0.5, stratify=np.array(test_data.targets)
     )
 
-    clean_test_data = data.Custom2dDataset(clean_test_x, clean_test_y)
+    clean_test_data = data.Custom3dDataset(clean_test_x, clean_test_y)
     clean_test_loader = DataLoader(
         clean_test_data,
         batch_size=args.n_batch,
@@ -212,7 +212,7 @@ def main():
     )
 
     # poison subset of test data
-    pois_test_data = data.Custom2dDataset(pois_test_x, pois_test_y)
+    pois_test_data = data.Custom3dDataset(pois_test_x, pois_test_y)
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
