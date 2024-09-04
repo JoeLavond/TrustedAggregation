@@ -155,3 +155,32 @@ class Custom3dDataset(Dataset):
             user_labels[:n_pois] = to_pois.labels
 
         return Custom3dDataset(user_images, user_labels, self.transformations)
+
+
+class Custom2dDataset(Custom3dDataset):
+    """ Initial Setup """
+
+    def __init__(self, images, labels, transformations=None, permute=1):
+
+        # load data
+        self.target = None
+        if isinstance(images, torch.Tensor):
+            self.labels = labels.clone().detach()
+            self.images = images.clone().detach().float()
+
+        else:
+
+            # restructure (channel, height, width)
+            self.labels = torch.tensor(labels)
+            self.images = torch.tensor(images).float()
+
+            if len(self.images.shape) == 3:
+                self.images = self.images.unsqueeze(dim=1)
+            elif permute:
+                self.images = self.images.permute(dims=(0, 3, 1, 2))
+
+            # normalize data
+            self.images = self.images / 255
+
+        # transforms
+        self.transformations = transformations
