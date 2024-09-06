@@ -1,5 +1,5 @@
 set -e
-source activate joeenv;
+source activate tag;
 
 python main_accuracy_single.py --show=0 --resnet=0 --beta=0.1;
 python main_accuracy_single.py --show=0 --dba=1 --n_malicious=2 --resnet=0 --beta=0.1;

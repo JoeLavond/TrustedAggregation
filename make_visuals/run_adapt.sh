@@ -1,4 +1,4 @@
-source activate joeenv;
+source activate tag;
 
 python ext_adapt.py --show=0 --mu=0.01 --dba=0 --n_malicious=1 --neuro=0 &
 python ext_adapt.py --show=0 --mu=0.01 --dba=1 --n_malicious=2 --neuro=0 &
