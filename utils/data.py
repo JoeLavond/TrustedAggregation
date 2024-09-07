@@ -1,5 +1,6 @@
 # packages
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 from torch.distributions import Dirichlet
 from torch.utils.data import Dataset, DataLoader
@@ -61,6 +62,7 @@ class Custom3dDataset(Dataset):
 
         return None
 
+
     def _sample_helper(self, n_local_data, alpha, n_classes, **kwargs):
 
         # setup sample
@@ -87,6 +89,30 @@ class Custom3dDataset(Dataset):
         out_ind = out_ind.squeeze()
 
         return out_ind
+
+    def quadratic_scaling(self, n_classes):
+
+        """
+        Function: Return fitted parabola and output given class prop as input
+            Parabola passes through (0, 0), (2B, 0), and (B, 1)
+            y = a * x * (x - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * -1 * B ** 2
+            a = -1 / (B ** 2)
+        """
+
+        B = 1 / n_classes  # proportion of perfectly balanced class
+
+        # setup
+        label_counts = torch.bincount(self.labels).cpu().numpy()
+        label_props = label_counts / sum(label_counts)
+
+        index = (label_props <= 2 * B)
+        output = np.zeros_like(label_props)
+        output[index] = -1 / (B ** 2) * label_props[index] * (label_props[index] - 2 * B)
+
+        return output
 
     def sample(self, n_users, n_local_data, alpha, n_classes, **kwargs):
         return [self._sample_helper(n_local_data, alpha, n_classes) for _ in range(n_users)]
@@ -174,13 +200,18 @@ class Custom2dDataset(Custom3dDataset):
             self.labels = torch.tensor(labels)
             self.images = torch.tensor(images).float()
 
-            if len(self.images.shape) == 3:
-                self.images = self.images.unsqueeze(dim=1)
-            elif permute:
-                self.images = self.images.permute(dims=(0, 3, 1, 2))
-
             # normalize data
             self.images = self.images / 255
+
+
+        # add missing channel dimension
+        if len(self.images.shape) == 3:
+            self.images = self.images.unsqueeze(dim=1)
+            self.images = self.images.repeat(1, 3, 1, 1)
+
+        # ensure that channels are the first dimension
+        elif permute:
+            self.images = self.images.permute(dims=(0, 3, 1, 2))
 
         # transforms
         self.transformations = transformations
