@@ -18,7 +18,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms as T
 from torch.utils.data import DataLoader
 
-sys.path.insert(1, f'{Path.home()}/tag/')
+sys.path.insert(1, f'{Path.home()}/TAG/')
 from utils import setup, data
 from utils.modeling import pre, resnet, vgg
 from utils.training import atk, dist, eval, train

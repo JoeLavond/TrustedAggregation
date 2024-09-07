@@ -117,7 +117,7 @@ def main():
         for j, method in enumerate(methods):
 
             path = os.path.join(
-                f'{Path.home()}/tag',
+                f'{Path.home()}/TAG',
                 d,
                 ('neuro' if args.neuro else 'classic'),
                 method,

@@ -111,7 +111,7 @@ def main():
         for j, file_suffix in enumerate(file_suffices):
 
             path = os.path.join(
-                f'{Path.home()}/tag',
+                f'{Path.home()}/TAG',
                 data,
                 ('neuro' if args.neuro else 'classic'),
                 'adapt',
