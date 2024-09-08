@@ -42,7 +42,7 @@ def get_args():
     return parser.parse_args()
 
 
-def plot_threshold(
+def plot_filtering(
     data_val, data_user,  # ------- class distances for all users
     d_rounds,  # ------------------ output plot zoom
     m_start, n_malicious,  # ------ attack setting control
@@ -97,69 +97,6 @@ def plot_threshold(
     data_malicious_max = data_malicious_values.max(axis=1)
 
     fig1, (ax1, ax2, ax3) = plt.subplots(ncols=3, sharey=True, figsize=(12, 4))
-
-    # visual - benign
-    ax1.set_title('Threshold vs. Benign')
-    ax1.set_ylim(-0.05, 1.1)
-    ax1.set_xlabel('Communication Round')
-    ax1.set_xlim(0, d_rounds)
-
-    ax1.plot(data_val_r + 1, benign_upper, '--b')
-    ax1.plot(data_val_r + 1, benign_lower, '--b')
-    ax1.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
-
-    ax1.legend(labels=[
-        'benign: q3 + 1.5 * IQR',
-        'benign: q1 - 1.5 * IQR',
-        'scaled threshold'
-    ])
-
-    # visual - malicious
-    ax2.set_title('Threshold vs. Malicious')
-    ax2.set_ylim(-0.05, 1.1)
-    ax2.set_xlabel('Communication Round')
-    ax2.set_xlim(0, d_rounds)
-
-
-    """ Malicious Users
-    1. If multiple attacker, calculate quantiles
-    2. Otherwise, plot single user points
-    """
-    if n_malicious > 1:
-
-
-        # get lower and upper bound for malicious users
-        data_malicious_max_q1, data_malicious_max_q3 = lu.get_quantiles(data_malicious_r, data_malicious_max)
-        malicious_upper = data_malicious_max_q3 + 1.5 * (data_malicious_max_q3 - data_malicious_max_q1)
-        malicious_upper = np.maximum(np.minimum(malicious_upper, 1), 0)
-        malicious_lower = data_malicious_max_q1 - 1.5 * (data_malicious_max_q3 - data_malicious_max_q1)
-        malicious_lower = np.maximum(np.minimum(malicious_lower, 1), 0)
-
-        u_data_malicious_r = np.sort(np.unique(data_malicious_r))
-
-        ax2.plot(u_data_malicious_r + 1, malicious_upper, '--r')
-        ax2.plot(u_data_malicious_r + 1, malicious_lower, '--r')
-
-        ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
-        c_labels=[
-            'malicious: q3 + 1.5 * IQR',
-            'malicious: q1 - 1.5 * IQR',
-            'scaled threshold'
-        ]
-        ax2.legend(labels=c_labels)
-
-    else:
-
-        u_data_malicious_r = np.sort(np.unique(data_malicious_r))
-        ax2.plot(u_data_malicious_r + 1, data_malicious_max, '--r')
-        ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
-
-        c_labels=[
-            'malicious',
-            'scaled threshold'
-        ]
-        ax2.legend(labels=c_labels)
-
 
     """ Threshold diagnostics
     View running rates of acceptance for benign and malicious users
@@ -232,7 +169,7 @@ def main():
         os.makedirs(os.path.join(path, 'visuals'))
 
 
-    """ Defense Plot - Thresholding """
+    """ Defense Plot - Filtering """
     subdir = os.path.join(
         path,
         f'n_rounds{args.n_rounds}--d_start1--m_start1--n_malicious{args.n_malicious}'
@@ -260,13 +197,13 @@ def main():
         ), allow_pickle=True
     )
 
-    plot_threshold(
-        temp_val, temp_user,
-        args.d_rounds,
-        args.m_start, args.n_malicious,
-        path, suffix,
-        args.show
-    )
+    print()
+    print(temp_val.shape)
+    print(temp_val[:5])
+
+    print()
+    print(temp_user.shape)
+    print(temp_user[:5])
 
 
 if __name__ == "__main__":

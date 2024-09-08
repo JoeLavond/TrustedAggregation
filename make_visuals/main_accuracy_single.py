@@ -123,7 +123,9 @@ def main():
     for j, method in enumerate(methods):
 
         path = os.path.join(
-            f'{Path.home()}/TAG',
+            f'{Path.home()}',
+            'Documents',
+            'TAG',
             data,
             ('neuro' if args.neuro else 'classic'),
             method,
@@ -131,7 +133,9 @@ def main():
             'alpha' + str(args.alpha) + '--alpha_val' + str(args.alpha_val)
         )
         alt_path = os.path.join(
-            f'{Path.home()}/TAG',
+            f'{Path.home()}',
+            'Documents',
+            'TAG',
             data,
             ('neuro' if args.neuro else 'classic'),
             method,
@@ -161,11 +165,15 @@ def main():
                 ), allow_pickle=True
             )
         except:
-            temp_global = np.load(
-                os.path.join(
-                    alt_path, f_path
-                ), allow_pickle=True
-            )
+            try:
+                temp_global = np.load(
+                    os.path.join(
+                        alt_path, f_path
+                    ), allow_pickle=True
+                )
+            except:
+                print(f"Error: {f_path}")
+                continue
 
         clean_line, = plt.plot(range(0, args.d_rounds + 1), temp_global[:args.d_rounds + 1, 1], c=cool_colors[j], linestyle=line_styles[j], label=method)
         clean_lines.append(clean_line)
@@ -183,9 +191,11 @@ def main():
     )
     ax = plt.gca().add_artist(l1)
 
+    """
     for i, c in enumerate(cool_colors):
         l1.legendHandles[i].set_color(c)
         l1.legendHandles[i].set_linestyle(line_styles[i])
+    """
 
     l2 = plt.legend(
         pois_lines,
@@ -195,19 +205,19 @@ def main():
         loc='lower left'
     )
 
+    """
     for i, c in enumerate(warm_colors):
         l2.legendHandles[i].set_color(c)
         l2.legendHandles[i].set_linestyle(line_styles[i])
-
-    plt.savefig(
-        os.path.join(out_path, f'accuracy--{data}{out_suffix}.png'),
-        bbox_inches='tight'
-    )
+    """
 
     if args.show:
-        #plt.tight_layout()
         plt.show()
     else:
+        plt.savefig(
+            os.path.join(out_path, f'accuracy--{data}{out_suffix}.png'),
+            bbox_inches='tight'
+        )
         plt.close()
 
 

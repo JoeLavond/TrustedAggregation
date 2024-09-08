@@ -186,6 +186,7 @@ def main():
     output_global_acc = []
 
     # defense
+    output_user = []
     output_user_ks = []
     output_val_ks_all = []
 
@@ -405,6 +406,9 @@ def main():
                     dist.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
+            output_user.append(
+                [m_user, r, user_id]
+            )
             output_user_ks.append(
                 [m_user, r] + user_ks
             )
@@ -550,6 +554,11 @@ def main():
     output_val_ks = np.array(output_val_ks)
     np.save(
         os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
+    )
+
+    output_user = np.array(output_user)
+    np.save(
+        os.path.join(args.out_path, 'data', f'output_user{suffix}.npy'), output_user
     )
 
     output_user_ks = np.array(output_user_ks)
