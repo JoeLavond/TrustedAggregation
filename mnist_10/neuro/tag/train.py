@@ -556,7 +556,7 @@ def main():
 
     output_user = np.array(output_user)
     np.save(
-        os.path.join(args.out_path, 'data', f'output_user{suffix}.npy'), output
+        os.path.join(args.out_path, 'data', f'output_user{suffix}.npy'), output_user
     )
 
     output_user_ks = np.array(output_user_ks)
