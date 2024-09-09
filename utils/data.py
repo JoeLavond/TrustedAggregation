@@ -1,37 +1,18 @@
 # packages
-import matplotlib.pyplot as plt
+from abc import ABC
+from typing import *
+
 import numpy as np
 import torch
 from torch.distributions import Dirichlet
 from torch.utils.data import Dataset, DataLoader
 
+import matplotlib.pyplot as plt
 
-class Custom3dDataset(Dataset):
-    """ Initial Setup """
 
-    def __init__(self, images, labels, transformations=None, permute=1):
+class CustomDataset(ABC, Dataset):
 
-        # load data
-        self.target = None
-        if isinstance(images, torch.Tensor):
-            self.labels = labels.clone().detach()
-            self.images = images.clone().detach().float()
-
-        else:
-
-            # restructure (channel, height, width)
-            self.labels = torch.tensor(labels)
-            self.images = torch.tensor(images).float()
-            if permute:
-                self.images = self.images.permute(dims=(0, 3, 1, 2))
-
-            # normalize data
-            self.images = self.images / 255
-
-        # transforms
-        self.transformations = transformations
-
-    def __getitem__(self, index):
+    def __getitem__(self, index: torch.Tensor) -> Tuple[torch.Tensor]:
 
         # indexing
         x, y = self.images[index], self.labels[index]
@@ -61,7 +42,6 @@ class Custom3dDataset(Dataset):
             plt.show()
 
         return None
-
 
     def _sample_helper(self, n_local_data, alpha, n_classes, **kwargs):
 
@@ -183,7 +163,33 @@ class Custom3dDataset(Dataset):
         return Custom3dDataset(user_images, user_labels, self.transformations)
 
 
-class Custom2dDataset(Custom3dDataset):
+class Custom3dDataset(CustomDataset):
+    """ Initial Setup """
+
+    def __init__(self, images, labels, transformations=None, permute=1):
+
+        # load data
+        self.target = None
+        if isinstance(images, torch.Tensor):
+            self.labels = labels.clone().detach()
+            self.images = images.clone().detach().float()
+
+        else:
+
+            # restructure (channel, height, width)
+            self.labels = torch.tensor(labels)
+            self.images = torch.tensor(images).float()
+            if permute:
+                self.images = self.images.permute(dims=(0, 3, 1, 2))
+
+            # normalize data
+            self.images = self.images / 255
+
+        # transforms
+        self.transformations = transformations
+
+
+class Custom2dDataset(CustomDataset):
     """ Initial Setup """
 
     def __init__(self, images, labels, transformations=None, permute=1):
@@ -202,7 +208,6 @@ class Custom2dDataset(Custom3dDataset):
 
             # normalize data
             self.images = self.images / 255
-
 
         # add missing channel dimension
         if len(self.images.shape) == 3:

@@ -9,6 +9,7 @@ import re
 # visual
 import matplotlib
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 
 # source
@@ -16,7 +17,6 @@ import local_utils as lu
 
 
 def get_args():
-
     parser = argparse.ArgumentParser()
 
     # path
@@ -42,14 +42,9 @@ def get_args():
     return parser.parse_args()
 
 
-def plot_filtering(
-    data_val, data_user,  # ------- class distances for all users
-    d_rounds,  # ------------------ output plot zoom
-    m_start, n_malicious,  # ------ attack setting control
-    path, suffix='',  # ----------- input and output location
-    show=1  # --------------------- display plots?
-    ):
-
+def preprocessing_for_model_filtering(
+        data_val, data_user,  # ------- class distances for all users
+):
     """ Documentation
     Function: Create plot for understanding threshold performance
     1. Validation threshold w/ scaling and smoothing
@@ -75,32 +70,116 @@ def plot_filtering(
     data_val_scaled_max_thresh = lu.min_mean_smooth(data_val_scaled_max, scale=2)
     data_val_scaled_max_thresh = np.minimum(data_val_scaled_max_thresh, 1)
 
+    data_val = pd.DataFrame({
+        'round': data_val_r,
+        'threshold': data_val_scaled_max_thresh
+    })
+
     """ User Manipulation
     1. Seperate benign from malicious users
     2. Compute each round quantiles for summarizing values for plotting
     """
     # benign manipulation
-    data_benign = data_user[data_user[:, 0] == 0, 1:]  # subset to benign users, remove malicious index column
-    data_benign_r, data_benign_values = data_benign[:, 0], data_benign[:, 1:]  # seperate round column from data
-    data_benign_max = data_benign_values.max(axis=1)
-    data_benign_max_q1, data_benign_max_q3 = lu.get_quantiles(data_benign_r, data_benign_max)
+    data_user_malicious, data_user_r, data_user_values = (
+        data_user[:, 0],
+        data_user[:, 1],
+        data_user[:, 2:]  # seperate round column from data
+    )
+    data_user_max = data_user_values.max(axis=1)
+    data_user_accepted = np.array([
+        v < data_val_scaled_max_thresh[int(r - 1)]
+        for r, v in zip(data_user_r, data_user_max)
+    ])
 
-    # clip to 0-1 scale
-    benign_upper = data_benign_max_q3 + 1.5 * (data_benign_max_q3 - data_benign_max_q1)
-    benign_upper = np.maximum(np.minimum(benign_upper, 1), 0)
-    benign_lower = data_benign_max_q1 - 1.5 * (data_benign_max_q3 - data_benign_max_q1)
-    benign_lower = np.maximum(np.minimum(benign_lower, 1), 0)
+    data_user = pd.DataFrame({
+        'malicious': data_user_malicious,
+        'round': data_user_r,
+        'max': data_user_max,
+        'accepted': data_user_accepted
+    })
 
-    # malicious users
-    data_malicious = data_user[data_user[:, 0] == 1, 1:]  # subset to benign users, remove malicious index column
-    data_malicious_r, data_malicious_values = data_malicious[:, 0], data_malicious[:, 1:]  # seperate round column from data
-    data_malicious_max = data_malicious_values.max(axis=1)
+    return data_val, data_user
 
+
+""" Main function HERE """
+
+
+def main():
+    # setup
+    args = get_args()
+    if args.d_rounds is None:
+        args.d_rounds = args.n_rounds
+
+    path = os.path.join(
+        f'{Path.home()}',
+        'Documents',
+        'TAG',
+        f'{args.data}_{args.n_classes}',
+        ('neuro' if args.neuro else 'classic'),
+        'tag',
+        ('distributed' if args.dba else 'centralized'),
+        f'alpha{args.alpha}--alpha_val{args.alpha_val}'
+    )
+    suffix = f'--n_malicious{args.n_malicious}'
+
+    if not os.path.exists(os.path.join(path, 'visuals')):
+        os.makedirs(os.path.join(path, 'visuals'))
+
+    """ Defense Plot - Filtering """
+    subdir = os.path.join(
+        path,
+        f'n_rounds{args.n_rounds}--d_start1--m_start1--n_malicious{args.n_malicious}'
+    )
+
+    temp_val_ks = np.load(
+        os.path.join(
+            subdir,
+            'data',
+            (
+                    'output_val_ks'
+                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                    + '.npy'
+            ),
+        ), allow_pickle=True
+    )
+    temp_user_ks = np.load(
+        os.path.join(
+            subdir,
+            'data',
+            (
+                    'output_user_ks'
+                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                    + '.npy'
+            )
+        ), allow_pickle=True
+    )
+
+    data_val, data_user = preprocessing_for_model_filtering(
+        temp_val_ks, temp_user_ks
+    )
+
+    temp_user = np.load(
+        os.path.join(
+            subdir,
+            'data',
+            (
+                    'output_user'
+                    + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                    + '.npy'
+            )
+        ), allow_pickle=True
+    )
+
+    # ensure that user data is the same
+    assert np.equal(data_user['malicious'].values, temp_user[:, 0]).all(), 'malicious'
+    assert np.equal(data_user['round'].values, temp_user[:, 1]).all(), 'round'
+
+    # combine user id
+    data_user['id'] = temp_user[:, 2]
+
+    """
     fig1, (ax1, ax2, ax3) = plt.subplots(ncols=3, sharey=True, figsize=(12, 4))
 
-    """ Threshold diagnostics
-    View running rates of acceptance for benign and malicious users
-    """
     # diagnostic computation
     (_, benign_diag_run) = lu.threshold_diagnostics(
         data_benign_r,
@@ -143,69 +222,8 @@ def plot_filtering(
         plt.show()
     else:
         plt.close()
-
-
-""" Main function HERE """
-def main():
-
-    # setup
-    args = get_args()
-    if args.d_rounds is None:
-        args.d_rounds = args.n_rounds
-
-    path = os.path.join(
-        f'{Path.home()}',
-        'Documents',
-        'TAG',
-        f'{args.data}_{args.n_classes}',
-        ('neuro' if args.neuro else 'classic'),
-        'tag',
-        ('distributed' if args.dba else 'centralized'),
-        f'alpha{args.alpha}--alpha_val{args.alpha_val}'
-    )
-    suffix = f'--n_malicious{args.n_malicious}'
-
-    if not os.path.exists(os.path.join(path, 'visuals')):
-        os.makedirs(os.path.join(path, 'visuals'))
-
-
-    """ Defense Plot - Filtering """
-    subdir = os.path.join(
-        path,
-        f'n_rounds{args.n_rounds}--d_start1--m_start1--n_malicious{args.n_malicious}'
-    )
-
-    temp_val = np.load(
-        os.path.join(
-            subdir,
-            'data',
-            (
-                'output_val_ks'
-                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                + '.npy'
-            ),
-        ), allow_pickle=True
-    )
-    temp_user = np.load(
-        os.path.join(
-            subdir,
-            (
-                'data/output_user_ks'
-                + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
-                + '.npy'
-            )
-        ), allow_pickle=True
-    )
-
-    print()
-    print(temp_val.shape)
-    print(temp_val[:5])
-
-    print()
-    print(temp_user.shape)
-    print(temp_user[:5])
+    """
 
 
 if __name__ == "__main__":
     main()
-

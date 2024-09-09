@@ -104,6 +104,14 @@ def main():
     logger = setup.get_log(args.out_path)
     logger.info(args)
 
+    suffix = (
+            f'--neuro_p{args.neuro_p}'
+            + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+            + (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
+            + ('--no_smooth' if not args.d_smooth else '')
+            + ('--vgg' if not args.resnet else '')
+    )
+
     """ Training data """
     cifar_trans = T.Compose([
         T.Pad(padding=4),
@@ -155,6 +163,39 @@ def main():
 
     m_users = torch.zeros(args.n_users)
     m_users[0:args.n_malicious] = 1
+
+    # compute and save class proportions for each user
+    def indexes_to_proportions(targets: torch.Tensor, indexes: torch.Tensor, n_classes: int) -> np.ndarray:
+        """
+        Compute the class proportions of targets for a given set of indexes.
+
+        Args:
+            targets (torch.Tensor): tensor of targets
+            indexes (torch.Tensor): tensor of indexes
+            n_classes (int): number of classes
+
+        Returns:
+            numpy.ndarray: vector of class proportions
+
+        """
+        user_targets = targets[indexes]
+        class_counts = torch.bincount(user_targets, minlength=n_classes)
+        class_proportions = class_counts.float() / class_counts.sum()
+        return class_proportions.numpy()
+
+
+    output_data = np.stack([
+        np.concatenate([
+            np.array([user_id, m_users[user_id]]),
+            indexes_to_proportions(train_data.targets, user_indices, args.n_classes)
+        ])
+        for user_id, user_indices in enumerate(users_data_indices)
+    ], axis=0)
+
+    output_data = np.array(output_data)
+    np.save(
+        os.path.join(args.out_path, 'data', f'output_data{suffix}.npy'), output_data
+    )
 
     # define trigger model
     stamp_model = atk.BasicStamp(
@@ -538,14 +579,6 @@ def main():
 
 
     """ Save output """
-    suffix = (
-        f'--neuro_p{args.neuro_p}'
-        + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
-        + (f'--n_val_data{args.n_val_data}' if args.n_val_data != args.n_user_data else '')
-        + ('--no_smooth' if not args.d_smooth else '')
-        + ('--vgg' if not args.resnet else '')
-    )
-
     output_global_acc = np.array(output_global_acc)
     np.save(
         os.path.join(args.out_path, 'data', f'output_global_acc{suffix}.npy'), output_global_acc

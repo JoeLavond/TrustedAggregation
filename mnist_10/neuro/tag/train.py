@@ -55,10 +55,10 @@ def get_args():
     parser.add_argument('--m_scale', default=1, type=int)
     parser.add_argument('--p_malicious', default=None, type=float)
     parser.add_argument('--n_malicious', default=1, type=int)
-    parser.add_argument('--n_epochs_pois', default=10, type=int)
+    parser.add_argument('--n_epochs_pois', default=15, type=int)
     parser.add_argument('--lr_pois', default=0.01, type=float)
     # benign users
-    parser.add_argument('--n_epochs', default=5, type=int)
+    parser.add_argument('--n_epochs', default=10, type=int)
     parser.add_argument('--lr', default=0.01, type=float)
 
     """ Data poisoning """
@@ -107,7 +107,7 @@ def main():
     """ Training data """
     mnist_trans = T.Compose([
         T.Pad(padding=4),
-        T.RandomCrop(size=32)
+        T.RandomCrop(size=28)
     ])
 
     train_data = datasets.MNIST(
@@ -185,7 +185,6 @@ def main():
     output_global_acc = []
 
     # defense
-    output_user = []
     output_user_ks = []
     output_val_ks_all = []
 
@@ -217,11 +216,12 @@ def main():
     pois_test_data.poison_(stamp_model, args.target, args.n_batch, args.gpu_start, test=1)
 
     pois_test_loader = DataLoader(
-        pois_test_data,
-        batch_size=args.n_batch,
-        shuffle=False,
-        num_workers=1,
-        pin_memory=True
+                pois_test_data,
+                batch_size=args.n_batch,
+                shuffle=False,
+                num_workers=1,
+                pin_memory=True
+
     )
 
     """ Initial validation """
@@ -404,9 +404,6 @@ def main():
                     dist.ks_div(global_output_layer[:, c], user_output_layer[:, c]), 3
                 ) for c in range(global_output_layer.shape[-1])
             ]
-            output_user.append(
-                [m_user, r, user_id]
-            )
             output_user_ks.append(
                 [m_user, r] + user_ks
             )
@@ -552,11 +549,6 @@ def main():
     output_val_ks = np.array(output_val_ks)
     np.save(
         os.path.join(args.out_path, 'data', f'output_val_ks{suffix}.npy'), output_val_ks
-    )
-
-    output_user = np.array(output_user)
-    np.save(
-        os.path.join(args.out_path, 'data', f'output_user{suffix}.npy'), output_user
     )
 
     output_user_ks = np.array(output_user_ks)
