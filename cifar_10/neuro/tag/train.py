@@ -178,16 +178,22 @@ def main():
             numpy.ndarray: vector of class proportions
 
         """
+        if not isinstance(indexes, torch.Tensor):
+            indexes = np.array(indexes)
+            indexes = torch.from_numpy(indexes, dtype=torch.int)
+
+        indexes = indexes.int()
         user_targets = targets[indexes]
         class_counts = torch.bincount(user_targets, minlength=n_classes)
         class_proportions = class_counts.float() / class_counts.sum()
+
         return class_proportions.numpy()
 
 
     output_data = np.stack([
         np.concatenate([
             np.array([user_id, m_users[user_id]]),
-            indexes_to_proportions(train_data.targets, user_indices, args.n_classes)
+            indexes_to_proportions(train_data.labels, user_indices, args.n_classes)
         ])
         for user_id, user_indices in enumerate(users_data_indices)
     ], axis=0)
