@@ -413,7 +413,7 @@ def main():
             thresh = args.d_scale * thresh
             thresh = np.minimum(thresh, 1)
 
-            user_update = (user_ks_max < thresh)
+            user_update = (user_ks_max <= thresh)
             if m_user:
                 logger.info(
                     'User KS Max: %.4f, Thresh: %.4f, Update: %r',
