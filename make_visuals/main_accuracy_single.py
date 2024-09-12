@@ -82,8 +82,6 @@ def main():
     ]
 
     methods = ('tag', 'base/mean', 'base/median', 'base/trust')
-    if args.only:
-        methods = list(methods[0])
 
     file_suffices = (
         (
@@ -127,6 +125,8 @@ def main():
     pois_lines = []
 
     for j, method in enumerate(methods):
+        if args.only and j > 0:
+            continue
 
         path = os.path.join(
             f'{Path.home()}',
