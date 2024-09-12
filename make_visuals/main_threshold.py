@@ -1,4 +1,3 @@
-""" Packages """
 # base
 import argparse
 import numpy as np
@@ -29,6 +28,9 @@ def get_args():
     parser.add_argument('--n_malicious', default=1, type=int)
     parser.add_argument('--dba', default=0, type=int)
 
+    parser.add_argument('--d_scale', default=2., type=float)
+    parser.add_argument('--d_smooth', default=False, type=bool)
+
     parser.add_argument('--neuro', default=0, type=int)
     parser.add_argument('--neuro_p', default=0.1, type=float)
 
@@ -44,7 +46,7 @@ def get_args():
 
 def plot_threshold(
     data_val, data_user,  # ------- class distances for all users
-    d_rounds,  # ------------------ output plot zoom
+    d_rounds, d_smooth,  # ------------------ output plot zoom
     m_start, n_malicious,  # ------ attack setting control
     path, suffix='',  # ----------- input and output location
     show=1  # --------------------- display plots?
@@ -72,7 +74,12 @@ def plot_threshold(
 
     data_val_scaled = data_val_values * scaling
     data_val_scaled_max = data_val_scaled.max(axis=1)
-    data_val_scaled_max_thresh = lu.min_mean_smooth(data_val_scaled_max, scale=2)
+
+    if not d_smooth:
+        data_val_scaled_max_thresh = lu.min_mean_smooth(data_val_scaled_max, scale=2)
+    else:
+        data_val_scaled_max_thresh = 2 * data_val_scaled_max
+
     data_val_scaled_max_thresh = np.minimum(data_val_scaled_max_thresh, 1)
 
     """ User Manipulation
@@ -226,7 +233,11 @@ def main():
         ('distributed' if args.dba else 'centralized'),
         f'alpha{args.alpha}--alpha_val{args.alpha_val}'
     )
-    suffix = f'--n_malicious{args.n_malicious}'
+    suffix = (
+        f'--n_malicious{args.n_malicious}'
+        + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+        + ('--no_smooth' if args.d_smooth else '')
+    )
 
     if not os.path.exists(os.path.join(path, 'visuals')):
         os.makedirs(os.path.join(path, 'visuals'))
@@ -238,31 +249,34 @@ def main():
         f'n_rounds{args.n_rounds}--d_start1--m_start1--n_malicious{args.n_malicious}'
     )
 
-    temp_val = np.load(
-        os.path.join(
-            subdir,
-            'data',
-            (
+    path_val = os.path.join(
+        subdir,
+        'data',
+        (
                 'output_val_ks'
                 + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + ('--no_smooth' if args.d_smooth else '')
                 + '.npy'
-            ),
-        ), allow_pickle=True
+        ),
     )
-    temp_user = np.load(
-        os.path.join(
-            subdir,
-            (
+    print(path_val)
+    temp_val = np.load(path_val, allow_pickle = True)
+
+    path_user = os.path.join(
+        subdir,
+        (
                 'data/output_user_ks'
                 + (f'--neuro_p{args.neuro_p}' if args.neuro else '')
+                + (f'--d_scale{args.d_scale}' if args.d_scale != 2. else '')
+                + ('--no_smooth' if args.d_smooth else '')
                 + '.npy'
-            )
-        ), allow_pickle=True
+        )
     )
+    temp_user = np.load(path_user, allow_pickle = True)
 
     plot_threshold(
         temp_val, temp_user,
-        args.d_rounds,
+        args.d_rounds, args.d_smooth,
         args.m_start, args.n_malicious,
         path, suffix,
         args.show
