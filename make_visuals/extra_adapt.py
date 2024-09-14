@@ -90,12 +90,12 @@ def main():
 
 
     """ Global Accuracy """
-    fig, axarr = plt.subplots(ncols=3, figsize=(3*4, 4))
+    fig, axarr = plt.subplots(ncols=3, figsize=(3*4, 4), sharey=True)
 
     dbas = (0, 1, 1)
     n_maliciouses = (1, 2, 4)
     titles = [
-        '10% Malicious', '20% Malicious', '40% Malicious'
+        '10% Malicious', 'Adaptive Attacks\n20% Malicious', '40% Malicious'
     ]
 
     for i, (dba, n_malicious) in enumerate(zip(dbas, n_maliciouses)):
@@ -103,7 +103,7 @@ def main():
 
         subdir = f'--d_start1--m_start{args.m_start}--n_malicious{n_malicious}'
 
-        plt.title(titles[i], fontsize=1.5*args.font_size)
+        plt.title(titles[i], fontsize=1.25*args.font_size)
         plt.xlabel('Communication Round')
 
         to_remove = []
@@ -111,7 +111,9 @@ def main():
         for j, file_suffix in enumerate(file_suffices):
 
             path = os.path.join(
-                f'{Path.home()}/TAG',
+                f'{Path.home()}',
+                'Documents',
+                'TAG',
                 data,
                 ('neuro' if args.neuro else 'classic'),
                 'adapt',
@@ -165,7 +167,7 @@ def main():
     )
     ax = plt.gca().add_artist(l1)
 
-    for i, h in enumerate(l1.legendHandles):
+    for i, h in enumerate(l1.legend_handles):
         h.set_color(cool_colors[i % len(cool_colors)])
         h.set_linestyle(line_styles[i % len(line_styles)])
 
@@ -191,13 +193,15 @@ def main():
         if i not in to_remove
     ]
 
-    for i, h in enumerate(l2.legendHandles):
+    for i, h in enumerate(l2.legend_handles):
         h.set_color(warm_colors[plot_ind[i] % len(warm_colors)])
         h.set_linestyle(line_styles[plot_ind[i] % len(line_styles)])
 
 
+    plt.tight_layout()
     plt.savefig(
         os.path.join(out_path, f'adapt--{data}{out_suffix}.png'),
+        bbox_extra_artists=(l1, l2),
         bbox_inches='tight'
     )
 
