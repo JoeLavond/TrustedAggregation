@@ -75,10 +75,8 @@ def plot_threshold(
     data_val_scaled = data_val_values * scaling
     data_val_scaled_max = data_val_scaled.max(axis=1)
 
-    alt_data_val_scaled_max_thresh = None
     if not d_smooth:
         data_val_scaled_max_thresh = lu.min_mean_smooth(data_val_scaled_max, scale=2)
-        alt_data_val_scaled_max_thresh = 2 * np.cumsum(data_val_scaled_max) / np.arange(1, len(data_val_scaled_max) + 1)
     else:
         data_val_scaled_max_thresh = 2 * data_val_scaled_max
 
@@ -105,7 +103,8 @@ def plot_threshold(
     data_malicious_r, data_malicious_values = data_malicious[:, 0], data_malicious[:, 1:]  # seperate round column from data
     data_malicious_max = data_malicious_values.max(axis=1)
 
-    fig1, (ax1, ax2, ax3) = plt.subplots(ncols=3, sharey=True, figsize=(12, 4))
+    #fig1, (ax1, ax2, ax3) = plt.subplots(ncols=3, sharey=True, figsize=(12, 4))
+    fig1, (ax1, ax2) = plt.subplots(ncols=2, sharey=True, figsize=(4 * 2, 4))
 
     # visual - benign
     ax1.set_title('Threshold vs. Benign')
@@ -117,14 +116,11 @@ def plot_threshold(
     ax1.plot(data_val_r + 1, benign_lower, '--b')
 
     ax1.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
-    if alt_data_val_scaled_max_thresh is not None:
-        ax1.plot(data_val_r + 1, alt_data_val_scaled_max_thresh, '-k')
 
     ax1.legend(labels=[
         'benign: q3 + 1.5 * IQR',
         'benign: q1 - 1.5 * IQR',
         'global min mean smoothing',
-        'running average smoothing',
     ])
 
     # visual - malicious
@@ -154,13 +150,10 @@ def plot_threshold(
         ax2.plot(u_data_malicious_r + 1, malicious_lower, '--r')
 
         ax2.plot(data_val_r + 1, data_val_scaled_max_thresh, '-g')
-        if alt_data_val_scaled_max_thresh is not None:
-            ax2.plot(data_val_r + 1, alt_data_val_scaled_max_thresh, '-k')
         c_labels=[
             'malicious: q3 + 1.5 * IQR',
             'malicious: q1 - 1.5 * IQR',
             'global min mean smoothing',
-            'running average smoothing',
         ]
         ax2.legend(labels=c_labels)
 
@@ -172,7 +165,7 @@ def plot_threshold(
 
         c_labels=[
             'malicious',
-            'scaled threshold'
+            'global min mean smoothing',
         ]
         ax2.legend(labels=c_labels)
 
@@ -193,6 +186,7 @@ def plot_threshold(
         data_val_scaled_max_thresh
     )
 
+    """
     # visual
     ax3.set_title('Model Filtering')
     ax3.plot(
@@ -208,7 +202,7 @@ def plot_threshold(
     ax3.set_xlabel('Communication Round')
     ax3.set_ylim(-0.05, 1.1)
     ax3.set_ylabel('Acceptance Rate')
-
+    """
 
     if path is not None:
         plt.savefig(
