@@ -19,7 +19,7 @@ from torchvision import datasets, transforms as T
 from torch.utils.data import DataLoader
 
 # source
-sys.path.insert(1, f'{Path.home()}/fed-tag/')
+sys.path.insert(1, f'{Path.home()}/TAG/')
 from utils import data, setup
 from utils.modeling import pre, resnet, vgg
 from utils.training import agg, atk, dist, eval, neuro, train
@@ -413,7 +413,7 @@ def main():
             thresh = args.d_scale * thresh
             thresh = np.minimum(thresh, 1)
 
-            user_update = (user_ks_max < thresh)
+            user_update = (user_ks_max <= thresh)
             if m_user:
                 logger.info(
                     'User KS Max: %.4f, Thresh: %.4f, Update: %r',

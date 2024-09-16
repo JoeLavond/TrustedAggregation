@@ -85,6 +85,11 @@ def main():
 
     """ Global Accuracy """
     fig, axarr = plt.subplots(nrows=len(data), figsize=(4, len(data)*4), sharey=True)
+    fig.suptitle(
+        f'{(10 * args.n_malicious):d}% Malicious Users'
+        + (', NT' if args.neuro else '')
+    )
+
     for i, (d, out_d) in enumerate(zip(data, out_data)):
         plt.sca(axarr[i])
         plt.ylabel(out_d, fontsize=1.5*args.font_size)
@@ -119,7 +124,7 @@ def main():
         for j, method in enumerate(methods):
 
             path = os.path.join(
-                f'{Path.home()}/fed-tag',
+                f'{Path.home()}/TAG',
                 d,
                 ('neuro' if args.neuro else 'classic'),
                 method,

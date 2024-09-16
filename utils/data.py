@@ -1,36 +1,18 @@
 # packages
-import matplotlib.pyplot as plt
+from abc import ABC
+from typing import *
+
+import numpy as np
 import torch
 from torch.distributions import Dirichlet
 from torch.utils.data import Dataset, DataLoader
 
+import matplotlib.pyplot as plt
 
-class Custom3dDataset(Dataset):
-    """ Initial Setup """
 
-    def __init__(self, images, labels, transformations=None, permute=1):
+class CustomDataset(ABC, Dataset):
 
-        # load data
-        self.target = None
-        if isinstance(images, torch.Tensor):
-            self.labels = labels.clone().detach()
-            self.images = images.clone().detach().float()
-
-        else:
-
-            # restructure (channel, height, width)
-            self.labels = torch.tensor(labels)
-            self.images = torch.tensor(images).float()
-            if permute:
-                self.images = self.images.permute(dims=(0, 3, 1, 2))
-
-            # normalize data
-            self.images = self.images / 255
-
-        # transforms
-        self.transformations = transformations
-
-    def __getitem__(self, index):
+    def __getitem__(self, index: torch.Tensor) -> Tuple[torch.Tensor]:
 
         # indexing
         x, y = self.images[index], self.labels[index]
@@ -87,6 +69,30 @@ class Custom3dDataset(Dataset):
         out_ind = out_ind.squeeze()
 
         return out_ind
+
+    def quadratic_scaling(self, n_classes):
+
+        """
+        Function: Return fitted parabola and output given class prop as input
+            Parabola passes through (0, 0), (2B, 0), and (B, 1)
+            y = a * x * (x - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * B * (B - 2B)
+            1 = a * -1 * B ** 2
+            a = -1 / (B ** 2)
+        """
+
+        B = 1 / n_classes  # proportion of perfectly balanced class
+
+        # setup
+        label_counts = torch.bincount(self.labels).cpu().numpy()
+        label_props = label_counts / sum(label_counts)
+
+        index = (label_props <= 2 * B)
+        output = np.zeros_like(label_props)
+        output[index] = -1 / (B ** 2) * label_props[index] * (label_props[index] - 2 * B)
+
+        return output
 
     def sample(self, n_users, n_local_data, alpha, n_classes, **kwargs):
         return [self._sample_helper(n_local_data, alpha, n_classes) for _ in range(n_users)]
@@ -155,3 +161,62 @@ class Custom3dDataset(Dataset):
             user_labels[:n_pois] = to_pois.labels
 
         return Custom3dDataset(user_images, user_labels, self.transformations)
+
+
+class Custom3dDataset(CustomDataset):
+    """ Initial Setup """
+
+    def __init__(self, images, labels, transformations=None, permute=1):
+
+        # load data
+        self.target = None
+        if isinstance(images, torch.Tensor):
+            self.labels = labels.clone().detach()
+            self.images = images.clone().detach().float()
+
+        else:
+
+            # restructure (channel, height, width)
+            self.labels = torch.tensor(labels)
+            self.images = torch.tensor(images).float()
+            if permute:
+                self.images = self.images.permute(dims=(0, 3, 1, 2))
+
+            # normalize data
+            self.images = self.images / 255
+
+        # transforms
+        self.transformations = transformations
+
+
+class Custom2dDataset(CustomDataset):
+    """ Initial Setup """
+
+    def __init__(self, images, labels, transformations=None, permute=1):
+
+        # load data
+        self.target = None
+        if isinstance(images, torch.Tensor):
+            self.labels = labels.clone().detach()
+            self.images = images.clone().detach().float()
+
+        else:
+
+            # restructure (channel, height, width)
+            self.labels = torch.tensor(labels)
+            self.images = torch.tensor(images).float()
+
+            # normalize data
+            self.images = self.images / 255
+
+        # add missing channel dimension
+        if len(self.images.shape) == 3:
+            self.images = self.images.unsqueeze(dim=1)
+            self.images = self.images.repeat(1, 3, 1, 1)
+
+        # ensure that channels are the first dimension
+        elif permute:
+            self.images = self.images.permute(dims=(0, 3, 1, 2))
+
+        # transforms
+        self.transformations = transformations
