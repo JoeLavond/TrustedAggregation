@@ -124,7 +124,7 @@ def main():
         for j, method in enumerate(methods):
 
             path = os.path.join(
-                f'{Path.home()}/TAG',
+                f'{Path.home()}/TrustedAggregation',
                 d,
                 ('neuro' if args.neuro else 'classic'),
                 method,

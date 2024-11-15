@@ -83,7 +83,7 @@ def main():
             path = os.path.join(
                 f'{Path.home()}',
                 'Documents',
-                'TAG',
+                'TrustedAggregation',
                 f'{args.data}_{args.n_classes}',
                 ('neuro' if args.neuro else 'classic'),
                 'tag',

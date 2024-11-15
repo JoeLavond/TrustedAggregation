@@ -141,7 +141,7 @@ def main():
                 path = os.path.join(
                     f'{Path.home()}',
                     'Documents',
-                    'TAG',
+                    'TrustedAggregation',
                     d,
                     ('neuro' if args.neuro else 'classic'),
                     method,
