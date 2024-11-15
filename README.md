@@ -99,10 +99,12 @@ The full code structure is as follows:
 ## Citation
 If you find our work useful, please consider citing our paper:
 ```bibtex
-@article{lavond2022trusted,
-  title={Trusted Aggregation (TAG): Backdoor Defense in Federated Learning},
-  author={Lavond, Joseph and Cheng, Minhao and Li, Yao},
-  journal={arXiv preprint arXiv:2202.00000},
-  year={2022}
+@inproceedings{
+lavond2022trusted, 
+title={Trusted Aggregation ({TAG}): Model Filtering Backdoor Defense In Federated Learning},
+author={Joseph Lavond and Minhao Cheng and Yao Li},
+booktitle={Workshop on Federated Learning: Recent Advances and New Challenges (in Conjunction with NeurIPS 2022)},
+year={2022},
+url={https://openreview.net/forum?id=3tUku0Nf9gw}
 }
 ```
