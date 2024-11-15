@@ -1,7 +1,11 @@
 # packages
+import logging
 import re
 import time
 import torch
+import torch.nn as nn
+from torch.optim import Optimizer
+from torch.utils.data import DataLoader
 
 
 # Base class
@@ -20,10 +24,22 @@ class Neurotoxin:
         EXCEPT WHEN APPLYING THE MASK WITH MASK_()
     """
 
-    def __init__(self,
-                 model, p
-                 ):
+    def __init__(
+        self,
+        model: nn.Module,
+        p: float
+    ):
+        """
+        Initialize Neurotoxin attack
+        Create mask from random initialized model
+        Store original model weights
+        Store percentage of weights to mask
 
+        Args:
+            model (nn.Module): model to be attacked
+            p (float): percentage of weights to mask
+
+        """
         # initializations
         self.mask = None
         self.p = p
@@ -36,14 +52,18 @@ class Neurotoxin:
         # create mask from random initialized model
         self.update_mask_(model)
 
-    def update_mask_(self, new_model):
-
+    def update_mask_(self, new_model: nn.Module):
         """
-        Function: Create a flattened mask of model weights
-            Omit positions of the largest changes in model weights
-        Usage: Perform Neurotoxin attack
-            Project attack onto weights not regularly updated
-            Intended to produce lasting attacks
+        Create a flattened mask of model weights
+        Omit positions of the largest changes in model weights
+
+        Perform Neurotoxin attack
+        Project attack onto weights not regularly updated
+        Intended to produce lasting attacks
+
+        Args:
+            new_model (nn.Module): model to be attacked
+
         """
 
         # initializations
@@ -90,15 +110,18 @@ class Neurotoxin:
             # move new model to old model
             self.old_model = new_model.cpu()
 
-    def mask_(self, model):
+    def mask_(self, model: nn.Module):
+        """
+        Use mask on proposed model update
+        Replace locations of the largest change
+        Use instead values from original model
+
+        Apply after every model update when using Neurotoxin
+
+        Args:
+            model (nn.Module): model to be attacked
 
         """
-        Function: Use mask on proposed model update
-            Replace locations of the largest change
-            Use instead values from original model
-        Usage: Apply after every model update when using Neurotoxin
-        """
-
         # initializations
         start_index = 0
 
@@ -139,10 +162,34 @@ class Neurotoxin:
 
 
 def nt_training(
-        loader, model, cost, opt, n_epochs=1, gpu=0, scheduler=None,  # training
-        logger=None, title='training', print_all=0,  # logging
-        nt_obj=None  # add neurotoxin attack
+        loader: DataLoader, model: nn.Module, cost: nn.Module, opt: Optimizer, n_epochs: int = 1, gpu: int = 0, scheduler=None,  # training
+        logger: logging.Logger = None, title: str = 'training', print_all: bool = False,  # logging
+        nt_obj: Neurotoxin = None  # add neurotoxin attack
 ):
+    """
+    Train model on a dataset
+    Compute time, loss, and accuracy of training
+
+    Use the Neurotoxin object to apply Neurotoxin attack
+    Project attack onto weights not regularly updated
+
+    Args:
+        loader (DataLoader): data loader for training
+        model (nn.Module): model to train
+        cost (nn.Module): loss function
+        opt (Optimizer): optimizer for training
+        n_epochs (int): number of epochs to train
+        gpu (int): gpu to use for computation
+        scheduler (torch.optim.lr_scheduler): learning rate scheduler
+        logger (logging.Logger): logger for recording training results
+        title (str): title for logging
+        print_all (bool): print all epochs
+        nt_obj (Neurotoxin): Neurotoxin object to apply attack
+
+    Returns:
+        Tuple[float, float]: training loss and accuracy
+
+    """
     # initializations
     model = model.train()
     model = model.cuda(gpu)

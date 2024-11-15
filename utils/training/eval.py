@@ -1,12 +1,33 @@
 # packages
+import logging
 import time
+from typing import *
+
 import torch
+import torch.nn as nn
+from torch.utils.data import DataLoader
 
 
 def evaluate(
-        loader, model, cost, gpu=0,  # evaluate
-        logger=None, title=''  # logging
-):
+    loader: DataLoader, model: nn.Module, cost: nn.Module, gpu: int = 0,  # evaluate
+    logger: logging.Logger = None, title: str = ''  # logging
+) -> Tuple[float, float]:
+    """
+    Evaluate model on a dataset
+    Compute time, loss, and accuracy of evaluation
+
+    Args:
+        loader (DataLoader): data loader for evaluation
+        model (nn.Module): model to evaluate
+        cost (nn.Module): loss function
+        gpu (int): gpu to use for computation
+        logger (logging.Logger): logger for recording evaluation results
+        title (str): title for logging
+
+    Returns:
+        Tuple[float, float]: evaluation loss and accuracy
+
+    """
 
     # initializations
     model = model.eval()
@@ -45,10 +66,27 @@ def evaluate(
 
 # evaluation that saves output distribution layer and labels
 def evaluate_output(
-        loader, model, cost, gpu=0,  # evaluate
-        logger=None, title='',  # logging
-        output=1
+    loader: DataLoader, model: nn.Module, cost: nn.Module, gpu: int = 0,  # evaluate
+    logger: logging.Logger = None, title: str = '',  # logging
+    output: bool = True,
 ):
+    """
+    Evaluate model on a dataset
+    Compute time, loss, and accuracy of evaluation
+    Save output distribution layer and labels
+
+    Args:
+        loader (DataLoader): data loader for evaluation
+        model (nn.Module): model to evaluate
+        cost (nn.Module): loss function
+        gpu (int): gpu to use for computation
+        logger (logging.Logger): logger for recording evaluation results
+        title (str): title for logging
+        output (bool): whether to save output distribution layer and labels
+
+    Returns: Tuple[float, float, Union[None, np.ndarray], Union[None, np.ndarray]]: evaluation loss, accuracy,
+        output distribution layer, and labels
+    """
 
     # initializations
     model = model.eval()

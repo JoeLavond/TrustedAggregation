@@ -1,14 +1,29 @@
+"""
+Implementation of alternate aggregation methods for federated learning
+Global median and global mean are used to aggregate model weights
+Global trust is used to filter out malicious or unusual model weights
+
+"""
 # packages
+from typing import *
+
 import numpy as np
+
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 
 # alternate backdoor defense aggregation methods
-def global_median_(global_model, model_list, gpu=0):
+def global_median_(global_model: nn.Module, model_list: List[nn.Module], gpu: int = 0):
     """
-    Function: Update global model (in-place) with the elementwise median of suggested model weights
-    Usage: Model filtering of users for federated learning
+    Update global model (in-place) with the elementwise median of suggested model weights
+
+    Args:
+        global_model (nn.Module): global model to be updated
+        model_list (List[nn.Module]): list of models to be aggregated
+        gpu (int): gpu to use for computation
+
     """
 
     # iterate over model weights simultaneously
@@ -28,11 +43,18 @@ def global_median_(global_model, model_list, gpu=0):
     return None
 
 
-def global_mean_(global_model, model_list, beta=.1, gpu=0):
+def global_mean_(global_model: nn.Module, model_list: List[nn.Module], beta: float = 0.1, gpu: int = 0):
     """
-    Function: Update global model (in-place) with the trimmed mean of suggested model weights
-        Trimmed mean is the elementwise mean with the top and bottom beta of data removed
-    Usage: Model filtering of users for federated learning
+    Update global model (in-place) with the trimmed mean of suggested model weights
+    Trimmed mean is the elementwise mean with the top and bottom beta of data removed
+    Used to filter out malicious or unusual model weights before aggregation
+
+    Args:
+        global_model (nn.Module): global model to be updated
+        model_list (List[nn.Module]): list of models to be aggregated
+        beta (float): fraction of data to be removed from top and bottom of data
+        gpu (int): gpu to use for computation
+
     """
 
     assert 0 <= beta < 1 / 2, 'invalid value of beta outside of [0, 1/2)'
@@ -64,7 +86,17 @@ def global_mean_(global_model, model_list, beta=.1, gpu=0):
 
 
 # Fed Trust
-def __center_model_(new, old):
+def __center_model_(new: nn.Module, old: nn.Module):
+    """
+    Center new model weights by subtracting old model weights
+    Used to compute the difference between two models
+    Modify new model in-place
+
+    Args:
+        new (nn.Module): new model to be centered
+        old (nn.Module): old model to be subtracted
+
+    """
     with torch.no_grad():
         for (_, new_weight), (_, old_weight) in zip(
                 new.state_dict().items(),
@@ -75,9 +107,18 @@ def __center_model_(new, old):
     return None
 
 
-def __get_trust_score(trusted_model, user_model):
-    """ Returns (relu trust score times the ratio of trusted to user norm) """
+def __get_trust_score(trusted_model: nn.Module, user_model: nn.Module) -> Tuple[torch.Tensor, torch.Tensor]:
+    """
+    Compute trust score and scaling factor for user model weights
 
+    Args:
+        trusted_model (nn.Module): model to be trusted
+        user_model (nn.Module): model to be evaluated
+
+    Return:
+        Tuple[torch.Tensor, torch.Tensor]: trust score and scaling factor for user model weights
+
+    """
     # flatten all model weights to
     trusted_weights = []
     user_weights = []
@@ -104,7 +145,20 @@ def __get_trust_score(trusted_model, user_model):
     return F.relu(output), trusted_norm / user_norm
 
 
-def global_trust_(global_model, trusted_model, model_list, eta=1):
+def global_trust_(global_model: nn.Module, trusted_model: nn.Module, model_list: List[nn.Module], eta: float = 1):
+    """
+    Update global model (in-place) with the trusted mean of suggested model weights
+    Trust is computed as the cosine similarity between the trusted model and user model
+    Weights are scaled by the trust score and the scaling factor
+    Used to filter out malicious or unusual model weights before aggregation
+
+    Args:
+        global_model (nn.Module): global model to be updated
+        trusted_model (nn.Module): model to be trusted
+        model_list (List[nn.Module]): list of models to be aggregated
+        eta (float): learning rate for aggregation
+
+    """
     # get model differences
     __center_model_(trusted_model, global_model)
     for m in model_list:

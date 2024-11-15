@@ -1,11 +1,33 @@
 # packages
+from typing import *
+import logging
 import time
+
+from torch import nn
+from torch.utils.data import DataLoader
 
 
 def training(
-        loader, model, cost, opt, n_epochs=1, gpu=0, scheduler=None,  # training
-        logger=None, title='training', print_all=0  # logging
-):
+    loader: DataLoader, model: nn.Module, cost: nn.Module, opt, n_epochs: int = 1, gpu: int = 0, scheduler=None,  # training
+    logger: logging.Logger = None, title: str = 'training', print_all: bool = False  # logging
+) -> Tuple[float, float]:
+    """
+    Train model on a dataset
+    Compute time, loss, and accuracy of training
+
+    Args:
+        loader (DataLoader): data loader for training
+        model (nn.Module): model to train
+        cost (nn.Module): loss function
+        opt (Optimizer): optimizer for training
+        n_epochs (int): number of epochs to train
+        gpu (int): gpu to use for computation
+        scheduler (torch.optim.lr_scheduler): learning rate scheduler
+        logger (logging.Logger): logger for recording training results
+        title (str): title for logging
+        print_all (bool): print all epochs
+
+    """
     # initializations
     model = model.train()
     model = model.cuda(gpu)
