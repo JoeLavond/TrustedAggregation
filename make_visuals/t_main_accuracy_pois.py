@@ -89,6 +89,12 @@ def main():
         plt.sca(axarr[i])
         plt.ylabel(out_d, fontsize=1.5*args.font_size)
         plt.ylim(-0.05, 1.05)
+
+        if i == 0:
+            plt.title(
+                f'{(10 * args.n_malicious):d}% Malicious Users'
+                + (', NT' if args.neuro else '')
+            )
         if (i + 1) == len(out_data):
             plt.xlabel('Communication Round')
 
@@ -119,7 +125,9 @@ def main():
         for j, method in enumerate(methods):
 
             path = os.path.join(
-                f'{Path.home()}/TAG',
+                f'{Path.home()}',
+                'Documents',
+                'TAG',
                 d,
                 ('neuro' if args.neuro else 'classic'),
                 method,
@@ -180,6 +188,7 @@ def main():
         l2.legendHandles[i].set_linestyle(line_styles[i])
     """
 
+    plt.tight_layout()
     plt.savefig(
         os.path.join(out_path, f't_accuracy_pois{out_suffix}.png'),
         bbox_inches='tight'
