@@ -1,0 +1,15 @@
+name: tag
+channels:
+  - defaults
+dependencies:
+  - pytorch::torchaudio
+  - pytorch::torchvision
+  - pytorch::pytorch
+  - pytorch::pytorch-cuda=12.4
+  - python==3.10
+  - pandas
+  - anaconda::scikit-learn
+  - matplotlib
+  - pip:
+    - torchsummary
+prefix: ~/.conda/envs/tag

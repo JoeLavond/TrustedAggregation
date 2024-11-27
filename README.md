@@ -11,22 +11,18 @@ TAG is able to keep the backdoor attack from poisoning the global model, while m
 
 ## Getting Started
 Here we provide a step-by-step guide to set up the environment for our experiments. 
-Our code is written using **Python 3.10**, and we provide requirements files for both conda (recommended) and pip environments.
+Our code is written using **Python 3.10**, and we provide our dependencies in `requirements.yml` for use with conda environmnets.
 
 1. Clone the repository
 ```bash
 git clone https://github.com/JoeLavond/TAG.git
 ```
 
-2. Install the required packages. 
+2. Install the required packages.
+We provide `requirements.yml` to list all the required packages if using conda.
+To install them in a new conda environment, you can run the following command:
 ```bash
-# using conda
-conda create --name tag python=3.10
-conda activate tag
-conda install --name tag --file conda_requirements.txt
-
-# using pip (and virtualenv)
-pip install -r requirements.txt
+conda env create -f requirements.yml;
 ```
 
 ## Usage
