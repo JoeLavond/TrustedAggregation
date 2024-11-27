@@ -3,7 +3,8 @@ Backdoor Defense in Federated Learning
 Authors: Joseph Lavond, Minhao Cheng, and Yao Li
 
 ## Overview
-This repository contains the code for our paper "Trusted Aggregation (TAG): Backdoor Defense in Federated Learning".
+This repository contains the code for our paper ["Trusted Aggregation (TAG): Backdoor Defense in Federated Learning"](https://openreview.net/pdf?id=r9eNUDe2im). 
+
 We propose a backdoor defense based on the assumption that we can trust a subset of the clients in a federated learning setting. 
 Our defense, TAG, leverages the trustworthiness of these clients to identify and remove unusual local updates before global aggregation.
 TAG is able to keep the backdoor attack from poisoning the global model, while maintaining the performance of the benign clients.
@@ -99,12 +100,14 @@ The full code structure is as follows:
 ## Citation
 If you find our work useful, please consider citing our paper:
 ```bibtex
-@inproceedings{
-lavond2022trusted, 
-title={Trusted Aggregation ({TAG}): Model Filtering Backdoor Defense In Federated Learning},
+@article{
+lavond2024trusted,
+title={Trusted Aggregation ({TAG}): Backdoor Defense in Federated Learning},
 author={Joseph Lavond and Minhao Cheng and Yao Li},
-booktitle={Workshop on Federated Learning: Recent Advances and New Challenges (in Conjunction with NeurIPS 2022)},
-year={2022},
-url={https://openreview.net/forum?id=3tUku0Nf9gw}
+journal={Transactions on Machine Learning Research},
+issn={2835-8856},
+year={2024},
+url={https://openreview.net/forum?id=r9eNUDe2im},
+note={}
 }
 ```
